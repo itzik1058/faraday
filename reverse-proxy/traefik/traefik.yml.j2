@@ -1,9 +1,15 @@
+global:
+  sendAnonymousUsage: true
+
 log:
   level: DEBUG
   filePath: /logs/traefik.log
 
 accessLog:
   filePath: /logs/access.log
+
+api:
+  dashboard: true
 
 providers:
   docker:
@@ -16,14 +22,14 @@ providers:
     watch: true
 
 entryPoints:
-  web:
-    address: ":80"
-    http:
-      redirections:
-        entryPoint:
-          to: websecure
-          scheme: https
-          permanent: true
+  # web:
+  #   address: ":80"
+  #   http:
+  #     redirections:
+  #       entryPoint:
+  #         to: websecure
+  #         scheme: https
+  #         permanent: true
   websecure:
     address: ":443"
     http:
