@@ -1,0 +1,48 @@
+log:
+  level: DEBUG
+  filePath: /logs/traefik.log
+
+accessLog:
+  filePath: /logs/access.log
+
+providers:
+  docker:
+    endpoint: "tcp://docker-socket-proxy:2375"
+    exposedByDefault: false
+    defaultRule: 'Host(`{{ index .Labels "com.docker.compose.service"}}.{@DOMAIN@}`)'
+
+  file:
+    directory: /config
+    watch: true
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
+  websecure:
+    address: ":443"
+    http:
+      tls:
+        certResolver: mydnschallenge
+        domains:
+          - main: "{@DOMAIN@}"
+            sans: "*.{@DOMAIN@}"
+
+certificatesResolvers:
+  mydnschallenge:
+    acme:
+      dnsChallenge:
+        provider: duckdns
+        delaybeforecheck: 10
+        resolvers:
+          - 1.1.1.1:53
+          - 8.8.8.8:53
+      email: "{@DUCKDNS_EMAIL@}"
+      # Staging CA
+      # caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      storage: /letsencrypt/acme.json
