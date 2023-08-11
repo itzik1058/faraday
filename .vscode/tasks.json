@@ -8,7 +8,7 @@
             "type": "shell",
             "command": ".venv/bin/python",
             "args": [
-                "template.py",
+                "render.py",
             ],
             "problemMatcher": [],
         }
