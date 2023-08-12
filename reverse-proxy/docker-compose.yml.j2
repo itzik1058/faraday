@@ -1,6 +1,8 @@
-version: "3.3"
+version: "3.8"
 
 services:
+  # Traefik
+
   traefik:
     image: traefik:v2.10
     container_name: traefik
@@ -23,7 +25,7 @@ services:
         source: "{@DATA_PATH@}/traefik/letsencrypt"
         target: /letsencrypt
       - type: bind
-        source: "{@LOGS_PATH@}"
+        source: "{@LOGS_PATH@}/traefik"
         target: /logs
     depends_on:
       - docker-socket-proxy
@@ -46,6 +48,6 @@ services:
     image: traefik/whoami
     container_name: simple-service
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.whoami.rule=Host(`whoami.{@DOMAIN@}`)
-      - traefik.http.routers.whoami.entrypoints=websecure
+      traefik.enable: true
+      traefik.http.routers.whoami.rule: Host(`whoami.{@DOMAIN@}`)
+      traefik.http.routers.whoami.entrypoints: websecure
