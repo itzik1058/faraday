@@ -29,6 +29,7 @@ services:
         target: /logs
     depends_on:
       - docker-socket-proxy
+      - authelia
     restart: unless-stopped
 
   docker-socket-proxy:
@@ -43,11 +44,46 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: unless-stopped
+  
+  authelia:
+    image: authelia/authelia
+    container_name: authelia
+    environment:
+      TZ: "{@TIMEZONE@}"
+    volumes:
+      - type: bind
+        source: ./authelia
+        target: /config
+        read_only: true
+      - type: bind
+        source: "{@DATA_PATH@}/authelia"
+        target: /data
+      - type: bind
+        source: "{@LOGS_PATH@}/authelia"
+        target: /logs
+    labels:
+      traefik.enable: true
+      traefik.http.routers.authelia.rule: Host(`auth.{@DOMAIN@}`)
+      traefik.http.routers.authelia.entryPoints: websecure
+    depends_on:
+      - authelia-redis
+    restart: unless-stopped
+
+  authelia-redis:
+    image: redis:alpine
+    container_name: authelia-redis
+    volumes:
+      - type: bind
+        source: "{@DATA_PATH@}/authelia/redis"
+        target: /data
+    restart: unless-stopped
 
   whoami:
     image: traefik/whoami
     container_name: simple-service
     labels:
       traefik.enable: true
-      traefik.http.routers.whoami.rule: Host(`whoami.{@DOMAIN@}`)
+      traefik.http.routers.whoami.rule: Host(`{@DOMAIN@}`)
       traefik.http.routers.whoami.entrypoints: websecure
+      traefik.http.routers.whoami.middlewares: authelia@file
+    restart: unless-stopped
