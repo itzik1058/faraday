@@ -87,3 +87,8 @@ services:
       traefik.http.routers.whoami.entrypoints: websecure
       traefik.http.routers.whoami.middlewares: authelia@file
     restart: unless-stopped
+
+
+networks:
+  default:
+    name: reverse-proxy
