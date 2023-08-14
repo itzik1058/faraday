@@ -28,6 +28,8 @@ services:
     depends_on:
       - docker-socket-proxy
       - authelia
+    labels:
+      com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
 
   docker-socket-proxy:
@@ -44,6 +46,8 @@ services:
         source: /var/run/docker.sock
         target: /var/run/docker.sock
         read_only: true
+    labels:
+      com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
   
   authelia:
@@ -63,6 +67,7 @@ services:
         source: "{@LOGS_PATH@}/authelia"
         target: /logs
     labels:
+      com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
       traefik.http.routers.authelia.rule: Host(`auth.{@DOMAIN@}`)
       traefik.http.routers.authelia.entryPoints: websecure
@@ -77,6 +82,8 @@ services:
       - type: bind
         source: "{@DATA_PATH@}/authelia/redis"
         target: /data
+    labels:
+      com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
 
   whoami:
