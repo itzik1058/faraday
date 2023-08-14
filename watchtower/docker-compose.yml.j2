@@ -1,0 +1,33 @@
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    environment:
+      TZ: "{@TIMEZONE@}"
+      WATCHTOWER_CLEANUP: true
+      WATCHTOWER_LOG_LEVEL: debug
+      WATCHTOWER_LABEL_ENABLE: true
+      WATCHTOWER_HTTP_API_TOKEN: "{@WATCHTOWER_HTTP_API_TOKEN@}"
+      WATCHTOWER_HTTP_API_METRICS: true
+      WATCHTOWER_SCHEDULE: 0 0 6 * * FRI
+      # WATCHTOWER_NOTIFICATIONS: gotify
+      # WATCHTOWER_NOTIFICATION_GOTIFY_URL: http://gotify:80
+      # WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN: {@WATCHTOWER_GOTIFY_TOKEN@}
+      WATCHTOWER_NOTIFICATIONS: shoutrrr
+      WATCHTOWER_NOTIFICATION_URL: "telegram://{@TELEGRAM_BOT_TOKEN@}@telegram/?channels={@TELEGRAM_CHAT_ID@}"
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+    labels:
+      traefik.enable: true
+      traefik.http.routers.watchtower.rule: Host(`watchtower.{@DOMAIN@}`)
+      traefik.http.routers.watchtower.entrypoints: websecure
+      traefik.http.routers.watchtower.middlewares: whitelist@file
+      traefik.http.services.watchtower.loadbalancer.server.port: 8080
+    restart: unless-stopped
+
+networks:
+  default:
+    name: reverse-proxy
+    external: true
