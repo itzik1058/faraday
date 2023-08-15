@@ -1,0 +1,219 @@
+services:
+  qbittorrent:
+    image: linuxserver/qbittorrent
+    container_name: qbittorrent
+    environment:
+      PUID: "{@USER@}"
+      PGID: "{@GROUP@}"
+      TZ: "{@TIMEZONE@}"
+      WEBUI_PORT: 8080
+    volumes:
+      - type: bind
+        source: "{@DATA_PATH@}/qbittorrent"
+        target: /config
+      - type: bind
+        source: "{@MEDIA_PATH@}"
+        target: /data
+    # ports:
+    #   - 8080:8080
+    #   - 6881:6881
+    #   - 6881:6881/udp
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.qbittorrent.rule: Host(`qbittorrent.{@DOMAIN@}`)
+      traefik.http.routers.qbittorrent.entrypoints: websecure
+      traefik.http.routers.qbittorrent.middlewares: authelia@file
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
+    restart: unless-stopped
+  
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    environment:
+      PUID: "{@USER@}"
+      PGID: "{@GROUP@}"
+      TZ: "{@TIMEZONE@}"
+    volumes:
+      - type: bind
+        source: "{@LOGS_PATH@}/radarr"
+        target: /config/logs
+      - type: bind
+        source: "{@DATA_PATH@}/radarr"
+        target: /config
+      - type: bind
+        source: "{@MEDIA_PATH@}/"
+        target: /data
+    # ports:
+    #   - 7878:7878
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.radarr.rule: Host(`radarr.{@DOMAIN@}`)
+      traefik.http.routers.radarr.entrypoints: websecure
+      traefik.http.routers.radarr.middlewares: authelia@file
+    depends_on:
+      - qbittorrent
+    restart: unless-stopped
+  
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      PUID: "{@USER@}"
+      PGID: "{@GROUP@}"
+      TZ: "{@TIMEZONE@}"
+    volumes:
+      - type: bind
+        source: "{@LOGS_PATH@}/sonarr"
+        target: /config/logs
+      - type: bind
+        source: "{@DATA_PATH@}/sonarr"
+        target: /config
+      - type: bind
+        source: "{@MEDIA_PATH@}/"
+        target: /data
+    # ports:
+    #   - 8989:8989
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.sonarr.rule: Host(`sonarr.{@DOMAIN@}`)
+      traefik.http.routers.sonarr.entrypoints: websecure
+      traefik.http.routers.sonarr.middlewares: authelia@file
+    depends_on:
+      - qbittorrent
+    restart: unless-stopped
+  
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr
+    container_name: recyclarr
+    user: "{@USER@}:{@GROUP@}"
+    environment:
+      TZ: "{@TIMEZONE@}"
+      RECYCLARR_CREATE_CONFIG: true
+    volumes:
+      - type: bind
+        source: "{@LOGS_PATH@}/recyclarr"
+        target: /config/logs
+      - type: bind
+        source: "{@DATA_PATH@}/recyclarr"
+        target: /config
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+  prowlarr:
+    image: linuxserver/prowlarr
+    container_name: prowlarr
+    environment:
+      PUID: "{@USER@}"
+      PGID: "{@GROUP@}"
+      TZ: "{@TIMEZONE@}"
+    volumes:
+      - type: bind
+        source: "{@LOGS_PATH@}/prowlarr"
+        target: /config/logs
+      - type: bind
+        source: "{@DATA_PATH@}/prowlarr"
+        target: /config
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.prowlarr.rule: Host(`prowlarr.{@DOMAIN@}`)
+      traefik.http.routers.prowlarr.entrypoints: websecure
+      traefik.http.routers.prowlarr.middlewares: authelia@file
+    depends_on:
+      - radarr
+      - sonarr
+    restart: unless-stopped
+  
+  bazarr:
+    image: linuxserver/bazarr
+    container_name: bazarr
+    environment:
+      PUID: "{@USER@}"
+      PGID: "{@GROUP@}"
+      TZ: "{@TIMEZONE@}"
+    volumes:
+      - type: bind
+        source: "{@LOGS_PATH@}/bazarr"
+        target: /config/log
+      - type: bind
+        source: "{@DATA_PATH@}/bazarr"
+        target: /config
+      - type: bind
+        source: "{@MEDIA_PATH@}/"
+        target: /data
+    # ports:
+    #   - 6767:6767
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.bazarr.rule: Host(`bazarr.{@DOMAIN@}`)
+      traefik.http.routers.bazarr.entrypoints: websecure
+      traefik.http.routers.bazarr.middlewares: authelia@file
+    depends_on:
+      - radarr
+      - sonarr
+    restart: unless-stopped
+  
+  jellyfin:
+    image: linuxserver/jellyfin
+    container_name: jellyfin
+    environment:
+      PUID: "{@USER@}"
+      PGID: "{@GROUP@}"
+      TZ: "{@TIMEZONE@}"
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - type: bind
+        source: "{@LOGS_PATH@}/jellyfin"
+        target: /config/log
+      - type: bind
+        source: "{@DATA_PATH@}/jellyfin"
+        target: /config
+      - type: bind
+        source: "{@MEDIA_PATH@}/"
+        target: /media
+    # ports:
+    #   - 8096:8096
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.jellyfin.rule: Host(`jellyfin.{@DOMAIN@}`)
+      traefik.http.routers.jellyfin.entrypoints: websecure
+    restart: unless-stopped
+  
+  jellyseerr:
+    image: fallenbagel/jellyseerr
+    container_name: jellyseerr
+    environment:
+      LOG_LEVEL: debug
+      TZ: "{@TIMEZONE@}"
+    volumes:
+      - type: bind
+        source: "{@LOGS_PATH@}/jellyseerr"
+        target: /app/config/logs
+      - type: bind
+        source: "{@DATA_PATH@}/jellyseerr"
+        target: /app/config
+    # ports:
+    #   - 5055:5055
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.jellyseerr.rule: Host(`jellyseerr.{@DOMAIN@}`)
+      traefik.http.routers.jellyseerr.entrypoints: websecure
+      traefik.http.routers.jellyseerr.middlewares: authelia@file
+    depends_on:
+      - jellyfin
+      - radarr
+      - sonarr
+    restart: unless-stopped
+
+networks:
+  default:
+    name: reverse-proxy
+    external: true
