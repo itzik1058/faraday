@@ -206,7 +206,6 @@ services:
       traefik.enable: true
       traefik.http.routers.jellyseerr.rule: Host(`jellyseerr.{@DOMAIN@}`)
       traefik.http.routers.jellyseerr.entrypoints: websecure
-      traefik.http.routers.jellyseerr.middlewares: authelia@file
     depends_on:
       - jellyfin
       - radarr
