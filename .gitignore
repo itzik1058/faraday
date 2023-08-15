@@ -1,3 +1,9 @@
-.env
+# Ignore all yaml files except Jinja2 templates
 *.yml
+!*.j2*
+
+# Ignore .env
+.env
+
+# Ignore python virtual environment
 .venv
