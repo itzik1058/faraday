@@ -14,10 +14,10 @@ services:
       - type: bind
         source: "{@MEDIA_PATH@}"
         target: /data
-    # ports:
+    ports:
     #   - 8080:8080
-    #   - 6881:6881
-    #   - 6881:6881/udp
+      - 26881:6881
+      - 26881:6881/udp
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
