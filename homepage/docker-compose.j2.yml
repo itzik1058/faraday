@@ -1,0 +1,25 @@
+services:
+  homepage:
+    image: ghcr.io/benphelps/homepage
+    container_name: homepage
+    environment:
+      PUID: "{@USER@}"
+      PGID: "{@GROUP@}"
+    volumes:
+      - type: bind
+        source: "{@LOGS_PATH@}/homepage"
+        target: /app/config/logs
+      - type: bind
+        source: "{@DATA_PATH@}/homepage"
+        target: /app/config
+    labels:
+      traefik.enable: true
+      traefik.http.routers.homepage.rule: Host(`{@DOMAIN@}`)
+      traefik.http.routers.homepage.entrypoints: websecure
+      # traefik.http.routers.homepage.middlewares: authelia@file
+    restart: unless-stopped
+
+networks:
+  default:
+    name: reverse-proxy
+    external: true
