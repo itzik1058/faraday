@@ -177,8 +177,8 @@ services:
       - type: bind
         source: "{@MEDIA_PATH@}/"
         target: /media
-    # ports:
-    #   - 8096:8096
+    ports:
+      - 8096:8096
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
