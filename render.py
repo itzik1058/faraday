@@ -9,10 +9,10 @@ if __name__ == "__main__":
         variable_end_string="@}",
     )
     variables = dotenv_values()
-    for path in Path().rglob("*.j2*"):
+    for path in Path().rglob("*.j2"):
         template = env.get_template(str(path))
         rendered = template.render(**variables)
-        path.with_stem(path.stem.strip(".j2")).write_text(rendered)
+        path.with_suffix("").write_text(rendered)
     for path in Path().rglob("*.env"):
         path.with_suffix(".example").write_text(
             "\n".join([f"{key}=" for key in variables])
