@@ -22,7 +22,7 @@ services:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
       traefik.http.routers.qbittorrent.rule: Host(`qbittorrent.{@DOMAIN@}`)
-      traefik.http.routers.qbittorrent.entrypoints: websecure
+      traefik.http.routers.qbittorrent.entryPoints: websecure
       traefik.http.routers.qbittorrent.middlewares: authelia@file
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
     restart: unless-stopped
@@ -50,7 +50,7 @@ services:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
       traefik.http.routers.radarr.rule: Host(`radarr.{@DOMAIN@}`)
-      traefik.http.routers.radarr.entrypoints: websecure
+      traefik.http.routers.radarr.entryPoints: websecure
       traefik.http.routers.radarr.middlewares: authelia@file
     depends_on:
       - qbittorrent
@@ -79,7 +79,7 @@ services:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
       traefik.http.routers.sonarr.rule: Host(`sonarr.{@DOMAIN@}`)
-      traefik.http.routers.sonarr.entrypoints: websecure
+      traefik.http.routers.sonarr.entryPoints: websecure
       traefik.http.routers.sonarr.middlewares: authelia@file
     depends_on:
       - qbittorrent
@@ -121,7 +121,7 @@ services:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
       traefik.http.routers.prowlarr.rule: Host(`prowlarr.{@DOMAIN@}`)
-      traefik.http.routers.prowlarr.entrypoints: websecure
+      traefik.http.routers.prowlarr.entryPoints: websecure
       traefik.http.routers.prowlarr.middlewares: authelia@file
     depends_on:
       - radarr
@@ -151,7 +151,7 @@ services:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
       traefik.http.routers.bazarr.rule: Host(`bazarr.{@DOMAIN@}`)
-      traefik.http.routers.bazarr.entrypoints: websecure
+      traefik.http.routers.bazarr.entryPoints: websecure
       traefik.http.routers.bazarr.middlewares: authelia@file
     depends_on:
       - radarr
@@ -183,7 +183,7 @@ services:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
       traefik.http.routers.jellyfin.rule: Host(`jellyfin.{@DOMAIN@}`)
-      traefik.http.routers.jellyfin.entrypoints: websecure
+      traefik.http.routers.jellyfin.entryPoints: websecure
     restart: unless-stopped
   
   jellyseerr:
@@ -205,7 +205,7 @@ services:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
       traefik.http.routers.jellyseerr.rule: Host(`jellyseerr.{@DOMAIN@}`)
-      traefik.http.routers.jellyseerr.entrypoints: websecure
+      traefik.http.routers.jellyseerr.entryPoints: websecure
     depends_on:
       - jellyfin
       - radarr
