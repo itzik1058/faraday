@@ -1,0 +1,33 @@
+services:
+  mealie:
+    image: hkotel/mealie
+    container_name: mealie
+    environment:
+      # Default Recipe Settings
+      RECIPE_PUBLIC: "true"
+      RECIPE_SHOW_NUTRITION: "true"
+      RECIPE_SHOW_ASSETS: "true"
+      RECIPE_LANDSCAPE_VIEW: "true"
+      RECIPE_DISABLE_COMMENTS: "false"
+      RECIPE_DISABLE_AMOUNT: "false"
+
+      # Gunicorn
+      # WEB_CONCURRENCY: 2
+      # WORKERS_PER_CORE: 0.5
+      # MAX_WORKERS: 8
+    # ports:
+    #   - 9925:80
+    volumes:
+      - type: bind
+        source: "{@DATA_PATH@}/mealie"
+        target: /app/data
+    labels:
+      traefik.enable: true
+      traefik.http.routers.mealie.rule: Host(`mealie.{@DOMAIN@}`)
+      traefik.http.routers.mealie.entrypoints: websecure
+    restart: unless-stopped
+
+networks:
+  default:
+    name: reverse-proxy
+    external: true
