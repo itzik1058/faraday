@@ -3,7 +3,7 @@ services:
     image: containrrr/watchtower
     container_name: watchtower
     environment:
-      TZ: "{@TIMEZONE@}"
+      TZ: "{@TZ@}"
       WATCHTOWER_CLEANUP: true
       WATCHTOWER_LOG_LEVEL: debug
       WATCHTOWER_LABEL_ENABLE: true

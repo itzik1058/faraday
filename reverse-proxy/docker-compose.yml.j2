@@ -54,7 +54,9 @@ services:
     image: authelia/authelia
     container_name: authelia
     environment:
-      TZ: "{@TIMEZONE@}"
+      TZ: "{@TZ@}"
+      PUID: "{@PUID@}"
+      PGID: "{@PGID@}"
     volumes:
       - type: bind
         source: ./authelia

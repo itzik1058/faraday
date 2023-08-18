@@ -3,9 +3,9 @@ services:
     image: linuxserver/qbittorrent
     container_name: qbittorrent
     environment:
-      PUID: "{@USER@}"
-      PGID: "{@GROUP@}"
-      TZ: "{@TIMEZONE@}"
+      TZ: "{@TZ@}"
+      PUID: "{@PUID@}"
+      PGID: "{@PGID@}"
       WEBUI_PORT: 8080
     volumes:
       - type: bind
@@ -31,9 +31,9 @@ services:
     image: linuxserver/radarr
     container_name: radarr
     environment:
-      PUID: "{@USER@}"
-      PGID: "{@GROUP@}"
-      TZ: "{@TIMEZONE@}"
+      TZ: "{@TZ@}"
+      PUID: "{@PUID@}"
+      PGID: "{@PGID@}"
     volumes:
       - type: bind
         source: "{@LOGS_PATH@}/radarr"
@@ -60,9 +60,9 @@ services:
     image: linuxserver/sonarr
     container_name: sonarr
     environment:
-      PUID: "{@USER@}"
-      PGID: "{@GROUP@}"
-      TZ: "{@TIMEZONE@}"
+      TZ: "{@TZ@}"
+      PUID: "{@PUID@}"
+      PGID: "{@PGID@}"
     volumes:
       - type: bind
         source: "{@LOGS_PATH@}/sonarr"
@@ -88,9 +88,9 @@ services:
   recyclarr:
     image: ghcr.io/recyclarr/recyclarr
     container_name: recyclarr
-    user: "{@USER@}:{@GROUP@}"
+    user: "{@PUID@}:{@PGID@}"
     environment:
-      TZ: "{@TIMEZONE@}"
+      TZ: "{@TZ@}"
       RECYCLARR_CREATE_CONFIG: true
     volumes:
       - type: bind
@@ -107,9 +107,9 @@ services:
     image: linuxserver/prowlarr
     container_name: prowlarr
     environment:
-      PUID: "{@USER@}"
-      PGID: "{@GROUP@}"
-      TZ: "{@TIMEZONE@}"
+      TZ: "{@TZ@}"
+      PUID: "{@PUID@}"
+      PGID: "{@PGID@}"
     volumes:
       - type: bind
         source: "{@LOGS_PATH@}/prowlarr"
@@ -132,9 +132,9 @@ services:
     image: linuxserver/bazarr
     container_name: bazarr
     environment:
-      PUID: "{@USER@}"
-      PGID: "{@GROUP@}"
-      TZ: "{@TIMEZONE@}"
+      TZ: "{@TZ@}"
+      PUID: "{@PUID@}"
+      PGID: "{@PGID@}"
     volumes:
       - type: bind
         source: "{@LOGS_PATH@}/bazarr"
@@ -162,9 +162,9 @@ services:
     image: linuxserver/jellyfin
     container_name: jellyfin
     environment:
-      PUID: "{@USER@}"
-      PGID: "{@GROUP@}"
-      TZ: "{@TIMEZONE@}"
+      TZ: "{@TZ@}"
+      PUID: "{@PUID@}"
+      PGID: "{@PGID@}"
     devices:
       - /dev/dri:/dev/dri
     volumes:
@@ -190,8 +190,8 @@ services:
     image: fallenbagel/jellyseerr
     container_name: jellyseerr
     environment:
+      TZ: "{@TZ@}"
       LOG_LEVEL: debug
-      TZ: "{@TIMEZONE@}"
     volumes:
       - type: bind
         source: "{@LOGS_PATH@}/jellyseerr"
