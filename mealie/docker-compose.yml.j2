@@ -22,6 +22,7 @@ services:
         source: "{@DATA_PATH@}/mealie"
         target: /app/data
     labels:
+      com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
       traefik.http.routers.mealie.rule: Host(`mealie.{@DOMAIN@}`)
       traefik.http.routers.mealie.entrypoints: websecure
