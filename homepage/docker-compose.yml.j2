@@ -13,6 +13,7 @@ services:
         source: "{@DATA_PATH@}/homepage"
         target: /app/config
     labels:
+      com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
       traefik.http.routers.homepage.rule: Host(`{@DOMAIN@}`)
       traefik.http.routers.homepage.entrypoints: websecure
