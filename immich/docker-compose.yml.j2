@@ -1,0 +1,126 @@
+services:
+  immich-server:
+    image: ghcr.io/immich-app/immich-server:release
+    container_name: immich-server
+    environment:
+      TYPESENSE_HOST: "immich-typesense"
+      TYPESENSE_API_KEY: "{@IMMICH_TYPESENSE_API_KEY@}"
+      DB_HOSTNAME: "immich-postgres"
+      DB_DATABASE_NAME: "immich"
+      DB_USERNAME: "postgres"
+      DB_PASSWORD: "{@IMMICH_DB_PASSWORD@}"
+      REDIS_HOSTNAME: "immich-redis"
+    volumes:
+      - type: bind
+        source: "{@MEDIA_PATH@}/photos/immich"
+        target: /usr/src/app/upload
+    command: [ "start.sh", "immich" ]
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    depends_on:
+      - immich-redis
+      - immich-postgres
+      - immich-typesense
+    restart: unless-stopped
+
+  immich-microservices:
+    container_name: immich-microservices
+    image: ghcr.io/immich-app/immich-server:release
+    environment:
+      TZ: "{@TZ@}"
+      TYPESENSE_HOST: "immich-typesense"
+      TYPESENSE_API_KEY: "{@IMMICH_TYPESENSE_API_KEY@}"
+      DB_HOSTNAME: "immich-postgres"
+      DB_DATABASE_NAME: "immich"
+      DB_USERNAME: "postgres"
+      DB_PASSWORD: "{@IMMICH_DB_PASSWORD@}"
+      REDIS_HOSTNAME: "immich-redis"
+    devices:
+      # hardware acceleration
+      - /dev/dri:/dev/dri
+    volumes:
+      - type: bind
+        source: "{@MEDIA_PATH@}/photos/immich"
+        target: /usr/src/app/upload
+    command: [ "start.sh", "microservices" ]
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    depends_on:
+      - immich-redis
+      - immich-postgres
+      - immich-typesense
+    restart: unless-stopped
+
+  immich-machine-learning:
+    image: ghcr.io/immich-app/immich-machine-learning:release
+    container_name: immich-machine-learning
+    volumes:
+      - type: bind
+        source: "{@DATA_PATH@}/immich/ml"
+        target: /cache
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+  immich-web:
+    image: ghcr.io/immich-app/immich-web:release
+    container_name: immich-web
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+  immich-typesense:
+    container_name: immich-typesense
+    image: typesense/typesense:0.24.1@sha256:9bcff2b829f12074426ca044b56160ca9d777a0c488303469143dd9f8259d4dd
+    environment:
+      TYPESENSE_API_KEY: "{@IMMICH_TYPESENSE_API_KEY@}"
+      TYPESENSE_DATA_DIR: "/data"
+    volumes:
+      - type: bind
+        source: "{@DATA_PATH@}/immich/typesense"
+        target: /data
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+  immich-redis:
+    image: redis:6.2-alpine@sha256:70a7a5b641117670beae0d80658430853896b5ef269ccf00d1827427e3263fa3
+    container_name: immich-redis
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+  immich-postgres:
+    image: postgres:14-alpine@sha256:28407a9961e76f2d285dc6991e8e48893503cc3836a4755bbc2d40bcc272a441
+    container_name: immich-postgres
+    environment:
+      POSTGRES_PASSWORD: "{@IMMICH_DB_PASSWORD@}"
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "immich"
+    volumes:
+      - type: bind
+        source: "{@DATA_PATH@}/immich/database"
+        target: /var/lib/postgresql/data
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+  immich-proxy:
+    image: ghcr.io/immich-app/immich-proxy:release
+    container_name: immich-proxy
+    # ports:
+    #   - 2283:8080
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.immich.rule: Host(`immich.{@DOMAIN@}`)
+      traefik.http.routers.immich.entrypoints: websecure
+    depends_on:
+      - immich-server
+      - immich-web
+    restart: unless-stopped
+
+networks:
+  default:
+    name: reverse-proxy
+    external: true
