@@ -42,7 +42,7 @@ services:
         source: "{@DATA_PATH@}/radarr"
         target: /config
       - type: bind
-        source: "{@MEDIA_PATH@}/"
+        source: "{@MEDIA_PATH@}"
         target: /data
     # ports:
     #   - 7878:7878
@@ -71,7 +71,7 @@ services:
         source: "{@DATA_PATH@}/sonarr"
         target: /config
       - type: bind
-        source: "{@MEDIA_PATH@}/"
+        source: "{@MEDIA_PATH@}"
         target: /data
     # ports:
     #   - 8989:8989
@@ -143,7 +143,7 @@ services:
         source: "{@DATA_PATH@}/bazarr"
         target: /config
       - type: bind
-        source: "{@MEDIA_PATH@}/"
+        source: "{@MEDIA_PATH@}"
         target: /data
     # ports:
     #   - 6767:6767
@@ -175,7 +175,7 @@ services:
         source: "{@DATA_PATH@}/jellyfin"
         target: /config
       - type: bind
-        source: "{@MEDIA_PATH@}/"
+        source: "{@MEDIA_PATH@}"
         target: /media
     ports:
       - 8096:8096
