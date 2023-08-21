@@ -3,8 +3,8 @@ services:
     image: ghcr.io/benphelps/homepage
     container_name: homepage
     environment:
-      PUID: "{@USER@}"
-      PGID: "{@GROUP@}"
+      PUID: "{@PUID@}"
+      PGID: "{@PGID@}"
     volumes:
       - type: bind
         source: "{@LOGS_PATH@}/homepage"
