@@ -15,6 +15,8 @@ services:
       - type: bind
         source: "{@MEDIA_PATH@}/files"
         target: /srv
+    networks:
+      - filebrowser
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -23,6 +25,5 @@ services:
     restart: unless-stopped
 
 networks:
-  default:
-    name: reverse-proxy
-    external: true
+  filebrowser:
+    name: filebrowser

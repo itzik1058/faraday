@@ -83,8 +83,8 @@ services:
       ## Run/install on first startup (options: update https gpu tensorflow davfs clitools clean):
       # PHOTOPRISM_INIT: "https gpu tensorflow"
       ## Run as a non-root user after initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
-      PHOTOPRISM_UID: {@PUID@}
-      PHOTOPRISM_GID: {@PGID@}
+      PHOTOPRISM_UID: "{@PUID@}"
+      PHOTOPRISM_GID: "{@PGID@}"
       PHOTOPRISM_UMASK: 0000
     ## Start as non-root user before initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
     user: "{@PUID@}:{@PGID@}"
@@ -112,6 +112,8 @@ services:
       - type: bind                  # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
         source: "{@DATA_PATH@}/photoprism/storage"
         target: /photoprism/storage
+    networks:
+      - photoprism
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -141,8 +143,9 @@ services:
   #     MARIADB_USER: "photoprism"
   #     MARIADB_PASSWORD: "insecure"
   #     MARIADB_ROOT_PASSWORD: "insecure"
+  #   networks:
+  #     - photoprism
 
 networks:
-  default:
-    name: reverse-proxy
-    external: true
+  photoprism:
+    name: photoprism

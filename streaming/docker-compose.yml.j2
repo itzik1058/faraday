@@ -18,6 +18,8 @@ services:
     #   - 8080:8080
       - 26881:6881
       - 26881:6881/udp
+    networks:
+      - qbittorrent
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -46,6 +48,9 @@ services:
         target: /data
     # ports:
     #   - 7878:7878
+    networks:
+      - radarr
+      - qbittorrent
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -75,6 +80,9 @@ services:
         target: /data
     # ports:
     #   - 8989:8989
+    networks:
+      - sonarr
+      - qbittorrent
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -99,6 +107,8 @@ services:
       - type: bind
         source: "{@DATA_PATH@}/recyclarr"
         target: /config
+    networks:
+      - recyclarr
     labels:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
@@ -117,6 +127,10 @@ services:
       - type: bind
         source: "{@DATA_PATH@}/prowlarr"
         target: /config
+    networks:
+      - prowlarr
+      - radarr
+      - sonarr
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -147,6 +161,10 @@ services:
         target: /data
     # ports:
     #   - 6767:6767
+    networks:
+      - bazarr
+      - radarr
+      - sonarr
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -179,6 +197,8 @@ services:
         target: /media
     ports:
       - 8096:8096
+    networks:
+      - jellyfin
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -201,6 +221,11 @@ services:
         target: /app/config
     # ports:
     #   - 5055:5055
+    networks:
+      - jellyseerr
+      - jellyfin
+      - radarr
+      - sonarr
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -213,6 +238,19 @@ services:
     restart: unless-stopped
 
 networks:
-  default:
-    name: reverse-proxy
-    external: true
+  qbittorrent:
+    name: qbittorrent
+  radarr:
+    name: radarr
+  sonarr:
+    name: sonarr
+  recyclarr:
+    name: recyclarr
+  prowlarr:
+    name: prowlarr
+  bazarr:
+    name: bazarr
+  jellyfin:
+    name: jellyfin
+  jellyseerr:
+    name: jellyseerr

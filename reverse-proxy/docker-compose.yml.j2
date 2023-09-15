@@ -25,6 +25,23 @@ services:
       - type: bind
         source: "{@LOGS_PATH@}/traefik"
         target: /logs
+    networks:
+      - reverse-proxy
+      - docker-socket-proxy
+      - authelia
+      # - watchtower
+      - homepage
+      - immich
+      - photoprism
+      - filebrowser
+      - qbittorrent
+      - radarr
+      - sonarr
+      - prowlarr
+      - bazarr
+      - jellyfin
+      - jellyseerr
+      - mealie
     depends_on:
       - docker-socket-proxy
       - authelia
@@ -46,6 +63,8 @@ services:
         source: /var/run/docker.sock
         target: /var/run/docker.sock
         read_only: true
+    networks:
+      - docker-socket-proxy
     labels:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
@@ -73,6 +92,8 @@ services:
       traefik.enable: true
       traefik.http.routers.authelia.rule: Host(`auth.{@DOMAIN@}`)
       traefik.http.routers.authelia.entryPoints: websecure
+    networks:
+      - authelia
     depends_on:
       - authelia-redis
     restart: unless-stopped
@@ -84,6 +105,8 @@ services:
       - type: bind
         source: "{@DATA_PATH@}/authelia/redis"
         target: /data
+    networks:
+      - authelia
     labels:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
@@ -102,11 +125,15 @@ services:
       - type: bind
         source: "{@DATA_PATH@}/duckdns"
         target: /config
+    networks:
+      - duckdns
     restart: unless-stopped
 
   # whoami:
   #   image: traefik/whoami
   #   container_name: simple-service
+  #   networks:
+  #     - whoami
   #   labels:
   #     traefik.enable: true
   #     traefik.http.routers.whoami.rule: Host(`{@DOMAIN@}`)
@@ -115,5 +142,49 @@ services:
   #   restart: unless-stopped
 
 networks:
-  default:
+  reverse-proxy:
     name: reverse-proxy
+  docker-socket-proxy:
+    name: docker-socket-proxy
+  authelia:
+    name: authelia
+  duckdns:
+    name: duckdns
+  # whoami:
+  #   name: whoami
+  homepage:
+    name: homepage
+    external: true
+  immich:
+    name: immich
+    external: true
+  photoprism:
+    name: photoprism
+    external: true
+  filebrowser:
+    name: filebrowser
+    external: true
+  qbittorrent:
+    name: qbittorrent
+    external: true
+  radarr:
+    name: radarr
+    external: true
+  sonarr:
+    name: sonarr
+    external: true
+  prowlarr:
+    name: prowlarr
+    external: true
+  bazarr:
+    name: bazarr
+    external: true
+  jellyfin:
+    name: jellyfin
+    external: true
+  jellyseerr:
+    name: jellyseerr
+    external: true
+  mealie:
+    name: mealie
+    external: true

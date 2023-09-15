@@ -15,6 +15,8 @@ services:
         source: "{@MEDIA_PATH@}/photos/immich"
         target: /usr/src/app/upload
     command: [ "start.sh", "immich" ]
+    networks:
+      - immich
     labels:
       com.centurylinklabs.watchtower.enable: true
     depends_on:
@@ -43,6 +45,8 @@ services:
         source: "{@MEDIA_PATH@}/photos/immich"
         target: /usr/src/app/upload
     command: [ "start.sh", "microservices" ]
+    networks:
+      - immich
     labels:
       com.centurylinklabs.watchtower.enable: true
     depends_on:
@@ -58,6 +62,8 @@ services:
       - type: bind
         source: "{@DATA_PATH@}/immich/ml"
         target: /cache
+    networks:
+      - immich
     labels:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
@@ -65,6 +71,8 @@ services:
   immich-web:
     image: ghcr.io/immich-app/immich-web:release
     container_name: immich-web
+    networks:
+      - immich
     labels:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
@@ -79,6 +87,8 @@ services:
       - type: bind
         source: "{@DATA_PATH@}/immich/typesense"
         target: /data
+    networks:
+      - immich
     labels:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
@@ -86,6 +96,8 @@ services:
   immich-redis:
     image: redis:6.2-alpine@sha256:70a7a5b641117670beae0d80658430853896b5ef269ccf00d1827427e3263fa3
     container_name: immich-redis
+    networks:
+      - immich
     labels:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
@@ -101,6 +113,8 @@ services:
       - type: bind
         source: "{@DATA_PATH@}/immich/database"
         target: /var/lib/postgresql/data
+    networks:
+      - immich
     labels:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
@@ -115,12 +129,13 @@ services:
       traefik.enable: true
       traefik.http.routers.immich.rule: Host(`immich.{@DOMAIN@}`)
       traefik.http.routers.immich.entrypoints: websecure
+    networks:
+      - immich
     depends_on:
       - immich-server
       - immich-web
     restart: unless-stopped
 
 networks:
-  default:
-    name: reverse-proxy
-    external: true
+  immich:
+    name: immich

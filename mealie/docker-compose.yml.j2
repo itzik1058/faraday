@@ -26,9 +26,10 @@ services:
       traefik.enable: true
       traefik.http.routers.mealie.rule: Host(`mealie.{@DOMAIN@}`)
       traefik.http.routers.mealie.entrypoints: websecure
+    networks:
+      - mealie
     restart: unless-stopped
 
 networks:
-  default:
-    name: reverse-proxy
-    external: true
+  mealie:
+    name: mealie

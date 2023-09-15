@@ -13,8 +13,10 @@ services:
         source: "{@MEDIA_PATH@}/omnibot"
         target: /omnibot
         read_only: true
+    networks:
+      - omnibot
     restart: unless-stopped
 
 networks:
-  default:
+  omnibot:
     name: omnibot

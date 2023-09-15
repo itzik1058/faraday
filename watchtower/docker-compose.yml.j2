@@ -19,6 +19,8 @@ services:
       - type: bind
         source: /var/run/docker.sock
         target: /var/run/docker.sock
+    networks:
+      - watchtower
     labels:
       traefik.enable: true
       traefik.http.routers.watchtower.rule: Host(`watchtower.{@DOMAIN@}`)
@@ -28,6 +30,5 @@ services:
     restart: unless-stopped
 
 networks:
-  default:
-    name: reverse-proxy
-    external: true
+  watchtower:
+    name: watchtower
