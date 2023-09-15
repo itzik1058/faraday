@@ -1,0 +1,16 @@
+services:
+  omnibot:
+    image: omnibot
+    container_name: omnibot
+    environment:
+      CLIENT_ID: "{@OMNIBOT_CLIENT_ID@}"
+      DISCORD_TOKEN: "{@OMNIBOT_DISCORD_TOKEN@}"
+      DATA_PATH: "/omnibot"
+      GUILD_ID: "{@OMNIBOT_GUILD_ID@}"
+      CHANNEL_ID: "{@OMNIBOT_CHANNEL_ID@}"
+    volumes:
+      - type: bind
+        source: "{@MEDIA_PATH@}/omnibot"
+        target: /omnibot
+        read_only: true
+    restart: unless-stopped
