@@ -1,0 +1,28 @@
+services:
+  filebrowser:
+    image: filebrowser/filebrowser:s6
+    container_name: filebrowser
+    environment:
+      PUID: "{@PUID@}"
+      PGID: "{@PGID@}"
+    volumes:
+      - type: bind
+        source: "{@DATA_PATH@}/filebrowser/database"
+        target: /database
+      - type: bind
+        source: "{@DATA_PATH@}/filebrowser/config"
+        target: /config
+      - type: bind
+        source: "{@MEDIA_PATH@}/files"
+        target: /srv
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.filebrowser.rule: Host(`filebrowser.spellvault.duckdns.org`)
+      traefik.http.routers.filebrowser.entryPoints: websecure
+    restart: unless-stopped
+
+networks:
+  default:
+    name: reverse-proxy
+    external: true
