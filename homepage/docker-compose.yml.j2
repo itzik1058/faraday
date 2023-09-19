@@ -24,6 +24,8 @@ services:
       - bazarr
       - jellyfin
       - jellyseerr
+      - readarr
+      - calibre
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -64,4 +66,10 @@ networks:
     external: true
   jellyseerr:
     name: jellyseerr
+    external: true
+  readarr:
+    name: readarr
+    external: true
+  calibre:
+    name: calibre
     external: true

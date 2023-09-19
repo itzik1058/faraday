@@ -15,7 +15,7 @@ services:
         source: "{@MEDIA_PATH@}"
         target: /data
     ports:
-    #   - 8080:8080
+      #   - 8080:8080
       - 26881:6881
       - 26881:6881/udp
     networks:
@@ -28,7 +28,7 @@ services:
       traefik.http.routers.qbittorrent.middlewares: authelia@file
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
     restart: unless-stopped
-  
+
   radarr:
     image: linuxserver/radarr
     container_name: radarr
@@ -60,7 +60,7 @@ services:
     depends_on:
       - qbittorrent
     restart: unless-stopped
-  
+
   sonarr:
     image: linuxserver/sonarr
     container_name: sonarr
@@ -92,7 +92,7 @@ services:
     depends_on:
       - qbittorrent
     restart: unless-stopped
-  
+
   recyclarr:
     image: ghcr.io/recyclarr/recyclarr
     container_name: recyclarr
@@ -131,6 +131,7 @@ services:
       - prowlarr
       - radarr
       - sonarr
+      - readarr
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -140,8 +141,9 @@ services:
     depends_on:
       - radarr
       - sonarr
+      - readarr
     restart: unless-stopped
-  
+
   bazarr:
     image: linuxserver/bazarr
     container_name: bazarr
@@ -175,7 +177,7 @@ services:
       - radarr
       - sonarr
     restart: unless-stopped
-  
+
   jellyfin:
     image: linuxserver/jellyfin
     container_name: jellyfin
@@ -205,7 +207,7 @@ services:
       traefik.http.routers.jellyfin.rule: Host(`jellyfin.{@DOMAIN@}`)
       traefik.http.routers.jellyfin.entryPoints: websecure
     restart: unless-stopped
-  
+
   jellyseerr:
     image: fallenbagel/jellyseerr
     container_name: jellyseerr
@@ -237,6 +239,62 @@ services:
       - sonarr
     restart: unless-stopped
 
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    environment:
+      TZ: "{@TZ@}"
+      PUID: "{@PUID@}"
+      PGID: "{@PGID@}"
+    volumes:
+      - type: bind
+        source: "{@DATA_PATH@}/readarr"
+        target: /config
+      - type: bind
+        source: "{@MEDIA_PATH@}"
+        target: /data
+    # ports:
+    #   - 8787:8787
+    networks:
+      - readarr
+      - qbittorrent
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.readarr.rule: Host(`readarr.{@DOMAIN@}`)
+      traefik.http.routers.readarr.entryPoints: websecure
+      traefik.http.routers.readarr.middlewares: authelia@file
+    depends_on:
+      - qbittorrent
+    restart: unless-stopped
+
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web:latest
+    container_name: calibre-web
+    environment:
+      TZ: "{@TZ@}"
+      PUID: "{@PUID@}"
+      PGID: "{@PGID@}"
+      DOCKER_MODS: linuxserver/mods:universal-calibre #optional
+      OAUTHLIB_RELAX_TOKEN_SCOPE: 1 #optional
+    volumes:
+      - type: bind
+        source: "{@DATA_PATH@}/calibre"
+        target: /config
+      - type: bind
+        source: "{@MEDIA_PATH@}/calibre"
+        target: /books
+    # ports:
+    #   - 8083:8083
+    networks:
+      - calibre
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.calibre.rule: Host(`calibre.{@DOMAIN@}`)
+      traefik.http.routers.calibre.entryPoints: websecure
+    restart: unless-stopped
+
 networks:
   qbittorrent:
     name: qbittorrent
@@ -254,3 +312,7 @@ networks:
     name: jellyfin
   jellyseerr:
     name: jellyseerr
+  readarr:
+    name: readarr
+  calibre:
+    name: calibre

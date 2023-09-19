@@ -41,6 +41,8 @@ services:
       - bazarr
       - jellyfin
       - jellyseerr
+      - readarr
+      - calibre
       - mealie
     depends_on:
       - docker-socket-proxy
@@ -184,6 +186,12 @@ networks:
     external: true
   jellyseerr:
     name: jellyseerr
+    external: true
+  readarr:
+    name: readarr
+    external: true
+  calibre:
+    name: calibre
     external: true
   mealie:
     name: mealie
