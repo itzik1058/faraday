@@ -1,0 +1,63 @@
+services:
+  rallly:
+    image: lukevella/rallly:latest
+    container_name: rallly
+    environment:
+      DATABASE_URL: postgres://rallly:{@RALLLY_DB_PASSWORD@}@rallly-db:5432/rallly
+      # A random 32-character secret key used to encrypt user sessions
+      SECRET_PASSWORD: "{@RALLLY_SECRET@}"
+      NEXT_PUBLIC_BASE_URL: "https://rallly.{@DOMAIN@}"
+      # Comma separated list of email addresses that are allowed to register and login.
+      # You can use wildcard syntax to match a range of email addresses.
+      # Example: "john@example.com,jane@example.com" or "*@example.com"
+      ALLOWED_EMAILS: ""
+      # The email address that will be used to send emails. If not set, SUPPORT_EMAIL will be used instead.
+      NOREPLY_EMAIL: ""
+      # The email of whoever is managing this instance in case a user needs support.
+      SUPPORT_EMAIL: ""
+      # The host address of your SMTP server
+      SMTP_HOST: ""
+      # The port of your SMTP server
+      SMTP_PORT: 587
+      # Set to "true" if SSL is enabled for your SMTP connection
+      SMTP_SECURE: ""
+      # The username (if auth is enabled on your SMTP server)
+      SMTP_USER: ""
+      # The password (if auth is enabled on your SMTP server)
+      SMTP_PWD: ""
+    networks:
+      - rallly
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.rallly.rule: Host(`rallly.{@DOMAIN@}`)
+      traefik.http.routers.rallly.entrypoints: websecure
+    depends_on:
+      - rallly-db
+    restart: unless-stopped
+
+  rallly-db:
+    image: postgres:14.2
+    container_name: rallly-db
+    environment:
+      POSTGRES_USER: rallly
+      POSTGRES_PASSWORD: "{@RALLLY_DB_PASSWORD@}"
+      POSTGRES_DB: rallly
+    volumes:
+      - type: bind
+        source: "{@DATA_PATH@}/rallly"
+        target: /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rallly
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+networks:
+  rallly:
+    name: rallly

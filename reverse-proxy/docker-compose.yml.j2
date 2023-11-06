@@ -44,6 +44,7 @@ services:
       - readarr
       - calibre
       - mealie
+      - rallly
       - stirling-pdf
     depends_on:
       - docker-socket-proxy
@@ -196,6 +197,9 @@ networks:
     external: true
   mealie:
     name: mealie
+    external: true
+  rallly:
+    name: rallly
     external: true
   stirling-pdf:
     name: stirling-pdf
