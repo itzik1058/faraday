@@ -1,0 +1,55 @@
+services:
+  speedtest-tracker:
+    image: ghcr.io/alexjustesen/speedtest-tracker
+    container_name: speedtest-tracker
+    environment:
+      TZ: "{@TZ@}"
+      PUID: "{@PUID@}"
+      PGID: "{@PGID@}"
+      DB_CONNECTION: pgsql
+      DB_HOST: speedtest-db
+      DB_PORT: 5432
+      DB_DATABASE: "{@SPEEDTEST_DB_DATABASE@}"
+      DB_USERNAME: "{@SPEEDTEST_DB_USERNAME@}"
+      DB_PASSWORD: "{@SPEEDTEST_DB_PASSWORD@}"
+      TELEGRAM_BOT_TOKEN: "{@TELEGRAM_BOT_TOKEN@}"
+    volumes:
+      - type: bind
+        source: "{@DATA_PATH@}/speedtest-tracker/config"
+        target: /config
+    # ports:
+    #   - "8080:80"
+    #   - "8443:443"
+    networks:
+      - speedtest
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.speedtest.rule: Host(`speedtest.{@DOMAIN@}`)
+      traefik.http.routers.speedtest.entryPoints: websecure
+      traefik.http.routers.speedtest.middlewares: authelia@file
+      traefik.http.services.speedtest.loadbalancer.server.port: 443
+    depends_on:
+      - speedtest-db
+    restart: unless-stopped
+
+  speedtest-db:
+    image: postgres:15
+    container_name: speedtest-db
+    environment:
+      POSTGRES_DB: "{@SPEEDTEST_DB_DATABASE@}"
+      POSTGRES_USER: "{@SPEEDTEST_DB_USERNAME@}"
+      POSTGRES_PASSWORD: "{@SPEEDTEST_DB_PASSWORD@}"
+    volumes:
+      - type: bind
+        source: "{@DATA_PATH@}/speedtest-tracker/data"
+        target: /var/lib/postgresql/data
+    networks:
+      - speedtest
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+networks:
+  speedtest:
+    name: speedtest
