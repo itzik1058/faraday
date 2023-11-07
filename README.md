@@ -30,7 +30,7 @@ Clone this repository then rename `.env.example` to `.env` and fill the variable
 | `IMMICH_DB_PASSWORD`              | Database password                                                                     |
 | `IMMICH_TYPESENSE_API_KEY`        | Typesense API key                                                                     |
 |                                   |                                                                                       |
-| `RALLLY_SECRET`                   | Rallly secret token                                                                   |
+| `RALLLY_SECRET`                   | Rallly secret token (16 characters)                                                   |
 | `RALLLY_DB_PASSWORD`              | Rallly database password                                                              |
 |                                   |                                                                                       |
 | `OMNIBOT_CLIENT_ID`               | Discord client id                                                                     |
