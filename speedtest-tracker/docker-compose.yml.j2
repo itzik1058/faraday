@@ -6,6 +6,8 @@ services:
       TZ: "{@TZ@}"
       PUID: "{@PUID@}"
       PGID: "{@PGID@}"
+      # APP_DEBUG: true
+      APP_KEY: "{@SPEEDTEST_KEY@}"
       DB_CONNECTION: pgsql
       DB_HOST: speedtest-db
       DB_PORT: 5432
@@ -21,14 +23,14 @@ services:
     #   - "8080:80"
     #   - "8443:443"
     networks:
-      - speedtest
+      - speedtest-tracker
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
       traefik.http.routers.speedtest.rule: Host(`speedtest.{@DOMAIN@}`)
       traefik.http.routers.speedtest.entryPoints: websecure
       traefik.http.routers.speedtest.middlewares: authelia@file
-      traefik.http.services.speedtest.loadbalancer.server.port: 443
+      traefik.http.services.speedtest.loadbalancer.server.port: 80
     depends_on:
       - speedtest-db
     restart: unless-stopped
@@ -45,11 +47,11 @@ services:
         source: "{@DATA_PATH@}/speedtest-tracker/data"
         target: /var/lib/postgresql/data
     networks:
-      - speedtest
+      - speedtest-tracker
     labels:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
 
 networks:
-  speedtest:
-    name: speedtest
+  speedtest-tracker:
+    name: speedtest-tracker

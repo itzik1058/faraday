@@ -35,6 +35,11 @@ Clone this repository then rename `.env.example` to `.env` and fill the variable
 |                                   |                                                                                       |
 | `PAPERLESS_SECRET_KEY`            | Paperless secret                                                                      |
 |                                   |                                                                                       |
+| `SPEEDTEST_KEY`                   | Generate with `php artisan key:generate --show` in the speedtest-tracker container    |
+| `SPEEDTEST_DB_DATABASE`           | Speedtest database schema                                                             |
+| `SPEEDTEST_DB_USERNAME`           | Speedtest database username                                                           |
+| `SPEEDTEST_DB_PASSWORD`           | Speedtest database password                                                           |
+|                                   |                                                                                       |
 | `RALLLY_SECRET`                   | Rallly secret token (16 characters)                                                   |
 | `RALLLY_DB_PASSWORD`              | Rallly database password                                                              |
 |                                   |                                                                                       |
