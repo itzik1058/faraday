@@ -2,11 +2,14 @@
 
 Clone this repository then rename `.env.example` to `.env` and fill the variables.
 
-| Environment Variable | Description                                                                                        |
-| --------------------              | ------------------------------------------------------------------------------------- |
+| Environment Variable              | Description                                                                           |
+| --------------------------------- | ------------------------------------------------------------------------------------- |
 | `LOGS_PATH`                       | Path to logs directory                                                                |
 | `DATA_PATH`                       | Path to service config and data directory                                             |
 | `MEDIA_PATH`                      | Path to media/photos/documents directory                                              |
+|                                   |                                                                                       |
+| `RESTIC_REPOSITORY`               | Path to restic backup repository                                                      |
+| `RESTIC_PASSWORD`                 | Password for restic repository                                                        |
 |                                   |                                                                                       |
 | `TZ`                              | Timezone used by docker services https://man7.org/linux/man-pages/man5/tzfile.5.html  |
 | `PUID`                            | User id used by docker services (use `id -u` to find your user id)                    |
@@ -47,6 +50,11 @@ Passwords and secrets which are not provided by external services (i.e. DuckDNS,
 Install the python requirements listed in `requirements.txt` and run `python render.py` to create the `docker-compose.yml` files.
 
 Proceed to start the services with `docker compose up -d` and create missing directories as necessary.
+
+## Backup
+Initiate a restic repository, then update the environment variables with the path and password.
+
+Run `backup.sh` to stop the docker service, backup, and restart docker.
 
 ## DuckDNS
 
