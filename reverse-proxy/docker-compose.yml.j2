@@ -33,6 +33,7 @@ services:
       - homepage
       - immich
       - photoprism
+      - paperless-ngx
       - filebrowser
       - qbittorrent
       - radarr
@@ -164,6 +165,9 @@ networks:
     external: true
   photoprism:
     name: photoprism
+    external: true
+  paperless-ngx:
+    name: paperless-ngx
     external: true
   filebrowser:
     name: filebrowser
