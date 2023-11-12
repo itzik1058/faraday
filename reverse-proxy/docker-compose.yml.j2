@@ -48,6 +48,7 @@ services:
       - mealie
       - rallly
       - stirling-pdf
+      - microbin
     depends_on:
       - docker-socket-proxy
       - authelia
@@ -211,4 +212,7 @@ networks:
     external: true
   stirling-pdf:
     name: stirling-pdf
+    external: true
+  microbin:
+    name: microbin
     external: true

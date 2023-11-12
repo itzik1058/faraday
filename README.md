@@ -43,6 +43,9 @@ Clone this repository then rename `.env.example` to `.env` and fill the variable
 | `RALLLY_SECRET`                   | Rallly secret token (16 characters)                                                   |
 | `RALLLY_DB_PASSWORD`              | Rallly database password                                                              |
 |                                   |                                                                                       |
+| `MICROBIN_ADMIN_USERNAME`         | Microbin admin username                                                               |
+| `MICROBIN_ADMIN_PASSWORD`         | Microbin admin password                                                               |
+|                                   |                                                                                       |
 | `OMNIBOT_CLIENT_ID`               | Discord client id                                                                     |
 | `OMNIBOT_DISCORD_TOKEN`           | Discord token                                                                         |
 | `OMNIBOT_GUILD_ID`                | Discord guild id                                                                      |
