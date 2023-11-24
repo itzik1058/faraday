@@ -17,8 +17,13 @@ services:
     command: [ "start.sh", "immich" ]
     networks:
       - immich
+    # ports:
+    #   - 2283:3001
     labels:
       com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.immich.rule: Host(`immich.{@DOMAIN@}`)
+      traefik.http.routers.immich.entrypoints: websecure
     depends_on:
       - immich-redis
       - immich-postgres
@@ -68,15 +73,6 @@ services:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
 
-  immich-web:
-    image: ghcr.io/immich-app/immich-web:release
-    container_name: immich-web
-    networks:
-      - immich
-    labels:
-      com.centurylinklabs.watchtower.enable: true
-    restart: unless-stopped
-
   immich-typesense:
     container_name: immich-typesense
     image: typesense/typesense:0.24.1@sha256:9bcff2b829f12074426ca044b56160ca9d777a0c488303469143dd9f8259d4dd
@@ -117,23 +113,6 @@ services:
       - immich
     labels:
       com.centurylinklabs.watchtower.enable: true
-    restart: unless-stopped
-
-  immich-proxy:
-    image: ghcr.io/immich-app/immich-proxy:release
-    container_name: immich-proxy
-    # ports:
-    #   - 2283:8080
-    labels:
-      com.centurylinklabs.watchtower.enable: true
-      traefik.enable: true
-      traefik.http.routers.immich.rule: Host(`immich.{@DOMAIN@}`)
-      traefik.http.routers.immich.entrypoints: websecure
-    networks:
-      - immich
-    depends_on:
-      - immich-server
-      - immich-web
     restart: unless-stopped
 
 networks:
