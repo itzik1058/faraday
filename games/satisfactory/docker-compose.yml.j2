@@ -1,0 +1,27 @@
+services:
+  satisfactory-server:
+    image: wolveix/satisfactory-server:latest
+    container_name: satisfactory-server
+    environment:
+      PUID: "{@PUID@}"
+      PGID: "{@PGID@}"
+      STEAMBETA: false
+      MAXPLAYERS: 8
+    ports:
+      - 7777:7777/udp
+      - 15000:15000/udp
+      - 15777:15777/udp
+    volumes:
+      - type: bind
+        source: "{@DATA_PATH@}/satisfactory"
+        target: /config
+      - type: bind
+        source: "{@MEDIA_PATH@}/games/satisfactory"
+        target: /config/saved
+    networks:
+      - satisfactory
+    restart: unless-stopped
+
+networks:
+  satisfactory:
+    name: satisfactory
