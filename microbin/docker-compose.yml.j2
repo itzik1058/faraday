@@ -40,12 +40,12 @@ services:
       MICROBIN_ENCRYPTION_SERVER_SIDE: true
       MICROBIN_MAX_FILE_SIZE_ENCRYPTED_MB: 256
       MICROBIN_MAX_FILE_SIZE_UNENCRYPTED_MB: 2048
-    networks:
-      - microbin
     volumes:
       - type: bind
         source: "{@MEDIA_PATH@}/microbin"
         target: /app/microbin_data
+    networks:
+      - microbin
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
