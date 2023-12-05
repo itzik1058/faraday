@@ -49,6 +49,7 @@ services:
       - rallly
       - stirling-pdf
       - microbin
+      - wger
     depends_on:
       - docker-socket-proxy
       - authelia
@@ -215,4 +216,7 @@ networks:
     external: true
   microbin:
     name: microbin
+    external: true
+  wger:
+    name: wger
     external: true

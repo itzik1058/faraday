@@ -46,6 +46,10 @@ Clone this repository then rename `.env.example` to `.env` and fill the variable
 | `MICROBIN_ADMIN_USERNAME`         | Microbin admin username                                                               |
 | `MICROBIN_ADMIN_PASSWORD`         | Microbin admin password                                                               |
 |                                   |                                                                                       |
+| `WGER_SECRET_KEY`                 | WGER secret key                                                                       |
+| `WGER_JWT_KEY`                    | WGER JWT secret                                                                       |
+| `WGER_DB_PASSWORD`                | WGER database password                                                                |
+|                                   |                                                                                       |
 | `OMNIBOT_CLIENT_ID`               | Discord client id                                                                     |
 | `OMNIBOT_DISCORD_TOKEN`           | Discord token                                                                         |
 | `OMNIBOT_GUILD_ID`                | Discord guild id                                                                      |
