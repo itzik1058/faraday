@@ -26,6 +26,7 @@ services:
       - jellyseerr
       - readarr
       - calibre
+      - mealie
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -72,4 +73,7 @@ networks:
     external: true
   calibre:
     name: calibre
+    external: true
+  mealie:
+    name: mealie
     external: true
