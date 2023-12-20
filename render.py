@@ -1,6 +1,7 @@
-from jinja2 import Environment, FileSystemLoader
-from dotenv import dotenv_values
 from pathlib import Path
+
+from dotenv import dotenv_values
+from jinja2 import Environment, FileSystemLoader
 
 if __name__ == "__main__":
     env = Environment(
@@ -9,6 +10,7 @@ if __name__ == "__main__":
         variable_end_string="@}",
     )
     variables = dotenv_values()
+    variables = {key: value.replace("$", "$$") for key, value in variables.items()}
     for path in Path().rglob("*.j2"):
         template = env.get_template(str(path))
         rendered = template.render(**variables)
