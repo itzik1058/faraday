@@ -31,7 +31,6 @@ Clone this repository then rename `.env.example` to `.env` and fill the variable
 | `TELEGRAM_CHAT_ID`                | Telegram chat id                                                                      |
 |                                   |                                                                                       |
 | `IMMICH_DB_PASSWORD`              | Database password                                                                     |
-| `IMMICH_TYPESENSE_API_KEY`        | Typesense API key                                                                     |
 |                                   |                                                                                       |
 | `PAPERLESS_SECRET_KEY`            | Paperless secret                                                                      |
 |                                   |                                                                                       |

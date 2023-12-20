@@ -3,8 +3,6 @@ services:
     image: ghcr.io/immich-app/immich-server:release
     container_name: immich-server
     environment:
-      TYPESENSE_HOST: "immich-typesense"
-      TYPESENSE_API_KEY: "{@IMMICH_TYPESENSE_API_KEY@}"
       DB_HOSTNAME: "immich-postgres"
       DB_DATABASE_NAME: "immich"
       DB_USERNAME: "postgres"
@@ -27,7 +25,6 @@ services:
     depends_on:
       - immich-redis
       - immich-postgres
-      - immich-typesense
     restart: unless-stopped
 
   immich-microservices:
@@ -35,8 +32,6 @@ services:
     image: ghcr.io/immich-app/immich-server:release
     environment:
       TZ: "{@TZ@}"
-      TYPESENSE_HOST: "immich-typesense"
-      TYPESENSE_API_KEY: "{@IMMICH_TYPESENSE_API_KEY@}"
       DB_HOSTNAME: "immich-postgres"
       DB_DATABASE_NAME: "immich"
       DB_USERNAME: "postgres"
@@ -57,7 +52,6 @@ services:
     depends_on:
       - immich-redis
       - immich-postgres
-      - immich-typesense
     restart: unless-stopped
 
   immich-machine-learning:
@@ -67,22 +61,6 @@ services:
       - type: bind
         source: "{@DATA_PATH@}/immich/ml"
         target: /cache
-    networks:
-      - immich
-    labels:
-      com.centurylinklabs.watchtower.enable: true
-    restart: unless-stopped
-
-  immich-typesense:
-    container_name: immich-typesense
-    image: typesense/typesense:0.24.1@sha256:9bcff2b829f12074426ca044b56160ca9d777a0c488303469143dd9f8259d4dd
-    environment:
-      TYPESENSE_API_KEY: "{@IMMICH_TYPESENSE_API_KEY@}"
-      TYPESENSE_DATA_DIR: "/data"
-    volumes:
-      - type: bind
-        source: "{@DATA_PATH@}/immich/typesense"
-        target: /data
     networks:
       - immich
     labels:
@@ -99,7 +77,7 @@ services:
     restart: unless-stopped
 
   immich-postgres:
-    image: postgres:14-alpine@sha256:28407a9961e76f2d285dc6991e8e48893503cc3836a4755bbc2d40bcc272a441
+    image: tensorchord/pgvecto-rs:pg14-v0.1.11
     container_name: immich-postgres
     environment:
       POSTGRES_PASSWORD: "{@IMMICH_DB_PASSWORD@}"
