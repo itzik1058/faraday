@@ -36,15 +36,7 @@ services:
       - paperless-ngx
       - speedtest-tracker
       - filebrowser
-      - qbittorrent
-      - radarr
-      - sonarr
-      - prowlarr
-      - bazarr
-      - jellyfin
-      - jellyseerr
-      - readarr
-      - calibre
+      - streaming
       - mealie
       - rallly
       - stirling-pdf
@@ -178,32 +170,8 @@ networks:
   filebrowser:
     name: filebrowser
     external: true
-  qbittorrent:
-    name: qbittorrent
-    external: true
-  radarr:
-    name: radarr
-    external: true
-  sonarr:
-    name: sonarr
-    external: true
-  prowlarr:
-    name: prowlarr
-    external: true
-  bazarr:
-    name: bazarr
-    external: true
-  jellyfin:
-    name: jellyfin
-    external: true
-  jellyseerr:
-    name: jellyseerr
-    external: true
-  readarr:
-    name: readarr
-    external: true
-  calibre:
-    name: calibre
+  streaming:
+    name: streaming
     external: true
   mealie:
     name: mealie
