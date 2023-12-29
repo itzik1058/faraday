@@ -9,10 +9,10 @@ services:
       MAXPLAYERS: 8
     volumes:
       - type: bind
-        source: "{@DATA_PATH@}/satisfactory"
+        source: "{@APP_DATA_PATH@}/satisfactory"
         target: /config
       - type: bind
-        source: "{@MEDIA_PATH@}/games/satisfactory"
+        source: "{@USER_DATA_PATH@}/games/satisfactory"
         target: /config/saved
     networks:
       - satisfactory

@@ -17,7 +17,7 @@ services:
       TELEGRAM_BOT_TOKEN: "{@TELEGRAM_BOT_TOKEN@}"
     volumes:
       - type: bind
-        source: "{@DATA_PATH@}/speedtest-tracker/config"
+        source: "{@APP_DATA_PATH@}/speedtest-tracker/config"
         target: /config
     # ports:
     #   - "8080:80"
@@ -44,7 +44,7 @@ services:
       POSTGRES_PASSWORD: "{@SPEEDTEST_DB_PASSWORD@}"
     volumes:
       - type: bind
-        source: "{@DATA_PATH@}/speedtest-tracker/data"
+        source: "{@APP_DATA_PATH@}/speedtest-tracker/data"
         target: /var/lib/postgresql/data
     networks:
       - speedtest-tracker

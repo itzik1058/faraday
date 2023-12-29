@@ -7,13 +7,13 @@ services:
       PGID: "{@PGID@}"
     volumes:
       - type: bind
-        source: "{@DATA_PATH@}/filebrowser/database"
+        source: "{@APP_DATA_PATH@}/filebrowser/database"
         target: /database
       - type: bind
-        source: "{@DATA_PATH@}/filebrowser/config"
+        source: "{@APP_DATA_PATH@}/filebrowser/config"
         target: /config
       - type: bind
-        source: "{@MEDIA_PATH@}/files"
+        source: "{@USER_DATA_PATH@}/files"
         target: /srv
     ports:
       - 26713:80

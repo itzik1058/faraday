@@ -9,10 +9,10 @@ services:
       WEBUI_PORT: 8080
     volumes:
       - type: bind
-        source: "{@DATA_PATH@}/qbittorrent"
+        source: "{@APP_DATA_PATH@}/qbittorrent"
         target: /config
       - type: bind
-        source: "{@MEDIA_PATH@}"
+        source: "{@USER_DATA_PATH@}"
         target: /data
     ports:
       #   - 8080:8080
@@ -38,13 +38,13 @@ services:
       PGID: "{@PGID@}"
     volumes:
       - type: bind
-        source: "{@LOGS_PATH@}/radarr"
+        source: "{@APP_LOG_PATH@}/radarr"
         target: /config/logs
       - type: bind
-        source: "{@DATA_PATH@}/radarr"
+        source: "{@APP_DATA_PATH@}/radarr"
         target: /config
       - type: bind
-        source: "{@MEDIA_PATH@}"
+        source: "{@USER_DATA_PATH@}"
         target: /data
     # ports:
     #   - 7878:7878
@@ -69,13 +69,13 @@ services:
       PGID: "{@PGID@}"
     volumes:
       - type: bind
-        source: "{@LOGS_PATH@}/sonarr"
+        source: "{@APP_LOG_PATH@}/sonarr"
         target: /config/logs
       - type: bind
-        source: "{@DATA_PATH@}/sonarr"
+        source: "{@APP_DATA_PATH@}/sonarr"
         target: /config
       - type: bind
-        source: "{@MEDIA_PATH@}"
+        source: "{@USER_DATA_PATH@}"
         target: /data
     # ports:
     #   - 8989:8989
@@ -100,10 +100,10 @@ services:
       RECYCLARR_CREATE_CONFIG: true
     volumes:
       - type: bind
-        source: "{@LOGS_PATH@}/recyclarr"
+        source: "{@APP_LOG_PATH@}/recyclarr"
         target: /config/logs
       - type: bind
-        source: "{@DATA_PATH@}/recyclarr"
+        source: "{@APP_DATA_PATH@}/recyclarr"
         target: /config
     networks:
       - streaming
@@ -120,10 +120,10 @@ services:
       PGID: "{@PGID@}"
     volumes:
       - type: bind
-        source: "{@LOGS_PATH@}/prowlarr"
+        source: "{@APP_LOG_PATH@}/prowlarr"
         target: /config/logs
       - type: bind
-        source: "{@DATA_PATH@}/prowlarr"
+        source: "{@APP_DATA_PATH@}/prowlarr"
         target: /config
     networks:
       - streaming
@@ -148,13 +148,13 @@ services:
       PGID: "{@PGID@}"
     volumes:
       - type: bind
-        source: "{@LOGS_PATH@}/bazarr"
+        source: "{@APP_LOG_PATH@}/bazarr"
         target: /config/log
       - type: bind
-        source: "{@DATA_PATH@}/bazarr"
+        source: "{@APP_DATA_PATH@}/bazarr"
         target: /config
       - type: bind
-        source: "{@MEDIA_PATH@}"
+        source: "{@USER_DATA_PATH@}"
         target: /data
     # ports:
     #   - 6767:6767
@@ -182,13 +182,13 @@ services:
       - /dev/dri:/dev/dri
     volumes:
       - type: bind
-        source: "{@LOGS_PATH@}/jellyfin"
+        source: "{@APP_LOG_PATH@}/jellyfin"
         target: /config/log
       - type: bind
-        source: "{@DATA_PATH@}/jellyfin"
+        source: "{@APP_DATA_PATH@}/jellyfin"
         target: /config
       - type: bind
-        source: "{@MEDIA_PATH@}"
+        source: "{@USER_DATA_PATH@}"
         target: /media
     ports:
       - 8096:8096
@@ -209,10 +209,10 @@ services:
       LOG_LEVEL: debug
     volumes:
       - type: bind
-        source: "{@LOGS_PATH@}/jellyseerr"
+        source: "{@APP_LOG_PATH@}/jellyseerr"
         target: /app/config/logs
       - type: bind
-        source: "{@DATA_PATH@}/jellyseerr"
+        source: "{@APP_DATA_PATH@}/jellyseerr"
         target: /app/config
     # ports:
     #   - 5055:5055
@@ -238,10 +238,10 @@ services:
       PGID: "{@PGID@}"
     volumes:
       - type: bind
-        source: "{@DATA_PATH@}/readarr"
+        source: "{@APP_DATA_PATH@}/readarr"
         target: /config
       - type: bind
-        source: "{@MEDIA_PATH@}"
+        source: "{@USER_DATA_PATH@}"
         target: /data
     # ports:
     #   - 8787:8787
@@ -268,10 +268,10 @@ services:
       OAUTHLIB_RELAX_TOKEN_SCOPE: 1 #optional
     volumes:
       - type: bind
-        source: "{@DATA_PATH@}/calibre"
+        source: "{@APP_DATA_PATH@}/calibre"
         target: /config
       - type: bind
-        source: "{@MEDIA_PATH@}/calibre"
+        source: "{@USER_DATA_PATH@}/calibre"
         target: /books
     # ports:
     #   - 8083:8083

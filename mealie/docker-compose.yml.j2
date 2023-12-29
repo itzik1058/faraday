@@ -19,7 +19,7 @@ services:
     #   - 9925:80
     volumes:
       - type: bind
-        source: "{@DATA_PATH@}/mealie"
+        source: "{@APP_DATA_PATH@}/mealie"
         target: /app/data
     labels:
       com.centurylinklabs.watchtower.enable: true

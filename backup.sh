@@ -5,8 +5,8 @@ source .env
 export RESTIC_PASSWORD=$RESTIC_PASSWORD
 systemctl stop docker
 sudo -E restic -r $RESTIC_REPOSITORY --verbose backup \
-	--exclude $MEDIA_PATH/downloads \
-	--exclude $MEDIA_PATH/media/tv \
-	--exclude $MEDIA_PATH/media/movies \
-	$MEDIA_PATH $DATA_PATH
+	--exclude $USER_DATA_PATH/downloads \
+	--exclude $USER_DATA_PATH/media/tv \
+	--exclude $USER_DATA_PATH/media/movies \
+	$USER_DATA_PATH $APP_DATA_PATH
 systemctl start docker

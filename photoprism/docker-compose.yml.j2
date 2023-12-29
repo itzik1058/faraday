@@ -103,14 +103,14 @@ services:
     volumes:
       # "/host/folder:/photoprism/folder"                # Example
       - type: bind               # Original media files (DO NOT REMOVE)
-        source: "{@MEDIA_PATH@}/photos/originals"
+        source: "{@USER_DATA_PATH@}/photos/originals"
         target: /photoprism/originals
       # - "/example/family:/photoprism/originals/family" # *Additional* media folders can be mounted like this
       - type: bind                  # *Optional* base folder from which files can be imported to originals
-        source: "{@MEDIA_PATH@}/photos/import"
+        source: "{@USER_DATA_PATH@}/photos/import"
         target: /photoprism/import
       - type: bind                  # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
-        source: "{@DATA_PATH@}/photoprism/storage"
+        source: "{@APP_DATA_PATH@}/photoprism/storage"
         target: /photoprism/storage
     networks:
       - photoprism

@@ -7,10 +7,10 @@ services:
       PGID: "{@PGID@}"
     volumes:
       - type: bind
-        source: "{@LOGS_PATH@}/homepage"
+        source: "{@APP_LOG_PATH@}/homepage"
         target: /app/config/logs
       - type: bind
-        source: "{@DATA_PATH@}/homepage"
+        source: "{@APP_DATA_PATH@}/homepage"
         target: /app/config
     networks:
       - homepage

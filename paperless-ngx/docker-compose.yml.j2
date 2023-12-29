@@ -16,16 +16,16 @@ services:
       #PAPERLESS_STATIC_URL: /PATHPREFIX/static/ # trailing slash required
     volumes:
       - type: bind
-        source: "{@DATA_PATH@}/paperless/data"
+        source: "{@APP_DATA_PATH@}/paperless/data"
         target: /usr/src/paperless/data
       - type: bind
-        source: "{@MEDIA_PATH@}/documents/media"
+        source: "{@USER_DATA_PATH@}/documents/media"
         target: /usr/src/paperless/media
       - type: bind
-        source: "{@MEDIA_PATH@}/documents/export"
+        source: "{@USER_DATA_PATH@}/documents/export"
         target: /usr/src/paperless/export
       - type: bind
-        source: "{@MEDIA_PATH@}/documents/consume"
+        source: "{@USER_DATA_PATH@}/documents/consume"
         target: /usr/src/paperless/consume
     healthcheck:
       test:
@@ -50,7 +50,7 @@ services:
     container_name: paperless-redis
     volumes:
       - type: bind
-        source: "{@DATA_PATH@}/paperless/cache"
+        source: "{@APP_DATA_PATH@}/paperless/cache"
         target: /data
     networks:
       - paperless-ngx

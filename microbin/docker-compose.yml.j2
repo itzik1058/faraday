@@ -42,7 +42,7 @@ services:
       MICROBIN_MAX_FILE_SIZE_UNENCRYPTED_MB: 2048
     volumes:
       - type: bind
-        source: "{@MEDIA_PATH@}/microbin"
+        source: "{@USER_DATA_PATH@}/microbin"
         target: /app/microbin_data
     networks:
       - microbin

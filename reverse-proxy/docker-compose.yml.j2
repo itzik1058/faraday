@@ -20,10 +20,10 @@ services:
         target: /config
         read_only: true
       - type: bind
-        source: "{@DATA_PATH@}/traefik/letsencrypt"
+        source: "{@APP_DATA_PATH@}/traefik/letsencrypt"
         target: /letsencrypt
       - type: bind
-        source: "{@LOGS_PATH@}/traefik"
+        source: "{@APP_LOG_PATH@}/traefik"
         target: /logs
     networks:
       - reverse-proxy
@@ -82,10 +82,10 @@ services:
         target: /config
         read_only: true
       - type: bind
-        source: "{@DATA_PATH@}/authelia"
+        source: "{@APP_DATA_PATH@}/authelia"
         target: /data
       - type: bind
-        source: "{@LOGS_PATH@}/authelia"
+        source: "{@APP_LOG_PATH@}/authelia"
         target: /logs
     labels:
       com.centurylinklabs.watchtower.enable: true
@@ -103,7 +103,7 @@ services:
     container_name: authelia-redis
     volumes:
       - type: bind
-        source: "{@DATA_PATH@}/authelia/redis"
+        source: "{@APP_DATA_PATH@}/authelia/redis"
         target: /data
     networks:
       - authelia
@@ -123,7 +123,7 @@ services:
       LOG_FILE: false
     volumes:
       - type: bind
-        source: "{@DATA_PATH@}/duckdns"
+        source: "{@APP_DATA_PATH@}/duckdns"
         target: /config
     networks:
       - duckdns

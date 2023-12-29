@@ -4,7 +4,7 @@ services:
     container_name: stirling-pdf
     volumes:
       - type: bind
-        source: "{@DATA_PATH@}/stirling-pdf"
+        source: "{@APP_DATA_PATH@}/stirling-pdf"
         target: /configs
     networks:
       - stirling-pdf

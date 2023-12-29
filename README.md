@@ -4,9 +4,9 @@ Clone this repository then rename `.env.example` to `.env` and fill the variable
 
 | Environment Variable              | Description                                                                           |
 | --------------------------------- | ------------------------------------------------------------------------------------- |
-| `LOGS_PATH`                       | Path to logs directory                                                                |
-| `DATA_PATH`                       | Path to service config and data directory                                             |
-| `MEDIA_PATH`                      | Path to media/photos/documents directory                                              |
+| `APP_LOG_PATH`                    | Path to logs directory                                                                |
+| `APP_DATA_PATH`                   | Path to service config and data directory                                             |
+| `USER_DATA_PATH`                  | Path to media/photos/documents directory                                              |
 |                                   |                                                                                       |
 | `RESTIC_REPOSITORY`               | Path to restic backup repository                                                      |
 | `RESTIC_PASSWORD`                 | Password for restic repository                                                        |
@@ -73,7 +73,7 @@ DuckDNS provides a free subdomain of `duckdns.org`. Create an account and choose
 
 ## Authelia
 
-Authelia configuration defaults to using `users.yml` in `$DATA_PATH/authelia`.
+Authelia configuration defaults to using `users.yml` in `$APP_DATA_PATH/authelia`.
 
 This behavior can be changed in the template at `reverse-proxy/authelia/configuration.yml.j2`.
 
