@@ -1,6 +1,4 @@
 services:
-  # Traefik
-
   traefik:
     image: traefik:v2.10
     container_name: traefik
@@ -131,9 +129,9 @@ services:
 
   # whoami:
   #   image: traefik/whoami
-  #   container_name: simple-service
+  #   container_name: whoami
   #   networks:
-  #     - whoami
+  #     - reverse-proxy
   #   labels:
   #     traefik.enable: true
   #     traefik.http.routers.whoami.rule: Host(`{@DOMAIN@}`)
@@ -150,8 +148,6 @@ networks:
     name: authelia
   duckdns:
     name: duckdns
-  # whoami:
-  #   name: whoami
   homepage:
     name: homepage
     external: true
