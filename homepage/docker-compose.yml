@@ -2,15 +2,14 @@ services:
   homepage:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage
-    environment:
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
+    env_file:
+      - ../.env
     volumes:
       - type: bind
-        source: "{@APP_LOG_PATH@}/homepage"
+        source: ${APP_LOG_PATH}/homepage
         target: /app/config/logs
       - type: bind
-        source: "{@APP_DATA_PATH@}/homepage"
+        source: ${APP_DATA_PATH}/homepage
         target: /app/config
     networks:
       - homepage
@@ -22,26 +21,20 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.homepage.rule: Host(`{@DOMAIN@}`)
+      traefik.http.routers.homepage.rule: Host(`${DOMAIN}`)
       traefik.http.routers.homepage.entrypoints: websecure
       traefik.http.routers.homepage.middlewares: authelia@file
     restart: unless-stopped
 
 networks:
   homepage:
-    name: homepage
   watchtower:
-    name: watchtower
     external: true
   immich:
-    name: immich
     external: true
   photoprism:
-    name: photoprism
     external: true
   streaming:
-    name: streaming
     external: true
   mealie:
-    name: mealie
     external: true

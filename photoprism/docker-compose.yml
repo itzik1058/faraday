@@ -43,11 +43,12 @@ services:
       - apparmor:unconfined
     # ports:
     #   - "2342:2342" # HTTP port (host:container)
+    env_file:
+      - ../.env
+      - .env
     environment:
-      PHOTOPRISM_ADMIN_USER: "admin"                 # admin login username
-      PHOTOPRISM_ADMIN_PASSWORD: "insecure"          # initial admin password (8-72 characters)
       PHOTOPRISM_AUTH_MODE: "password"               # authentication mode (public, password)
-      PHOTOPRISM_SITE_URL: "https://photoprism.{@DOMAIN@}/"  # server URL in the format "http(s)://domain.name(:port)/(path)"
+      PHOTOPRISM_SITE_URL: https://photoprism.${DOMAIN}/  # server URL in the format "http(s)://domain.name(:port)/(path)"
       PHOTOPRISM_DISABLE_TLS: "false"                # disables HTTPS/TLS even if the site URL starts with https:// and a certificate is available
       PHOTOPRISM_DEFAULT_TLS: "true"                 # defaults to a self-signed HTTPS/TLS certificate if no other certificate is available
       PHOTOPRISM_ORIGINALS_LIMIT: 5000               # file size limit for originals in MB (increase for high-res video)
@@ -83,11 +84,11 @@ services:
       ## Run/install on first startup (options: update https gpu tensorflow davfs clitools clean):
       # PHOTOPRISM_INIT: "https gpu tensorflow"
       ## Run as a non-root user after initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
-      PHOTOPRISM_UID: "{@PUID@}"
-      PHOTOPRISM_GID: "{@PGID@}"
+      PHOTOPRISM_UID: ${PUID}
+      PHOTOPRISM_GID: ${PGID}
       PHOTOPRISM_UMASK: 0000
     ## Start as non-root user before initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
-    user: "{@PUID@}:{@PGID@}"
+    user: ${PUID}:${PGID}
     ## Share hardware devices with FFmpeg and TensorFlow (optional):
     devices:
      - "/dev/dri:/dev/dri"                         # Intel QSV
@@ -103,21 +104,21 @@ services:
     volumes:
       # "/host/folder:/photoprism/folder"                # Example
       - type: bind               # Original media files (DO NOT REMOVE)
-        source: "{@USER_DATA_PATH@}/photos/originals"
+        source: ${USER_DATA_PATH}/photos/originals
         target: /photoprism/originals
       # - "/example/family:/photoprism/originals/family" # *Additional* media folders can be mounted like this
       - type: bind                  # *Optional* base folder from which files can be imported to originals
-        source: "{@USER_DATA_PATH@}/photos/import"
+        source: ${USER_DATA_PATH}/photos/import
         target: /photoprism/import
       - type: bind                  # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
-        source: "{@APP_DATA_PATH@}/photoprism/storage"
+        source: ${APP_DATA_PATH}/photoprism/storage
         target: /photoprism/storage
     networks:
       - photoprism
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.photoprism.rule: Host(`photoprism.{@DOMAIN@}`)
+      traefik.http.routers.photoprism.rule: Host(`photoprism.${DOMAIN}`)
       traefik.http.routers.photoprism.entrypoints: websecure
       traefik.http.routers.photoprism.middlewares: authelia@file
 
@@ -148,4 +149,3 @@ services:
 
 networks:
   photoprism:
-    name: photoprism

@@ -2,17 +2,16 @@ services:
   qbittorrent:
     image: linuxserver/qbittorrent
     container_name: qbittorrent
+    env_file:
+      - ../.env
     environment:
-      TZ: "{@TZ@}"
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
       WEBUI_PORT: 8080
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/qbittorrent"
+        source: ${APP_DATA_PATH}/qbittorrent
         target: /config
       - type: bind
-        source: "{@USER_DATA_PATH@}"
+        source: ${USER_DATA_PATH}
         target: /data
     ports:
       #   - 8080:8080
@@ -23,7 +22,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.qbittorrent.rule: Host(`qbittorrent.{@DOMAIN@}`)
+      traefik.http.routers.qbittorrent.rule: Host(`qbittorrent.${DOMAIN}`)
       traefik.http.routers.qbittorrent.entryPoints: websecure
       traefik.http.routers.qbittorrent.middlewares: authelia@file
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
@@ -32,19 +31,17 @@ services:
   radarr:
     image: linuxserver/radarr
     container_name: radarr
-    environment:
-      TZ: "{@TZ@}"
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
+    env_file:
+      - ../.env
     volumes:
       - type: bind
-        source: "{@APP_LOG_PATH@}/radarr"
+        source: ${APP_LOG_PATH}/radarr
         target: /config/logs
       - type: bind
-        source: "{@APP_DATA_PATH@}/radarr"
+        source: ${APP_DATA_PATH}/radarr
         target: /config
       - type: bind
-        source: "{@USER_DATA_PATH@}"
+        source: ${USER_DATA_PATH}
         target: /data
     # ports:
     #   - 7878:7878
@@ -53,7 +50,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.radarr.rule: Host(`radarr.{@DOMAIN@}`)
+      traefik.http.routers.radarr.rule: Host(`radarr.${DOMAIN}`)
       traefik.http.routers.radarr.entryPoints: websecure
       traefik.http.routers.radarr.middlewares: authelia@file
     depends_on:
@@ -63,19 +60,17 @@ services:
   sonarr:
     image: linuxserver/sonarr
     container_name: sonarr
-    environment:
-      TZ: "{@TZ@}"
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
+    env_file:
+      - ../.env
     volumes:
       - type: bind
-        source: "{@APP_LOG_PATH@}/sonarr"
+        source: ${APP_LOG_PATH}/sonarr
         target: /config/logs
       - type: bind
-        source: "{@APP_DATA_PATH@}/sonarr"
+        source: ${APP_DATA_PATH}/sonarr
         target: /config
       - type: bind
-        source: "{@USER_DATA_PATH@}"
+        source: ${USER_DATA_PATH}
         target: /data
     # ports:
     #   - 8989:8989
@@ -84,7 +79,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.sonarr.rule: Host(`sonarr.{@DOMAIN@}`)
+      traefik.http.routers.sonarr.rule: Host(`sonarr.${DOMAIN}`)
       traefik.http.routers.sonarr.entryPoints: websecure
       traefik.http.routers.sonarr.middlewares: authelia@file
     depends_on:
@@ -94,16 +89,17 @@ services:
   recyclarr:
     image: ghcr.io/recyclarr/recyclarr
     container_name: recyclarr
-    user: "{@PUID@}:{@PGID@}"
+    user: ${PUID}:{@PGID@}
+    env_file:
+      - ../.env
     environment:
-      TZ: "{@TZ@}"
       RECYCLARR_CREATE_CONFIG: true
     volumes:
       - type: bind
-        source: "{@APP_LOG_PATH@}/recyclarr"
+        source: ${APP_LOG_PATH}/recyclarr
         target: /config/logs
       - type: bind
-        source: "{@APP_DATA_PATH@}/recyclarr"
+        source: ${APP_DATA_PATH}/recyclarr
         target: /config
     networks:
       - streaming
@@ -114,23 +110,21 @@ services:
   prowlarr:
     image: linuxserver/prowlarr
     container_name: prowlarr
-    environment:
-      TZ: "{@TZ@}"
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
+    env_file:
+      - ../.env
     volumes:
       - type: bind
-        source: "{@APP_LOG_PATH@}/prowlarr"
+        source: ${APP_LOG_PATH}/prowlarr
         target: /config/logs
       - type: bind
-        source: "{@APP_DATA_PATH@}/prowlarr"
+        source: ${APP_DATA_PATH}/prowlarr
         target: /config
     networks:
       - streaming
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.prowlarr.rule: Host(`prowlarr.{@DOMAIN@}`)
+      traefik.http.routers.prowlarr.rule: Host(`prowlarr.${DOMAIN}`)
       traefik.http.routers.prowlarr.entryPoints: websecure
       traefik.http.routers.prowlarr.middlewares: authelia@file
     depends_on:
@@ -142,19 +136,17 @@ services:
   bazarr:
     image: linuxserver/bazarr
     container_name: bazarr
-    environment:
-      TZ: "{@TZ@}"
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
+    env_file:
+      - ../.env
     volumes:
       - type: bind
-        source: "{@APP_LOG_PATH@}/bazarr"
+        source: ${APP_LOG_PATH}/bazarr
         target: /config/log
       - type: bind
-        source: "{@APP_DATA_PATH@}/bazarr"
+        source: ${APP_DATA_PATH}/bazarr
         target: /config
       - type: bind
-        source: "{@USER_DATA_PATH@}"
+        source: ${USER_DATA_PATH}
         target: /data
     # ports:
     #   - 6767:6767
@@ -163,7 +155,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.bazarr.rule: Host(`bazarr.{@DOMAIN@}`)
+      traefik.http.routers.bazarr.rule: Host(`bazarr.${DOMAIN}`)
       traefik.http.routers.bazarr.entryPoints: websecure
       traefik.http.routers.bazarr.middlewares: authelia@file
     depends_on:
@@ -174,21 +166,19 @@ services:
   jellyfin:
     image: linuxserver/jellyfin
     container_name: jellyfin
-    environment:
-      TZ: "{@TZ@}"
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
+    env_file:
+      - ../.env
     devices:
       - /dev/dri:/dev/dri
     volumes:
       - type: bind
-        source: "{@APP_LOG_PATH@}/jellyfin"
+        source: ${APP_LOG_PATH}/jellyfin
         target: /config/log
       - type: bind
-        source: "{@APP_DATA_PATH@}/jellyfin"
+        source: ${APP_DATA_PATH}/jellyfin
         target: /config
       - type: bind
-        source: "{@USER_DATA_PATH@}"
+        source: ${USER_DATA_PATH}
         target: /media
     ports:
       - 8096:8096
@@ -197,22 +187,23 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.jellyfin.rule: Host(`jellyfin.{@DOMAIN@}`)
+      traefik.http.routers.jellyfin.rule: Host(`jellyfin.${DOMAIN}`)
       traefik.http.routers.jellyfin.entryPoints: websecure
     restart: unless-stopped
 
   jellyseerr:
     image: fallenbagel/jellyseerr
     container_name: jellyseerr
+    env_file:
+      - ../.env
     environment:
-      TZ: "{@TZ@}"
       LOG_LEVEL: debug
     volumes:
       - type: bind
-        source: "{@APP_LOG_PATH@}/jellyseerr"
+        source: ${APP_LOG_PATH}/jellyseerr
         target: /app/config/logs
       - type: bind
-        source: "{@APP_DATA_PATH@}/jellyseerr"
+        source: ${APP_DATA_PATH}/jellyseerr
         target: /app/config
     # ports:
     #   - 5055:5055
@@ -221,7 +212,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.jellyseerr.rule: Host(`jellyseerr.{@DOMAIN@}`)
+      traefik.http.routers.jellyseerr.rule: Host(`jellyseerr.${DOMAIN}`)
       traefik.http.routers.jellyseerr.entryPoints: websecure
     depends_on:
       - jellyfin
@@ -232,16 +223,14 @@ services:
   readarr:
     image: lscr.io/linuxserver/readarr:develop
     container_name: readarr
-    environment:
-      TZ: "{@TZ@}"
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
+    env_file:
+      - ../.env
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/readarr"
+        source: ${APP_DATA_PATH}/readarr
         target: /config
       - type: bind
-        source: "{@USER_DATA_PATH@}"
+        source: ${USER_DATA_PATH}
         target: /data
     # ports:
     #   - 8787:8787
@@ -250,7 +239,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.readarr.rule: Host(`readarr.{@DOMAIN@}`)
+      traefik.http.routers.readarr.rule: Host(`readarr.${DOMAIN}`)
       traefik.http.routers.readarr.entryPoints: websecure
       traefik.http.routers.readarr.middlewares: authelia@file
     depends_on:
@@ -260,18 +249,17 @@ services:
   calibre-web:
     image: lscr.io/linuxserver/calibre-web:latest
     container_name: calibre-web
+    env_file:
+      - ../.env
     environment:
-      TZ: "{@TZ@}"
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
       DOCKER_MODS: linuxserver/mods:universal-calibre #optional
       OAUTHLIB_RELAX_TOKEN_SCOPE: 1 #optional
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/calibre"
+        source: ${APP_DATA_PATH}/calibre
         target: /config
       - type: bind
-        source: "{@USER_DATA_PATH@}/calibre"
+        source: ${USER_DATA_PATH}/calibre
         target: /books
     # ports:
     #   - 8083:8083
@@ -280,10 +268,9 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.calibre.rule: Host(`calibre.{@DOMAIN@}`)
+      traefik.http.routers.calibre.rule: Host(`calibre.${DOMAIN}`)
       traefik.http.routers.calibre.entryPoints: websecure
     restart: unless-stopped
 
 networks:
   streaming:
-    name: streaming

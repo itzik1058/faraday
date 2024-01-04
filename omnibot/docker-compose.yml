@@ -2,15 +2,14 @@ services:
   omnibot:
     image: omnibot
     container_name: omnibot
+    env_file:
+      - ../.env
+      - .env
     environment:
-      CLIENT_ID: "{@OMNIBOT_CLIENT_ID@}"
-      DISCORD_TOKEN: "{@OMNIBOT_DISCORD_TOKEN@}"
       DATA_PATH: "/omnibot"
-      GUILD_ID: "{@OMNIBOT_GUILD_ID@}"
-      CHANNEL_ID: "{@OMNIBOT_CHANNEL_ID@}"
     volumes:
       - type: bind
-        source: "{@USER_DATA_PATH@}/omnibot"
+        source: ${USER_DATA_PATH}/omnibot
         target: /omnibot
         read_only: true
     networks:
@@ -19,4 +18,3 @@ services:
 
 networks:
   omnibot:
-    name: omnibot

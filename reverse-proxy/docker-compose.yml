@@ -2,8 +2,9 @@ services:
   traefik:
     image: traefik:v2.10
     container_name: traefik
-    environment:
-      DUCKDNS_TOKEN: "{@DUCKDNS_TOKEN@}"
+    env_file:
+      - ../.env
+      - .env
     ports:
       - 80:80
       - 443:443
@@ -18,10 +19,10 @@ services:
         target: /config
         read_only: true
       - type: bind
-        source: "{@APP_DATA_PATH@}/traefik/letsencrypt"
+        source: ${APP_DATA_PATH}/traefik/letsencrypt
         target: /letsencrypt
       - type: bind
-        source: "{@APP_LOG_PATH@}/traefik"
+        source: ${APP_LOG_PATH}/traefik
         target: /logs
     networks:
       - reverse-proxy
@@ -67,28 +68,49 @@ services:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
 
+  duckdns:
+    image: lscr.io/linuxserver/duckdns:latest
+    container_name: duckdns
+    env_file:
+      - ../.env
+      - .env
+    environment:
+      TOKEN: ${DUCKDNS_TOKEN}
+      LOG_FILE: false
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH}/duckdns
+        target: /config
+    networks:
+      - duckdns
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
   authelia:
     image: authelia/authelia
     container_name: authelia
+    env_file:
+      - ../.env
+      - .env
     environment:
-      TZ: "{@TZ@}"
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
+      AUTHELIA_DEFAULT_REDIRECTION_URL: https://${DOMAIN}/
+      AUTHELIA_SESSION_DOMAIN: ${DOMAIN}
     volumes:
       - type: bind
         source: ./authelia
         target: /config
         read_only: true
       - type: bind
-        source: "{@APP_DATA_PATH@}/authelia"
+        source: ${APP_DATA_PATH}/authelia
         target: /data
       - type: bind
-        source: "{@APP_LOG_PATH@}/authelia"
+        source: ${APP_LOG_PATH}/authelia
         target: /logs
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.authelia.rule: Host(`auth.{@DOMAIN@}`)
+      traefik.http.routers.authelia.rule: Host(`auth.${DOMAIN}`)
       traefik.http.routers.authelia.entryPoints: websecure
     networks:
       - authelia
@@ -101,30 +123,12 @@ services:
     container_name: authelia-redis
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/authelia/redis"
+        source: ${APP_DATA_PATH}/authelia/redis
         target: /data
     networks:
       - authelia
     labels:
       com.centurylinklabs.watchtower.enable: true
-    restart: unless-stopped
-
-  duckdns:
-    image: lscr.io/linuxserver/duckdns:latest
-    container_name: duckdns
-    environment:
-      TZ: "{@TZ@}"
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
-      SUBDOMAINS: "{@DUCKDNS_SUBDOMAINS@}"
-      TOKEN: "{@DUCKDNS_TOKEN@}"
-      LOG_FILE: false
-    volumes:
-      - type: bind
-        source: "{@APP_DATA_PATH@}/duckdns"
-        target: /config
-    networks:
-      - duckdns
     restart: unless-stopped
 
   # whoami:
@@ -134,53 +138,37 @@ services:
   #     - reverse-proxy
   #   labels:
   #     traefik.enable: true
-  #     traefik.http.routers.whoami.rule: Host(`{@DOMAIN@}`)
+  #     traefik.http.routers.whoami.rule: Host(`${DOMAIN}`)
   #     traefik.http.routers.whoami.entryPoints: websecure
   #     traefik.http.routers.whoami.middlewares: authelia@file
   #   restart: unless-stopped
 
 networks:
   reverse-proxy:
-    name: reverse-proxy
   docker-socket-proxy:
-    name: docker-socket-proxy
   authelia:
-    name: authelia
   duckdns:
-    name: duckdns
   homepage:
-    name: homepage
     external: true
   immich:
-    name: immich
     external: true
   photoprism:
-    name: photoprism
     external: true
   paperless-ngx:
-    name: paperless-ngx
     external: true
   speedtest-tracker:
-    name: speedtest-tracker
     external: true
   filebrowser:
-    name: filebrowser
     external: true
   streaming:
-    name: streaming
     external: true
   mealie:
-    name: mealie
     external: true
   rallly:
-    name: rallly
     external: true
   stirling-pdf:
-    name: stirling-pdf
     external: true
   microbin:
-    name: microbin
     external: true
   wger:
-    name: wger
     external: true

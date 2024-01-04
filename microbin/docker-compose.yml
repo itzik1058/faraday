@@ -2,11 +2,12 @@ services:
   microbin:
     image: danielszabo99/microbin:latest
     container_name: microbin
+    env_file:
+      - ../.env
+      - .env
     environment:
       # MICROBIN_BASIC_AUTH_USERNAME:
       # MICROBIN_BASIC_AUTH_PASSWORD:
-      MICROBIN_ADMIN_USERNAME: "{@MICROBIN_ADMIN_USERNAME@}"
-      MICROBIN_ADMIN_PASSWORD: "{@MICROBIN_ADMIN_PASSWORD@}"
       MICROBIN_EDITABLE: true
       # MICROBIN_FOOTER_TEXT:
       MICROBIN_HIDE_FOOTER: false
@@ -19,7 +20,7 @@ services:
       MICROBIN_PURE_HTML: false
       MICROBIN_DATA_DIR: "microbin_data"
       MICROBIN_JSON_DB: false
-      MICROBIN_PUBLIC_PATH: "https://microbin.{@DOMAIN@}/"
+      MICROBIN_PUBLIC_PATH: "https://microbin.${DOMAIN}/"
       # MICROBIN_SHORT_PATH:
       MICROBIN_READONLY: false
       MICROBIN_SHOW_READ_STATS: true
@@ -42,17 +43,16 @@ services:
       MICROBIN_MAX_FILE_SIZE_UNENCRYPTED_MB: 2048
     volumes:
       - type: bind
-        source: "{@USER_DATA_PATH@}/microbin"
+        source: ${USER_DATA_PATH}/microbin
         target: /app/microbin_data
     networks:
       - microbin
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.microbin.rule: Host(`microbin.{@DOMAIN@}`)
+      traefik.http.routers.microbin.rule: Host(`microbin.${DOMAIN}`)
       traefik.http.routers.microbin.entryPoints: websecure
     restart: unless-stopped
 
 networks:
   microbin:
-    name: microbin

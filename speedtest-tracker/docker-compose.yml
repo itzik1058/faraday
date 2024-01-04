@@ -2,22 +2,21 @@ services:
   speedtest-tracker:
     image: ghcr.io/alexjustesen/speedtest-tracker
     container_name: speedtest-tracker
+    env_file:
+      - ../.env
+      - .env
     environment:
-      TZ: "{@TZ@}"
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
       # APP_DEBUG: true
-      APP_KEY: "{@SPEEDTEST_KEY@}"
       DB_CONNECTION: pgsql
       DB_HOST: speedtest-db
       DB_PORT: 5432
-      DB_DATABASE: "{@SPEEDTEST_DB_DATABASE@}"
-      DB_USERNAME: "{@SPEEDTEST_DB_USERNAME@}"
-      DB_PASSWORD: "{@SPEEDTEST_DB_PASSWORD@}"
-      TELEGRAM_BOT_TOKEN: "{@TELEGRAM_BOT_TOKEN@}"
+      DB_DATABASE: ${POSTGRES_DB}
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/speedtest-tracker/config"
+        source: ${APP_DATA_PATH}/speedtest-tracker/config
         target: /config
     # ports:
     #   - "8080:80"
@@ -27,7 +26,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.speedtest.rule: Host(`speedtest.{@DOMAIN@}`)
+      traefik.http.routers.speedtest.rule: Host(`speedtest.${DOMAIN}`)
       traefik.http.routers.speedtest.entryPoints: websecure
       traefik.http.routers.speedtest.middlewares: authelia@file
       traefik.http.services.speedtest.loadbalancer.server.port: 80
@@ -38,13 +37,12 @@ services:
   speedtest-db:
     image: postgres:15
     container_name: speedtest-db
-    environment:
-      POSTGRES_DB: "{@SPEEDTEST_DB_DATABASE@}"
-      POSTGRES_USER: "{@SPEEDTEST_DB_USERNAME@}"
-      POSTGRES_PASSWORD: "{@SPEEDTEST_DB_PASSWORD@}"
+    env_file:
+      - ../.env
+      - .env
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/speedtest-tracker/data"
+        source: ${APP_DATA_PATH}/speedtest-tracker/data
         target: /var/lib/postgresql/data
     networks:
       - speedtest-tracker

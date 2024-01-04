@@ -2,15 +2,15 @@ services:
   immich-server:
     image: ghcr.io/immich-app/immich-server:release
     container_name: immich-server
+    env_file:
+      - ../.env
+      - .env
     environment:
       DB_HOSTNAME: "immich-postgres"
-      DB_DATABASE_NAME: "immich"
-      DB_USERNAME: "postgres"
-      DB_PASSWORD: "{@IMMICH_DB_PASSWORD@}"
       REDIS_HOSTNAME: "immich-redis"
     volumes:
       - type: bind
-        source: "{@USER_DATA_PATH@}/photos/immich"
+        source: ${USER_DATA_PATH}/photos/immich
         target: /usr/src/app/upload
     command: [ "start.sh", "immich" ]
     networks:
@@ -20,7 +20,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.immich.rule: Host(`immich.{@DOMAIN@}`)
+      traefik.http.routers.immich.rule: Host(`immich.${DOMAIN}`)
       traefik.http.routers.immich.entrypoints: websecure
     depends_on:
       - immich-redis
@@ -30,19 +30,18 @@ services:
   immich-microservices:
     container_name: immich-microservices
     image: ghcr.io/immich-app/immich-server:release
+    env_file:
+      - ../.env
+      - .env
     environment:
-      TZ: "{@TZ@}"
       DB_HOSTNAME: "immich-postgres"
-      DB_DATABASE_NAME: "immich"
-      DB_USERNAME: "postgres"
-      DB_PASSWORD: "{@IMMICH_DB_PASSWORD@}"
       REDIS_HOSTNAME: "immich-redis"
     devices:
       # hardware acceleration
       - /dev/dri:/dev/dri
     volumes:
       - type: bind
-        source: "{@USER_DATA_PATH@}/photos/immich"
+        source: ${USER_DATA_PATH}/photos/immich
         target: /usr/src/app/upload
     command: [ "start.sh", "microservices" ]
     networks:
@@ -57,9 +56,11 @@ services:
   immich-machine-learning:
     image: ghcr.io/immich-app/immich-machine-learning:release
     container_name: immich-machine-learning
+    env_file:
+      - ../.env
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/immich/ml"
+        source: ${APP_DATA_PATH}/immich/ml
         target: /cache
     networks:
       - immich
@@ -68,7 +69,7 @@ services:
     restart: unless-stopped
 
   immich-redis:
-    image: redis:6.2-alpine@sha256:70a7a5b641117670beae0d80658430853896b5ef269ccf00d1827427e3263fa3
+    image: redis:6.2-alpine
     container_name: immich-redis
     networks:
       - immich
@@ -79,13 +80,16 @@ services:
   immich-postgres:
     image: tensorchord/pgvecto-rs:pg14-v0.1.11
     container_name: immich-postgres
+    env_file:
+      - ../.env
+      - .env
     environment:
-      POSTGRES_PASSWORD: "{@IMMICH_DB_PASSWORD@}"
-      POSTGRES_USER: "postgres"
-      POSTGRES_DB: "immich"
+      POSTGRES_DB: ${DB_DATABASE_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/immich/database"
+        source: ${APP_DATA_PATH}/immich/database
         target: /var/lib/postgresql/data
     networks:
       - immich
@@ -95,4 +99,3 @@ services:
 
 networks:
   immich:
-    name: immich

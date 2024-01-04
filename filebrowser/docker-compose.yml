@@ -2,18 +2,17 @@ services:
   filebrowser:
     image: filebrowser/filebrowser:s6
     container_name: filebrowser
-    environment:
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
+    env_file:
+      - ../.env
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/filebrowser/database"
+        source: ${APP_DATA_PATH}/filebrowser/database
         target: /database
       - type: bind
-        source: "{@APP_DATA_PATH@}/filebrowser/config"
+        source: ${APP_DATA_PATH}/filebrowser/config
         target: /config
       - type: bind
-        source: "{@USER_DATA_PATH@}/files"
+        source: ${USER_DATA_PATH}/files
         target: /srv
     ports:
       - 26713:80
@@ -22,10 +21,9 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.filebrowser.rule: Host(`filebrowser.{@DOMAIN@}`)
+      traefik.http.routers.filebrowser.rule: Host(`filebrowser.${DOMAIN}`)
       traefik.http.routers.filebrowser.entryPoints: websecure
     restart: unless-stopped
 
 networks:
   filebrowser:
-    name: filebrowser

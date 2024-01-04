@@ -2,6 +2,8 @@ services:
   mealie:
     image: hkotel/mealie
     container_name: mealie
+    env_file:
+      - ../.env
     environment:
       # Default Recipe Settings
       RECIPE_PUBLIC: "true"
@@ -19,12 +21,12 @@ services:
     #   - 9925:80
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/mealie"
+        source: ${APP_DATA_PATH}/mealie
         target: /app/data
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.mealie.rule: Host(`mealie.{@DOMAIN@}`)
+      traefik.http.routers.mealie.rule: Host(`mealie.${DOMAIN}`)
       traefik.http.routers.mealie.entrypoints: websecure
     networks:
       - mealie
@@ -32,4 +34,3 @@ services:
 
 networks:
   mealie:
-    name: mealie

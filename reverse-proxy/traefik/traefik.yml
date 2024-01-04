@@ -15,7 +15,7 @@ providers:
   docker:
     endpoint: "tcp://docker-socket-proxy:2375"
     exposedByDefault: false
-    defaultRule: 'Host(`{{ index .Labels "com.docker.compose.service"}}.{@DOMAIN@}`)'
+    defaultRule: 'Host(`{{ index .Labels "com.docker.compose.service" }}.{@DOMAIN@}`)'
 
   file:
     directory: /config
