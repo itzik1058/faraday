@@ -22,7 +22,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.filebrowser.rule: Host(`filebrowser.spellvault.duckdns.org`)
+      traefik.http.routers.filebrowser.rule: Host(`filebrowser.{@DOMAIN@}`)
       traefik.http.routers.filebrowser.entryPoints: websecure
     restart: unless-stopped
 
