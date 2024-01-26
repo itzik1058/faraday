@@ -19,6 +19,7 @@ services:
     networks:
       - wireguard
     labels:
+      com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
       traefik.http.routers.wireguard.rule: Host(`vpn.{@DOMAIN@}`)
       traefik.http.routers.wireguard.entryPoints: websecure
