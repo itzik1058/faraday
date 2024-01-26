@@ -15,6 +15,7 @@ Clone this repository then rename `.env.example` to `.env` and fill the variable
 | `PUID`                            | User id used by docker services (use `id -u` to find your user id)                    |
 | `PGID`                            | Group id used by docker services (use `id -g` to find your group id)                  |
 |                                   |                                                                                       |
+| `IP_WHITELIST`                    | IP whitelist ranges                                                                   |
 | `DOMAIN`                          | Domain (e.g. example.duckdns.org)                                                     |
 | `DUCKDNS_TOKEN`                   | duckdns.org token for LetsEncrypt certificates and dynamic dns                        |
 | `DUCKDNS_EMAIL`                   | duckdns.org email                                                                     |

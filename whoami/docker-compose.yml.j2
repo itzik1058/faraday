@@ -5,10 +5,11 @@ services:
     networks:
       - reverse-proxy
     labels:
+      com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
       traefik.http.routers.whoami.rule: Host(`whoami.{@DOMAIN@}`)
       traefik.http.routers.whoami.entryPoints: websecure
-      traefik.http.routers.whoami.middlewares: authelia@file
+      traefik.http.routers.whoami.middlewares: ip-whitelist@docker
     restart: unless-stopped
 
 networks:

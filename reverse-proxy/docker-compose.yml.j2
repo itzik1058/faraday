@@ -45,6 +45,8 @@ services:
       - docker-socket-proxy
     labels:
       com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.middlewares.ip-whitelist.ipWhiteList.sourceRange: "{@IP_WHITELIST@}"
     restart: unless-stopped
 
   docker-socket-proxy:
