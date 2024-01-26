@@ -1,0 +1,46 @@
+services:
+  authelia:
+    image: authelia/authelia
+    container_name: authelia
+    environment:
+      TZ: "{@TZ@}"
+      PUID: "{@PUID@}"
+      PGID: "{@PGID@}"
+    volumes:
+      - type: bind
+        source: ./authelia
+        target: /config
+        read_only: true
+      - type: bind
+        source: "{@APP_DATA_PATH@}/authelia"
+        target: /data
+      - type: bind
+        source: "{@APP_LOG_PATH@}/authelia"
+        target: /logs
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.authelia.rule: Host(`auth.{@DOMAIN@}`)
+      traefik.http.routers.authelia.entryPoints: websecure
+    networks:
+      - authelia
+    depends_on:
+      - authelia-redis
+    restart: unless-stopped
+
+  authelia-redis:
+    image: redis:alpine
+    container_name: authelia-redis
+    volumes:
+      - type: bind
+        source: "{@APP_DATA_PATH@}/authelia/redis"
+        target: /data
+    networks:
+      - authelia
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+networks:
+  authelia:
+    name: authelia
