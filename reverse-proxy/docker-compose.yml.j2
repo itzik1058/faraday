@@ -92,10 +92,25 @@ services:
 networks:
   reverse-proxy:
     name: reverse-proxy
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.22.0.0/16
   docker-socket-proxy:
     name: docker-socket-proxy
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.19.0.0/16
   duckdns:
     name: duckdns
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.23.0.0/16
   wireguard:
     name: wireguard
     external: true

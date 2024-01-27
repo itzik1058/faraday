@@ -287,3 +287,8 @@ services:
 networks:
   streaming:
     name: streaming
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.24.0.0/16

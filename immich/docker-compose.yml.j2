@@ -97,3 +97,8 @@ services:
 networks:
   immich:
     name: immich
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.26.0.0/16
