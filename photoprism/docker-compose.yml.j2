@@ -119,7 +119,7 @@ services:
       traefik.enable: true
       traefik.http.routers.photoprism.rule: Host(`photoprism.{@DOMAIN@}`)
       traefik.http.routers.photoprism.entrypoints: websecure
-      traefik.http.routers.photoprism.middlewares: authelia@file
+      traefik.http.routers.photoprism.middlewares: ip-whitelist@docker
 
   # ## Database Server (recommended)
   # ## see https://docs.photoprism.app/getting-started/faq/#should-i-use-sqlite-mariadb-or-mysql

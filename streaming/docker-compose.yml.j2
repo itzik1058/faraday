@@ -25,7 +25,7 @@ services:
       traefik.enable: true
       traefik.http.routers.qbittorrent.rule: Host(`qbittorrent.{@DOMAIN@}`)
       traefik.http.routers.qbittorrent.entryPoints: websecure
-      traefik.http.routers.qbittorrent.middlewares: authelia@file
+      traefik.http.routers.qbittorrent.middlewares: ip-whitelist@docker
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
     restart: unless-stopped
 
@@ -55,7 +55,7 @@ services:
       traefik.enable: true
       traefik.http.routers.radarr.rule: Host(`radarr.{@DOMAIN@}`)
       traefik.http.routers.radarr.entryPoints: websecure
-      traefik.http.routers.radarr.middlewares: authelia@file
+      traefik.http.routers.radarr.middlewares: ip-whitelist@docker
     depends_on:
       - qbittorrent
     restart: unless-stopped
@@ -86,7 +86,7 @@ services:
       traefik.enable: true
       traefik.http.routers.sonarr.rule: Host(`sonarr.{@DOMAIN@}`)
       traefik.http.routers.sonarr.entryPoints: websecure
-      traefik.http.routers.sonarr.middlewares: authelia@file
+      traefik.http.routers.sonarr.middlewares: ip-whitelist@docker
     depends_on:
       - qbittorrent
     restart: unless-stopped
@@ -132,7 +132,7 @@ services:
       traefik.enable: true
       traefik.http.routers.prowlarr.rule: Host(`prowlarr.{@DOMAIN@}`)
       traefik.http.routers.prowlarr.entryPoints: websecure
-      traefik.http.routers.prowlarr.middlewares: authelia@file
+      traefik.http.routers.prowlarr.middlewares: ip-whitelist@docker
     depends_on:
       - radarr
       - sonarr
@@ -165,7 +165,7 @@ services:
       traefik.enable: true
       traefik.http.routers.bazarr.rule: Host(`bazarr.{@DOMAIN@}`)
       traefik.http.routers.bazarr.entryPoints: websecure
-      traefik.http.routers.bazarr.middlewares: authelia@file
+      traefik.http.routers.bazarr.middlewares: ip-whitelist@docker
     depends_on:
       - radarr
       - sonarr
@@ -252,7 +252,7 @@ services:
       traefik.enable: true
       traefik.http.routers.readarr.rule: Host(`readarr.{@DOMAIN@}`)
       traefik.http.routers.readarr.entryPoints: websecure
-      traefik.http.routers.readarr.middlewares: authelia@file
+      traefik.http.routers.readarr.middlewares: ip-whitelist@docker
     depends_on:
       - qbittorrent
     restart: unless-stopped

@@ -23,7 +23,7 @@ services:
       traefik.enable: true
       traefik.http.routers.wireguard.rule: Host(`vpn.{@DOMAIN@}`)
       traefik.http.routers.wireguard.entryPoints: websecure
-      traefik.http.routers.wireguard.middlewares: authelia@file
+      traefik.http.routers.wireguard.middlewares: ip-whitelist@docker
       traefik.http.services.wireguard.loadbalancer.server.port: 51821
     restart: unless-stopped
 

@@ -40,7 +40,7 @@ services:
       traefik.enable: true
       traefik.http.routers.paperless-ngx.rule: Host(`paperless.{@DOMAIN@}`)
       traefik.http.routers.paperless-ngx.entryPoints: websecure
-      traefik.http.routers.paperless-ngx.middlewares: authelia@file
+      traefik.http.routers.paperless-ngx.middlewares: ip-whitelist@docker
     depends_on:
       - paperless-redis
     restart: unless-stopped

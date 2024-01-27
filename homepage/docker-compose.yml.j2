@@ -24,7 +24,7 @@ services:
       traefik.enable: true
       traefik.http.routers.homepage.rule: Host(`{@DOMAIN@}`)
       traefik.http.routers.homepage.entrypoints: websecure
-      traefik.http.routers.homepage.middlewares: authelia@file
+      traefik.http.routers.homepage.middlewares: ip-whitelist@docker
     restart: unless-stopped
 
 networks:
