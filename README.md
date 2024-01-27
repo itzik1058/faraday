@@ -68,6 +68,11 @@ Initiate a restic repository, then update the environment variables with the pat
 
 Run `backup.sh` to stop the docker service, backup, and restart docker.
 
+## Adguard Home
+For initial configuration open a browser and connect on port 3000 (LAN only).
+
+Configure DNS settings in router LAN settings and point to the host IP, also do not enable advertising router's IP in addition to user-specified DNS.
+
 ## DuckDNS
 
 DuckDNS provides a free subdomain of `duckdns.org`. Create an account and choose a subdomain name, then copy your account token.
