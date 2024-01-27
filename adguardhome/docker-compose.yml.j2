@@ -1,0 +1,30 @@
+services:
+  adguardhome:
+    image: adguard/adguardhome
+    container_name: adguardhome
+    volumes:
+      - type: bind
+        source: "{@APP_DATA_PATH@}/adguardhome/conf"
+        target: /opt/adguardhome/conf
+      - type: bind
+        source: "{@APP_DATA_PATH@}/adguardhome/work"
+        target: /opt/adguardhome/work
+    ports:
+      - 53:53         # dns
+      - 67:67/udp     # dhcp
+      - 68:68         # dhcp
+      - 3000:3000/tcp # web setup
+    networks:
+      - adguardhome
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.adguardhome.rule: Host(`adguard.{@DOMAIN@}`)
+      traefik.http.routers.adguardhome.entryPoints: websecure
+      traefik.http.routers.adguardhome.middlewares: ip-whitelist@docker
+      traefik.http.services.adguardhome.loadbalancer.server.port: 80
+    restart: unless-stopped
+
+networks:
+  adguardhome:
+    name: adguardhome

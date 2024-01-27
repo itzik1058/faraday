@@ -27,6 +27,7 @@ services:
       - reverse-proxy
       - docker-socket-proxy
       - wireguard
+      - adguardhome
       - authelia
       # - watchtower
       - homepage
@@ -97,6 +98,9 @@ networks:
     name: duckdns
   wireguard:
     name: wireguard
+    external: true
+  adguardhome:
+    name: adguardhome
     external: true
   authelia:
     name: authelia
