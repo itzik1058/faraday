@@ -11,6 +11,7 @@ services:
       PAPERLESS_SECRET_KEY: "{@PAPERLESS_SECRET_KEY@}"
       PAPERLESS_TIME_ZONE: "{@TZ@}"
       PAPERLESS_OCR_LANGUAGE: heb
+      PAPERLESS_OCR_USER_ARGS: '{"invalidate_digital_signatures": true}'
       # Set if accessing paperless via a domain subpath e.g. https://domain.com/PATHPREFIX and using a reverse-proxy like traefik or nginx
       #PAPERLESS_FORCE_SCRIPT_NAME: /PATHPREFIX
       #PAPERLESS_STATIC_URL: /PATHPREFIX/static/ # trailing slash required
