@@ -4,10 +4,6 @@ services:
     container_name: traefik
     environment:
       DUCKDNS_TOKEN: "{@DUCKDNS_TOKEN@}"
-    ports:
-      - 80:80
-      - 443:443
-      # - 8080:8080
     volumes:
       - type: bind
         source: ./traefik/traefik.yml
@@ -23,6 +19,12 @@ services:
       - type: bind
         source: "{@APP_LOG_PATH@}/traefik"
         target: /logs
+    ports:
+      - 80:80
+      - 443:443
+      # - 8080:8080
+    extra_hosts:
+      - host.docker.internal:172.17.0.1
     networks:
       - reverse-proxy
       - docker-socket-proxy
