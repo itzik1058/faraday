@@ -2,6 +2,7 @@
 
 cd $(dirname $(realpath $0))
 source .env
+source ../.env
 export RESTIC_PASSWORD=$RESTIC_PASSWORD
 systemctl stop docker
 sudo -E restic -r $RESTIC_REPOSITORY --verbose backup \
