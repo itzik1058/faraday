@@ -4,15 +4,36 @@ services:
     container_name: traefik
     environment:
       DUCKDNS_TOKEN: "{@DUCKDNS_TOKEN@}"
+    command:
+      - --global.sendAnonymousUsage=true
+
+      - --log.level=DEBUG
+      - --log.filePath=/logs/traefik.log
+
+      - --accessLog.filePath=/logs/access.log
+
+      - --api.dashboard=true
+
+      - --providers.docker.endpoint=tcp://docker-socket-proxy:2375
+      - --providers.docker.exposedByDefault=false
+
+      - --entryPoints.web.address=:80
+      - --entryPoints.web.http.redirections.entryPoint.to=websecure
+      - --entryPoints.web.http.redirections.entryPoint.scheme=https
+      - --entryPoints.web.http.redirections.entryPoint.permanent=true
+      - --entryPoints.websecure.address=:443
+      - --entryPoints.websecure.http.tls.certResolver=mydnschallenge
+      - --entryPoints.websecure.http.tls.domains[0].main={@DOMAIN@}
+      - --entryPoints.websecure.http.tls.domains[0].sans=*.{@DOMAIN@}
+
+      - --certificatesResolvers.mydnschallenge.acme.dnsChallenge.provider=duckdns
+      - --certificatesResolvers.mydnschallenge.acme.dnsChallenge.delaybeforecheck=10
+      - --certificatesResolvers.mydnschallenge.acme.dnsChallenge.resolvers=1.1.1.1:53,8.8.8.8:53
+      - --certificatesResolvers.mydnschallenge.acme.email={@DUCKDNS_EMAIL@}
+      # Staging CA
+      # - --certificatesResolvers.mydnschallenge.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory
+      - --certificatesResolvers.mydnschallenge.acme.storage=/letsencrypt/acme.json
     volumes:
-      - type: bind
-        source: ./traefik/traefik.yml
-        target: /traefik.yml
-        read_only: true
-      - type: bind
-        source: ./traefik/config
-        target: /config
-        read_only: true
       - type: bind
         source: "{@APP_DATA_PATH@}/traefik/letsencrypt"
         target: /letsencrypt
@@ -50,6 +71,10 @@ services:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
       traefik.http.middlewares.ip-whitelist.ipWhiteList.sourceRange: "{@IP_WHITELIST@}"
+      traefik.http.routers.dashboard.rule: Host(`traefik.{@DOMAIN@}`)
+      traefik.http.routers.dashboard.entryPoints: websecure
+      traefik.http.routers.dashboard.service: api@internal
+      traefik.http.routers.dashboard.middlewares: ip-whitelist@docker
     restart: unless-stopped
 
   docker-socket-proxy:

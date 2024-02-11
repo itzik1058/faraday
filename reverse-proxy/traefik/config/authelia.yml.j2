@@ -1,7 +1,0 @@
-http:
-  middlewares:
-    authelia:
-      forwardAuth:
-        address: http://authelia:9091/api/verify?rd=https%3A%2F%2Fauth.{@DOMAIN@}%2F
-        trustForwardHeader: true
-        authResponseHeaders: Remote-User,Remote-Groups,Remote-Name,Remote-Email
