@@ -68,6 +68,7 @@ services:
       - stirling-pdf
       - microbin
       - wger
+      - monica
     depends_on:
       - docker-socket-proxy
     labels:
@@ -187,4 +188,7 @@ networks:
     external: true
   wger:
     name: wger
+    external: true
+  monica:
+    name: monica
     external: true

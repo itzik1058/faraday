@@ -1,0 +1,48 @@
+services:
+  monica:
+    image: monica
+    container_name: monica
+    environment:
+      APP_KEY: ${APP_KEY:?}
+      APP_ENV: production
+      DB_HOST: monica-db
+      DB_USERNAME: ${DB_USERNAME:?}
+      DB_PASSWORD: ${DB_PASSWORD:?}
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/monica/data
+        target: /var/www/html/storage
+    networks:
+      - monica
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.monica.rule: Host(`monica.${DOMAIN:?}`)
+      traefik.http.routers.monica.entrypoints: websecure
+      traefik.http.routers.monica.middlewares: ip-whitelist@docker
+      traefik.http.services.monica.loadbalancer.server.port: 80
+    depends_on:
+      - monica-db
+    restart: unless-stopped
+  
+  monica-db:
+    image: mariadb:11
+    container_name: monica-db
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: true
+      MYSQL_DATABASE: monica
+      MYSQL_USER: ${DB_USERNAME:?}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?}
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/monica/mysql
+        target: /var/lib/mysql
+    networks:
+      - monica
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+networks:
+  monica:
+    name: monica
