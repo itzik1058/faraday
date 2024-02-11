@@ -8,11 +8,11 @@ services:
       PGID: "{@PGID@}"
     volumes:
       - type: bind
-        source: ./config
+        source: "{@APP_DATA_PATH@}/authelia/config"
         target: /config
         read_only: true
       - type: bind
-        source: "{@APP_DATA_PATH@}/authelia"
+        source: "{@APP_DATA_PATH@}/authelia/data"
         target: /data
       - type: bind
         source: "{@APP_LOG_PATH@}/authelia"
