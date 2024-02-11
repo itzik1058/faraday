@@ -2,16 +2,18 @@ services:
   stirling-pdf:
     image: frooodle/s-pdf:latest
     container_name: stirling-pdf
+    env_file:
+      - ../.env
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/stirling-pdf"
+        source: ${APP_DATA_PATH:?}/stirling-pdf
         target: /configs
     networks:
       - stirling-pdf
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.stirling-pdf.rule: Host(`pdf.{@DOMAIN@}`)
+      traefik.http.routers.stirling-pdf.rule: Host(`pdf.${DOMAIN:?}`)
       traefik.http.routers.stirling-pdf.entryPoints: websecure
     restart: unless-stopped
 

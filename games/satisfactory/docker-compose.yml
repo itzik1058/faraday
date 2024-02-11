@@ -2,17 +2,19 @@ services:
   satisfactory-server:
     image: wolveix/satisfactory-server:latest
     container_name: satisfactory-server
+    env_file:
+      - ../../.env
     environment:
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
+      PUID: ${PUID:?}
+      PGID: ${PGID:?}
       STEAMBETA: false
       MAXPLAYERS: 8
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/satisfactory"
+        source: ${APP_DATA_PATH:?}/satisfactory
         target: /config
       - type: bind
-        source: "{@USER_DATA_PATH@}/games/satisfactory"
+        source: ${USER_DATA_PATH:?}/games/satisfactory
         target: /config/saved
     networks:
       - satisfactory

@@ -2,19 +2,22 @@ services:
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
+    env_file:
+      - .env
+      - ../.env
     environment:
-      TZ: "{@TZ@}"
+      TZ: ${TZ:?}
       WATCHTOWER_CLEANUP: true
       WATCHTOWER_LOG_LEVEL: debug
       WATCHTOWER_LABEL_ENABLE: true
-      WATCHTOWER_HTTP_API_TOKEN: "{@WATCHTOWER_HTTP_API_TOKEN@}"
+      WATCHTOWER_HTTP_API_TOKEN: ${WATCHTOWER_HTTP_API_TOKEN:?}
       WATCHTOWER_HTTP_API_METRICS: true
       WATCHTOWER_SCHEDULE: 0 0 6 * * *
       # WATCHTOWER_NOTIFICATIONS: gotify
       # WATCHTOWER_NOTIFICATION_GOTIFY_URL: http://gotify:80
-      # WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN: {@WATCHTOWER_GOTIFY_TOKEN@}
+      # WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN: ${WATCHTOWER_GOTIFY_TOKEN:?}
       WATCHTOWER_NOTIFICATIONS: shoutrrr
-      WATCHTOWER_NOTIFICATION_URL: "telegram://{@TELEGRAM_BOT_TOKEN@}@telegram/?channels={@TELEGRAM_CHAT_ID@}"
+      WATCHTOWER_NOTIFICATION_URL: telegram://${TELEGRAM_BOT_TOKEN:?}@telegram/?channels=${TELEGRAM_CHAT_ID:?}
     volumes:
       - type: bind
         source: /var/run/docker.sock

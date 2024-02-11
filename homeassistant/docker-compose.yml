@@ -2,22 +2,24 @@ services:
   homeassistant:
     image: ghcr.io/home-assistant/home-assistant:stable
     container_name: homeassistant
-    user: "{@PUID@}:{@PGID@}"
+    env_file:
+      - ../.env
+    user: ${PUID:?}:${PGID:?}
     environment:
-      TZ: "{@TZ@}"
+      TZ: ${TZ:?}
     volumes:
       - type: bind
         source: /run/dbus
         target: /run/dbus
         read_only: true
       - type: bind
-        source: "{@APP_DATA_PATH@}/homeassistant"
+        source: ${APP_DATA_PATH:?}/homeassistant
         target: /config
     network_mode: host
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.homeassistant.rule: Host(`homeassistant.{@DOMAIN@}`)
+      traefik.http.routers.homeassistant.rule: Host(`homeassistant.${DOMAIN:?}`)
       traefik.http.routers.homeassistant.entryPoints: websecure
       traefik.http.routers.homeassistant.middlewares: ip-whitelist@docker
       traefik.http.services.homeassistant.loadbalancer.server.port: 8123

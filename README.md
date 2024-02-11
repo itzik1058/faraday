@@ -1,67 +1,9 @@
 # Setup
 
-Clone this repository then rename `.env.example` to `.env` and fill the variables.
-
-| Environment Variable              | Description                                                                           |
-| --------------------------------- | ------------------------------------------------------------------------------------- |
-| `APP_LOG_PATH`                    | Path to logs directory                                                                |
-| `APP_DATA_PATH`                   | Path to service config and data directory                                             |
-| `USER_DATA_PATH`                  | Path to media/photos/documents directory                                              |
-|                                   |                                                                                       |
-| `RESTIC_REPOSITORY`               | Path to restic backup repository                                                      |
-| `RESTIC_PASSWORD`                 | Password for restic repository                                                        |
-|                                   |                                                                                       |
-| `TZ`                              | Timezone used by docker services https://man7.org/linux/man-pages/man5/tzfile.5.html  |
-| `PUID`                            | User id used by docker services (use `id -u` to find your user id)                    |
-| `PGID`                            | Group id used by docker services (use `id -g` to find your group id)                  |
-|                                   |                                                                                       |
-| `IP_WHITELIST`                    | IP whitelist ranges                                                                   |
-| `DOMAIN`                          | Domain (e.g. example.duckdns.org)                                                     |
-| `DUCKDNS_TOKEN`                   | duckdns.org token for LetsEncrypt certificates and dynamic dns                        |
-| `DUCKDNS_EMAIL`                   | duckdns.org email                                                                     |
-| `DUCKDNS_SUBDOMAINS`              | duckdns.org subdomains split by comma                                                 |
-|                                   |                                                                                       |
-| `AUTHELIA_JWT_SECRET`             | JWT secret                                                                            |
-| `AUTHELIA_SESSION_SECRET`         | Session secret                                                                        |
-| `AUTHELIA_STORAGE_ENCRYPTION_KEY` | Storage encryption key                                                                |
-| `AUTHELIA_OIDC_HMAC_SECRET`       | OIDC HMAC secret                                                                      |
-|                                   |                                                                                       |
-| `WATCHTOWER_HTTP_API_TOKEN`       | API token                                                                             |
-|                                   |                                                                                       |
-| `TELEGRAM_BOT_TOKEN`              | Telegram bot token                                                                    |
-| `TELEGRAM_CHAT_ID`                | Telegram chat id                                                                      |
-|                                   |                                                                                       |
-| `IMMICH_DB_PASSWORD`              | Database password                                                                     |
-|                                   |                                                                                       |
-| `PAPERLESS_SECRET_KEY`            | Paperless secret                                                                      |
-|                                   |                                                                                       |
-| `SPEEDTEST_KEY`                   | Generate with `php artisan key:generate --show` in the speedtest-tracker container    |
-| `SPEEDTEST_DB_DATABASE`           | Speedtest database schema                                                             |
-| `SPEEDTEST_DB_USERNAME`           | Speedtest database username                                                           |
-| `SPEEDTEST_DB_PASSWORD`           | Speedtest database password                                                           |
-|                                   |                                                                                       |
-| `RALLLY_SECRET`                   | Rallly secret token (16 characters)                                                   |
-| `RALLLY_DB_PASSWORD`              | Rallly database password                                                              |
-|                                   |                                                                                       |
-| `MICROBIN_ADMIN_USERNAME`         | Microbin admin username                                                               |
-| `MICROBIN_ADMIN_PASSWORD`         | Microbin admin password                                                               |
-|                                   |                                                                                       |
-| `WGER_SECRET_KEY`                 | WGER secret key                                                                       |
-| `WGER_JWT_KEY`                    | WGER JWT secret                                                                       |
-| `WGER_DB_PASSWORD`                | WGER database password                                                                |
-|                                   |                                                                                       |
-| `OMNIBOT_CLIENT_ID`               | Discord client id                                                                     |
-| `OMNIBOT_DISCORD_TOKEN`           | Discord token                                                                         |
-| `OMNIBOT_GUILD_ID`                | Discord guild id                                                                      |
-| `OMNIBOT_CHANNEL_ID`              | Discord channel id                                                                    |
+Start the services with `docker compose up -d` and create missing directories as necessary.
+Use .env files to provide any missing environment variables to the compose stacks that require them.
 
 Passwords and secrets which are not provided by external services (i.e. DuckDNS, Telegram, Discord) can be generated using `openssl rand -hex 32`
-
----
-
-Install the python requirements listed in `requirements.txt` and run `python render.py` to create the `docker-compose.yml` files.
-
-Proceed to start the services with `docker compose up -d` and create missing directories as necessary.
 
 ## Backup
 Initiate a restic repository, then update the environment variables with the path and password.
@@ -79,9 +21,9 @@ DuckDNS provides a free subdomain of `duckdns.org`. Create an account and choose
 
 ## Authelia
 
-Authelia configuration defaults to using `users.yml` in `$APP_DATA_PATH/authelia`.
+Authelia configuration defaults to using `users.yml` in `$APP_DATA_PATH/authelia/data`.
 
-This behavior can be changed in the template at `reverse-proxy/authelia/configuration.yml.j2`.
+This behavior can be changed in the template at `$APP_DATA_PATH/authelia/config/configuration.yml`.
 
 The format for the users file database can be found in the Authelia documentation. Use `authelia hash-password` inside the docker container to generate user passwords.
 

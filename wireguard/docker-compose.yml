@@ -2,8 +2,10 @@ services:
   wg-easy:
     image: ghcr.io/wg-easy/wg-easy
     container_name: wg-easy
+    env_file:
+      - ../.env
     environment:
-      WG_HOST: "vpn.{@DOMAIN@}"
+      WG_HOST: vpn.${DOMAIN:?}
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
@@ -12,7 +14,7 @@ services:
       - net.ipv4.conf.all.src_valid_mark=1
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/wg-easy"
+        source: ${APP_DATA_PATH:?}/wg-easy
         target: /etc/wireguard
     ports:
       - 51820:51820/udp
@@ -21,7 +23,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.wireguard.rule: Host(`vpn.{@DOMAIN@}`)
+      traefik.http.routers.wireguard.rule: Host(`vpn.${DOMAIN:?}`)
       traefik.http.routers.wireguard.entryPoints: websecure
       traefik.http.routers.wireguard.middlewares: ip-whitelist@docker
       traefik.http.services.wireguard.loadbalancer.server.port: 51821

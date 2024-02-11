@@ -2,27 +2,34 @@ services:
   authelia:
     image: authelia/authelia
     container_name: authelia
+    env_file:
+      - .env
+      - ../.env
     environment:
-      TZ: "{@TZ@}"
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
+      TZ: ${TZ:?}
+      PUID: ${PUID:?}
+      PGID: ${PGID:?}
+      AUTHELIA_JWT_SECRET: ${AUTHELIA_JWT_SECRET:?}
+      AUTHELIA_SESSION_SECRET: ${AUTHELIA_SESSION_SECRET:?}
+      AUTHELIA_STORAGE_ENCRYPTION_KEY: ${AUTHELIA_STORAGE_ENCRYPTION_KEY:?}
+      AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC: ${AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC:?}
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/authelia/config"
+        source: ${APP_DATA_PATH:?}/authelia/config
         target: /config
         read_only: true
       - type: bind
-        source: "{@APP_DATA_PATH@}/authelia/data"
+        source: ${APP_DATA_PATH:?}/authelia/data
         target: /data
       - type: bind
-        source: "{@APP_LOG_PATH@}/authelia"
+        source: ${APP_LOG_PATH:?}/authelia
         target: /logs
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.authelia.rule: Host(`auth.{@DOMAIN@}`)
+      traefik.http.routers.authelia.rule: Host(`auth.${DOMAIN:?}`)
       traefik.http.routers.authelia.entryPoints: websecure
-      traefik.http.middlewares.authelia.forwardAuth.address: http://authelia:9091/api/verify?rd=https%3A%2F%2Fauth.{@DOMAIN@}%2F
+      traefik.http.middlewares.authelia.forwardAuth.address: http://authelia:9091/api/verify?rd=https%3A%2F%2Fauth.${DOMAIN:?}%2F
       traefik.http.middlewares.authelia.forwardAuth.trustForwardHeader: true
       traefik.http.middlewares.authelia.forwardAuth.authResponseHeaders: Remote-User,Remote-Groups,Remote-Name,Remote-Email
     networks:
@@ -34,9 +41,11 @@ services:
   authelia-redis:
     image: redis:alpine
     container_name: authelia-redis
+    env_file:
+      - ../.env
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/authelia/redis"
+        source: ${APP_DATA_PATH:?}/authelia/redis
         target: /data
     networks:
       - authelia

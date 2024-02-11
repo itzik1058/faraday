@@ -2,15 +2,17 @@ services:
   homepage:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage
+    env_file:
+      - ../.env
     environment:
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
+      PUID: ${PUID:?}
+      PGID: ${PGID:?}
     volumes:
       - type: bind
-        source: "{@APP_LOG_PATH@}/homepage"
+        source: ${APP_LOG_PATH:?}/homepage
         target: /app/config/logs
       - type: bind
-        source: "{@APP_DATA_PATH@}/homepage"
+        source: ${APP_DATA_PATH:?}/homepage
         target: /app/config
     networks:
       - homepage
@@ -22,7 +24,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.homepage.rule: Host(`{@DOMAIN@}`)
+      traefik.http.routers.homepage.rule: Host(`${DOMAIN:?}`)
       traefik.http.routers.homepage.entrypoints: websecure
       traefik.http.routers.homepage.middlewares: ip-whitelist@docker
     restart: unless-stopped

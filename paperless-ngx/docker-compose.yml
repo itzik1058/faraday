@@ -2,14 +2,17 @@ services:
   paperless-ngx:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     container_name: paperless-ngx
+    env_file:
+      - .env
+      - ../.env
     environment:
       PAPERLESS_REDIS: redis://paperless-redis:6379
-      USERMAP_UID: "{@PUID@}"
-      USERMAP_GID: "{@PGID@}"
+      USERMAP_UID: ${PUID:?}
+      USERMAP_GID: ${PGID:?}
       PAPERLESS_OCR_LANGUAGES: "heb rus"
-      PAPERLESS_URL: "https://paperless.{@DOMAIN@}"
-      PAPERLESS_SECRET_KEY: "{@PAPERLESS_SECRET_KEY@}"
-      PAPERLESS_TIME_ZONE: "{@TZ@}"
+      PAPERLESS_URL: https://paperless.${DOMAIN:?}
+      PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY:?}
+      PAPERLESS_TIME_ZONE: ${TZ:?}
       PAPERLESS_OCR_LANGUAGE: heb
       PAPERLESS_OCR_USER_ARGS: '{"invalidate_digital_signatures": true}'
       # Set if accessing paperless via a domain subpath e.g. https://domain.com/PATHPREFIX and using a reverse-proxy like traefik or nginx
@@ -17,16 +20,16 @@ services:
       #PAPERLESS_STATIC_URL: /PATHPREFIX/static/ # trailing slash required
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/paperless/data"
+        source: ${APP_DATA_PATH:?}/paperless/data
         target: /usr/src/paperless/data
       - type: bind
-        source: "{@USER_DATA_PATH@}/documents/media"
+        source: ${USER_DATA_PATH:?}/documents/media
         target: /usr/src/paperless/media
       - type: bind
-        source: "{@USER_DATA_PATH@}/documents/export"
+        source: ${USER_DATA_PATH:?}/documents/export
         target: /usr/src/paperless/export
       - type: bind
-        source: "{@USER_DATA_PATH@}/documents/consume"
+        source: ${USER_DATA_PATH:?}/documents/consume
         target: /usr/src/paperless/consume
     healthcheck:
       test:
@@ -39,7 +42,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.routers.paperless-ngx.rule: Host(`paperless.{@DOMAIN@}`)
+      traefik.http.routers.paperless-ngx.rule: Host(`paperless.${DOMAIN:?}`)
       traefik.http.routers.paperless-ngx.entryPoints: websecure
       traefik.http.routers.paperless-ngx.middlewares: ip-whitelist@docker
     depends_on:
@@ -49,9 +52,11 @@ services:
   paperless-redis:
     image: docker.io/library/redis:7
     container_name: paperless-redis
+    env_file:
+      - ../.env
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/paperless/cache"
+        source: ${APP_DATA_PATH:?}/paperless/cache
         target: /data
     networks:
       - paperless-ngx

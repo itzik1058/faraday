@@ -2,8 +2,11 @@ services:
   traefik:
     image: traefik:v2.10
     container_name: traefik
+    env_file:
+      - .env
+      - ../.env
     environment:
-      DUCKDNS_TOKEN: "{@DUCKDNS_TOKEN@}"
+      DUCKDNS_TOKEN: ${DUCKDNS_TOKEN:?error}
     command:
       - --global.sendAnonymousUsage=true
 
@@ -23,22 +26,22 @@ services:
       - --entryPoints.web.http.redirections.entryPoint.permanent=true
       - --entryPoints.websecure.address=:443
       - --entryPoints.websecure.http.tls.certResolver=mydnschallenge
-      - --entryPoints.websecure.http.tls.domains[0].main={@DOMAIN@}
-      - --entryPoints.websecure.http.tls.domains[0].sans=*.{@DOMAIN@}
+      - --entryPoints.websecure.http.tls.domains[0].main=${DOMAIN:?}
+      - --entryPoints.websecure.http.tls.domains[0].sans=*.${DOMAIN:?}
 
       - --certificatesResolvers.mydnschallenge.acme.dnsChallenge.provider=duckdns
       - --certificatesResolvers.mydnschallenge.acme.dnsChallenge.delaybeforecheck=10
       - --certificatesResolvers.mydnschallenge.acme.dnsChallenge.resolvers=1.1.1.1:53,8.8.8.8:53
-      - --certificatesResolvers.mydnschallenge.acme.email={@DUCKDNS_EMAIL@}
+      - --certificatesResolvers.mydnschallenge.acme.email=${DUCKDNS_EMAIL:?}
       # Staging CA
       # - --certificatesResolvers.mydnschallenge.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory
       - --certificatesResolvers.mydnschallenge.acme.storage=/letsencrypt/acme.json
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/traefik/letsencrypt"
+        source: "${APP_DATA_PATH:?}/traefik/letsencrypt"
         target: /letsencrypt
       - type: bind
-        source: "{@APP_LOG_PATH@}/traefik"
+        source: "${APP_LOG_PATH:?}/traefik"
         target: /logs
     ports:
       - 80:80
@@ -70,8 +73,8 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.middlewares.ip-whitelist.ipWhiteList.sourceRange: "{@IP_WHITELIST@}"
-      traefik.http.routers.dashboard.rule: Host(`traefik.{@DOMAIN@}`)
+      traefik.http.middlewares.ip-whitelist.ipWhiteList.sourceRange: ${IP_WHITELIST:?}
+      traefik.http.routers.dashboard.rule: Host(`traefik.${DOMAIN:?}`)
       traefik.http.routers.dashboard.entryPoints: websecure
       traefik.http.routers.dashboard.service: api@internal
       traefik.http.routers.dashboard.middlewares: ip-whitelist@docker
@@ -97,20 +100,22 @@ services:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
 
-
   duckdns:
     image: lscr.io/linuxserver/duckdns:latest
     container_name: duckdns
+    env_file:
+      - .env
+      - ../.env
     environment:
-      TZ: "{@TZ@}"
-      PUID: "{@PUID@}"
-      PGID: "{@PGID@}"
-      SUBDOMAINS: "{@DUCKDNS_SUBDOMAINS@}"
-      TOKEN: "{@DUCKDNS_TOKEN@}"
+      TZ: ${TZ:?}
+      PUID: ${PUID:?}
+      PGID: ${PGID:?}
+      SUBDOMAINS: ${DUCKDNS_SUBDOMAINS:?}
+      TOKEN: ${DUCKDNS_TOKEN:?}
       LOG_FILE: false
     volumes:
       - type: bind
-        source: "{@APP_DATA_PATH@}/duckdns"
+        source: ${APP_DATA_PATH:?}/duckdns
         target: /config
     networks:
       - duckdns
