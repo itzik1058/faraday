@@ -55,7 +55,7 @@ services:
       # - watchtower
       - homepage
       - immich
-      - photoprism
+      # - photoprism
       - paperless-ngx
       - speedtest-tracker
       - filebrowser
@@ -153,9 +153,9 @@ networks:
   immich:
     name: immich
     external: true
-  photoprism:
-    name: photoprism
-    external: true
+  # photoprism:
+  #   name: photoprism
+  #   external: true
   paperless-ngx:
     name: paperless-ngx
     external: true
