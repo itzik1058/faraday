@@ -2,9 +2,6 @@ services:
   paperless-ngx:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     container_name: paperless-ngx
-    env_file:
-      - .env
-      - ../.env
     environment:
       PAPERLESS_REDIS: redis://paperless-redis:6379
       USERMAP_UID: ${PUID:?}
@@ -52,8 +49,6 @@ services:
   paperless-redis:
     image: docker.io/library/redis:7
     container_name: paperless-redis
-    env_file:
-      - ../.env
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/paperless/cache
@@ -69,4 +64,4 @@ networks:
     ipam:
       driver: default
       config:
-      - subnet: 172.25.0.0/16
+        - subnet: 172.25.0.0/16

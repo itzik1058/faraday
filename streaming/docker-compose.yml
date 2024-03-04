@@ -2,8 +2,6 @@ services:
   qbittorrent:
     image: linuxserver/qbittorrent
     container_name: qbittorrent
-    env_file:
-      - ../.env
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -35,8 +33,6 @@ services:
   radarr:
     image: linuxserver/radarr
     container_name: radarr
-    env_file:
-      - ../.env
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -69,8 +65,6 @@ services:
   sonarr:
     image: linuxserver/sonarr
     container_name: sonarr
-    env_file:
-      - ../.env
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -104,8 +98,6 @@ services:
     image: ghcr.io/recyclarr/recyclarr
     container_name: recyclarr
     user: ${PUID:?}:${PGID:?}
-    env_file:
-      - ../.env
     environment:
       TZ: ${TZ:?}
       RECYCLARR_CREATE_CONFIG: true
@@ -126,8 +118,6 @@ services:
   prowlarr:
     image: linuxserver/prowlarr
     container_name: prowlarr
-    env_file:
-      - ../.env
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -157,8 +147,6 @@ services:
   bazarr:
     image: linuxserver/bazarr
     container_name: bazarr
-    env_file:
-      - ../.env
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -192,8 +180,6 @@ services:
   jellyfin:
     image: linuxserver/jellyfin
     container_name: jellyfin
-    env_file:
-      - ../.env
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -225,8 +211,6 @@ services:
   jellyseerr:
     image: fallenbagel/jellyseerr
     container_name: jellyseerr
-    env_file:
-      - ../.env
     environment:
       TZ: ${TZ:?}
       LOG_LEVEL: debug
@@ -256,8 +240,6 @@ services:
   readarr:
     image: lscr.io/linuxserver/readarr:develop
     container_name: readarr
-    env_file:
-      - ../.env
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -287,8 +269,6 @@ services:
   calibre-web:
     image: lscr.io/linuxserver/calibre-web:latest
     container_name: calibre-web
-    env_file:
-      - ../.env
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -321,4 +301,4 @@ networks:
     ipam:
       driver: default
       config:
-      - subnet: 172.24.0.0/16
+        - subnet: 172.24.0.0/16

@@ -2,8 +2,6 @@ services:
   wger-nginx:
     image: nginx:stable
     container_name: wger-nginx
-    env_file:
-      - ../.env
     volumes:
       - type: bind
         source: ./nginx.conf
@@ -36,9 +34,6 @@ services:
   wger-server:
     image: wger/server
     container_name: wger-server
-    env_file:
-      - .env
-      - ../.env
     environment:
       PUID: ${PUID:?}
       PGID: ${PGID:?}
@@ -130,9 +125,6 @@ services:
   wger-db:
     image: postgres:15-alpine
     container_name: wger-db
-    env_file:
-      - .env
-      - ../.env
     environment:
       POSTGRES_DB: ${DB_DATABASE_NAME:?}
       POSTGRES_USER: ${DB_USERNAME:?}
@@ -155,8 +147,6 @@ services:
   wger-cache:
     image: redis
     container_name: wger-cache
-    env_file:
-      - ../.env
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/wger/cache

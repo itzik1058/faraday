@@ -2,9 +2,6 @@ services:
   immich-server:
     image: ghcr.io/immich-app/immich-server:release
     container_name: immich-server
-    env_file:
-      - .env
-      - ../.env
     environment:
       DB_HOSTNAME: immich-postgres
       DB_DATABASE_NAME: ${DB_DATABASE_NAME:?}
@@ -15,7 +12,7 @@ services:
       - type: bind
         source: ${USER_DATA_PATH:?}/photos/immich
         target: /usr/src/app/upload
-    command: [ "start.sh", "immich" ]
+    command: ["start.sh", "immich"]
     networks:
       - immich
     # ports:
@@ -34,9 +31,6 @@ services:
   immich-microservices:
     container_name: immich-microservices
     image: ghcr.io/immich-app/immich-server:release
-    env_file:
-      - .env
-      - ../.env
     environment:
       TZ: ${TZ:?}
       DB_HOSTNAME: immich-postgres
@@ -51,7 +45,7 @@ services:
       - type: bind
         source: ${USER_DATA_PATH:?}/photos/immich
         target: /usr/src/app/upload
-    command: [ "start.sh", "microservices" ]
+    command: ["start.sh", "microservices"]
     networks:
       - immich
     labels:
@@ -64,8 +58,6 @@ services:
   immich-machine-learning:
     image: ghcr.io/immich-app/immich-machine-learning:release
     container_name: immich-machine-learning
-    env_file:
-      - ../.env
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/immich/ml
@@ -88,9 +80,6 @@ services:
   immich-postgres:
     image: tensorchord/pgvecto-rs:pg14-v0.1.11
     container_name: immich-postgres
-    env_file:
-      - .env
-      - ../.env
     environment:
       POSTGRES_DB: ${DB_DATABASE_NAME:?}
       POSTGRES_USER: ${DB_USERNAME:?}
@@ -112,4 +101,4 @@ networks:
     ipam:
       driver: default
       config:
-      - subnet: 172.26.0.0/16
+        - subnet: 172.26.0.0/16

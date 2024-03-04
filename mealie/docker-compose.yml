@@ -2,8 +2,6 @@ services:
   mealie:
     image: hkotel/mealie
     container_name: mealie
-    env_file:
-      - ../.env
     environment:
       # Default Recipe Settings
       RECIPE_PUBLIC: "true"

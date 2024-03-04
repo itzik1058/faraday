@@ -2,9 +2,6 @@ services:
   traefik:
     image: traefik:v2.10
     container_name: traefik
-    env_file:
-      - .env
-      - ../.env
     environment:
       DUCKDNS_TOKEN: ${DUCKDNS_TOKEN:?error}
     command:
@@ -104,9 +101,6 @@ services:
   duckdns:
     image: lscr.io/linuxserver/duckdns:latest
     container_name: duckdns
-    env_file:
-      - .env
-      - ../.env
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -129,21 +123,21 @@ networks:
     ipam:
       driver: default
       config:
-      - subnet: 172.22.0.0/16
+        - subnet: 172.22.0.0/16
   docker-socket-proxy:
     name: docker-socket-proxy
     driver: bridge
     ipam:
       driver: default
       config:
-      - subnet: 172.19.0.0/16
+        - subnet: 172.19.0.0/16
   duckdns:
     name: duckdns
     driver: bridge
     ipam:
       driver: default
       config:
-      - subnet: 172.23.0.0/16
+        - subnet: 172.23.0.0/16
   wireguard:
     name: wireguard
     external: true

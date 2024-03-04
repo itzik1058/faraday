@@ -2,8 +2,6 @@ services:
   satisfactory-server:
     image: wolveix/satisfactory-server:latest
     container_name: satisfactory-server
-    env_file:
-      - ../../.env
     environment:
       PUID: ${PUID:?}
       PGID: ${PGID:?}

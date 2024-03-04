@@ -2,8 +2,6 @@ services:
   stirling-pdf:
     image: frooodle/s-pdf:latest
     container_name: stirling-pdf
-    env_file:
-      - ../.env
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/stirling-pdf

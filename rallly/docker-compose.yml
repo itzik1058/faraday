@@ -2,9 +2,6 @@ services:
   rallly:
     image: lukevella/rallly:latest
     container_name: rallly
-    env_file:
-      - .env
-      - ../.env
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER:?}:${POSTGRES_PASSWORD:?}@rallly-db:5432/${POSTGRES_DB:?}
       # A random 32-character secret key used to encrypt user sessions
@@ -42,9 +39,6 @@ services:
   rallly-db:
     image: postgres:14.2
     container_name: rallly-db
-    env_file:
-      - .env
-      - ../.env
     environment:
       POSTGRES_USER: ${POSTGRES_USER:?}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}

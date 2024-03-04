@@ -2,8 +2,6 @@ services:
   adguardhome:
     image: adguard/adguardhome
     container_name: adguardhome
-    env_file:
-      - ../.env
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/adguardhome/conf
@@ -12,12 +10,12 @@ services:
         source: ${APP_DATA_PATH:?}/adguardhome/work
         target: /opt/adguardhome/work
     ports:
-      - ${HOST_IP:?}:53:53/tcp      # dns
-      - ${HOST_IP:?}:53:53/udp      # dns
+      - ${HOST_IP:?}:53:53/tcp # dns
+      - ${HOST_IP:?}:53:53/udp # dns
       # - 67:67/udp                 # dhcp
       # - 68:68/tcp                 # dhcp
       # - 68:68/udp                 # dhcp
-      - 3000:3000/tcp               # web setup
+      - 3000:3000/tcp # web setup
       # - 853:853/tcp               # dns over tls
       # - 784:784/udp               # dns over quic
       # - 853:853/udp               # dns over quic
@@ -43,5 +41,5 @@ networks:
     ipam:
       driver: default
       config:
-      - subnet: 172.18.0.0/16
-        gateway: 172.18.0.1
+        - subnet: 172.18.0.0/16
+          gateway: 172.18.0.1

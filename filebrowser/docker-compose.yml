@@ -2,8 +2,6 @@ services:
   filebrowser:
     image: filebrowser/filebrowser:s6
     container_name: filebrowser
-    env_file:
-      - ../.env
     environment:
       PUID: ${PUID:?}
       PGID: ${PGID:?}

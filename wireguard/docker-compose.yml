@@ -2,8 +2,6 @@ services:
   wg-easy:
     image: ghcr.io/wg-easy/wg-easy
     container_name: wg-easy
-    env_file:
-      - ../.env
     environment:
       WG_HOST: vpn.${DOMAIN:?}
     cap_add:
@@ -36,4 +34,4 @@ networks:
     ipam:
       driver: default
       config:
-      - subnet: 172.20.0.0/16
+        - subnet: 172.20.0.0/16

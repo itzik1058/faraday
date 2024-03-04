@@ -2,9 +2,6 @@ services:
   speedtest-tracker:
     image: ghcr.io/alexjustesen/speedtest-tracker
     container_name: speedtest-tracker
-    env_file:
-      - .env
-      - ../.env
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -38,9 +35,6 @@ services:
   speedtest-db:
     image: postgres:15
     container_name: speedtest-db
-    env_file:
-      - .env
-      - ../.env
     environment:
       POSTGRES_DB: ${DB_DATABASE:?}
       POSTGRES_USER: ${DB_USERNAME:?}

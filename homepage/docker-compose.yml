@@ -2,8 +2,6 @@ services:
   homepage:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage
-    env_file:
-      - ../.env
     environment:
       PUID: ${PUID:?}
       PGID: ${PGID:?}
@@ -18,7 +16,7 @@ services:
       - homepage
       - watchtower
       - immich
-      - photoprism
+      # - photoprism
       - streaming
       - mealie
     labels:
@@ -38,9 +36,9 @@ networks:
   immich:
     name: immich
     external: true
-  photoprism:
-    name: photoprism
-    external: true
+  # photoprism:
+  #   name: photoprism
+  #   external: true
   streaming:
     name: streaming
     external: true

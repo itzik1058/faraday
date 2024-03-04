@@ -2,9 +2,6 @@ services:
   omnibot:
     image: omnibot
     container_name: omnibot
-    env_file:
-      - .env
-      - ../.env
     environment:
       CLIENT_ID: ${CLIENT_ID:?}
       DISCORD_TOKEN: ${DISCORD_TOKEN:?}

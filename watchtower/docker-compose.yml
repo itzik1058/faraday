@@ -2,9 +2,6 @@ services:
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
-    env_file:
-      - .env
-      - ../.env
     environment:
       TZ: ${TZ:?}
       WATCHTOWER_CLEANUP: true
@@ -35,4 +32,4 @@ networks:
     ipam:
       driver: default
       config:
-      - subnet: 172.21.0.0/16
+        - subnet: 172.21.0.0/16

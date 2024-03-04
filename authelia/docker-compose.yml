@@ -2,9 +2,6 @@ services:
   authelia:
     image: authelia/authelia
     container_name: authelia
-    env_file:
-      - .env
-      - ../.env
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -48,8 +45,6 @@ services:
   authelia-redis:
     image: redis:alpine
     container_name: authelia-redis
-    env_file:
-      - ../.env
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/authelia/redis
@@ -67,4 +62,4 @@ networks:
     ipam:
       driver: default
       config:
-      - subnet: 172.27.0.0/16
+        - subnet: 172.27.0.0/16
