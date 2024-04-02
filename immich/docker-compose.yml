@@ -78,7 +78,7 @@ services:
     restart: unless-stopped
 
   immich-postgres:
-    image: tensorchord/pgvecto-rs:pg14-v0.1.11
+    image: tensorchord/pgvecto-rs:pg14-v0.2.0
     container_name: immich-postgres
     environment:
       POSTGRES_DB: ${DB_DATABASE_NAME:?}
