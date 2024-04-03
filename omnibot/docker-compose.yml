@@ -5,6 +5,7 @@ services:
     environment:
       CLIENT_ID: ${CLIENT_ID:?}
       DISCORD_TOKEN: ${DISCORD_TOKEN:?}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:?}
       DATA_PATH: /omnibot
       GUILD_ID: ${GUILD_ID:?}
       CHANNEL_ID: ${CHANNEL_ID:?}
