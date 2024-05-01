@@ -19,8 +19,7 @@ services:
       - 26881:6881
       - 26881:6881/udp
     networks:
-      streaming:
-        ipv4_address: 172.24.0.2
+      - streaming
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -50,8 +49,7 @@ services:
     # ports:
     #   - 7878:7878
     networks:
-      streaming:
-        ipv4_address: 172.24.0.3
+      - streaming
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -82,8 +80,7 @@ services:
     # ports:
     #   - 8989:8989
     networks:
-      streaming:
-        ipv4_address: 172.24.0.4
+      - streaming
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -109,8 +106,7 @@ services:
         source: ${APP_DATA_PATH:?}/recyclarr
         target: /config
     networks:
-      streaming:
-        ipv4_address: 172.24.0.5
+      - streaming
     labels:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
@@ -148,8 +144,7 @@ services:
         source: ${APP_DATA_PATH:?}/prowlarr
         target: /config
     networks:
-      streaming:
-        ipv4_address: 172.24.0.6
+      - streaming
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -182,8 +177,7 @@ services:
     # ports:
     #   - 6767:6767
     networks:
-      streaming:
-        ipv4_address: 172.24.0.7
+      - streaming
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -217,8 +211,7 @@ services:
     ports:
       - 8096:8096
     networks:
-      streaming:
-        ipv4_address: 172.24.0.8
+      - streaming
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -242,8 +235,7 @@ services:
     # ports:
     #   - 5055:5055
     networks:
-      streaming:
-        ipv4_address: 172.24.0.9
+      - streaming
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -272,8 +264,7 @@ services:
     # ports:
     #   - 8787:8787
     networks:
-      streaming:
-        ipv4_address: 172.24.0.10
+      - streaming
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -303,8 +294,7 @@ services:
     # ports:
     #   - 8083:8083
     networks:
-      streaming:
-        ipv4_address: 172.24.0.11
+      - streaming
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -315,8 +305,3 @@ services:
 networks:
   streaming:
     name: streaming
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.24.0.0/16

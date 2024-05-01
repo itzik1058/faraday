@@ -23,8 +23,7 @@ services:
       # - 5443:5443/tcp             # dnscrypt
       # - 5443:5443/udp             # dnscrypt
     networks:
-      adguardhome:
-        ipv4_address: 172.18.0.2
+      - adguardhome
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
@@ -37,9 +36,3 @@ services:
 networks:
   adguardhome:
     name: adguardhome
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.18.0.0/16
-          gateway: 172.18.0.1
