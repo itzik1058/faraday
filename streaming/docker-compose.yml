@@ -115,6 +115,24 @@ services:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
 
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr
+    container_name: flaresolverr
+    environment:
+      TZ: ${TZ:?}
+      LOG_LEVEL: info
+      LOG_HTML: false
+      CAPTCHA_SOLVER: none
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.flaresolverr.rule: Host(`flaresolverr.${DOMAIN:?}`)
+      traefik.http.routers.flaresolverr.entryPoints: websecure
+      traefik.http.routers.flaresolverr.middlewares: ip-whitelist@docker
+    restart: unless-stopped
+
   prowlarr:
     image: linuxserver/prowlarr
     container_name: prowlarr
