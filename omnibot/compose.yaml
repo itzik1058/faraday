@@ -2,13 +2,14 @@ services:
   omnibot:
     image: omnibot
     container_name: omnibot
+    profiles: [omnibot]
     environment:
-      CLIENT_ID: ${CLIENT_ID:?}
-      DISCORD_TOKEN: ${DISCORD_TOKEN:?}
-      GEMINI_API_KEY: ${GEMINI_API_KEY:?}
+      CLIENT_ID: ${OMNIBOT_CLIENT_ID:?}
+      DISCORD_TOKEN: ${OMNIBOT_DISCORD_TOKEN:?}
+      GEMINI_API_KEY: ${OMNIBOT_GEMINI_API_KEY:?}
       DATA_PATH: /omnibot
-      GUILD_ID: ${GUILD_ID:?}
-      CHANNEL_ID: ${CHANNEL_ID:?}
+      GUILD_ID: ${OMNIBOT_GUILD_ID:?}
+      CHANNEL_ID: ${OMNIBOT_CHANNEL_ID:?}
     volumes:
       - type: bind
         source: ${USER_DATA_PATH:?}/omnibot

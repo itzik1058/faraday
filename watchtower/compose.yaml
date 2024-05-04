@@ -2,6 +2,7 @@ services:
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
+    profiles: [watchtower]
     environment:
       TZ: ${TZ:?}
       WATCHTOWER_CLEANUP: true

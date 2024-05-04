@@ -2,6 +2,7 @@ services:
   wger-nginx:
     image: nginx:stable
     container_name: wger-nginx
+    profiles: [wger]
     volumes:
       - type: bind
         source: ./nginx.conf
@@ -34,12 +35,13 @@ services:
   wger-server:
     image: wger/server
     container_name: wger-server
+    profiles: [wger]
     environment:
       PUID: ${PUID:?}
       PGID: ${PGID:?}
 
-      SECRET_KEY: ${SECRET_KEY:?}
-      SIGNING_KEY: ${SIGNING_KEY:?}
+      SECRET_KEY: ${WGER_SECRET_KEY:?}
+      SIGNING_KEY: ${WGER_SIGNING_KEY:?}
       TIME_ZONE: ${TZ:?}
 
       CSRF_TRUSTED_ORIGINS: https://wger.${DOMAIN:?}
@@ -64,9 +66,9 @@ services:
       DJANGO_DB_ENGINE: django.db.backends.postgresql
       DJANGO_DB_HOST: wger-db
       DJANGO_DB_PORT: 5432
-      DJANGO_DB_DATABASE: ${DB_DATABASE_NAME:?}
-      DJANGO_DB_USER: ${DB_USERNAME:?}
-      DJANGO_DB_PASSWORD: ${DB_PASSWORD:?}
+      DJANGO_DB_DATABASE: ${WGER_DB_DATABASE_NAME:?}
+      DJANGO_DB_USER: ${WGER_DB_USERNAME:?}
+      DJANGO_DB_PASSWORD: ${WGER_DB_PASSWORD:?}
       DJANGO_PERFORM_MIGRATIONS: "True"
 
       DJANGO_CACHE_BACKEND: django_redis.cache.RedisCache
@@ -125,10 +127,11 @@ services:
   wger-db:
     image: postgres:15-alpine
     container_name: wger-db
+    profiles: [wger]
     environment:
-      POSTGRES_DB: ${DB_DATABASE_NAME:?}
-      POSTGRES_USER: ${DB_USERNAME:?}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:?}
+      POSTGRES_DB: ${WGER_DB_DATABASE_NAME:?}
+      POSTGRES_USER: ${WGER_DB_USERNAME:?}
+      POSTGRES_PASSWORD: ${WGER_DB_PASSWORD:?}
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/wger/data
@@ -147,6 +150,7 @@ services:
   wger-cache:
     image: redis
     container_name: wger-cache
+    profiles: [wger]
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/wger/cache

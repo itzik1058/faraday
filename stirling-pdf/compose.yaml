@@ -2,6 +2,7 @@ services:
   stirling-pdf:
     image: frooodle/s-pdf:latest
     container_name: stirling-pdf
+    profiles: [stirlingpdf]
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/stirling-pdf

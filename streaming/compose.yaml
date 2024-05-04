@@ -2,6 +2,7 @@ services:
   qbittorrent:
     image: linuxserver/qbittorrent
     container_name: qbittorrent
+    profiles: [streaming]
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -32,6 +33,7 @@ services:
   radarr:
     image: linuxserver/radarr
     container_name: radarr
+    profiles: [streaming]
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -63,6 +65,7 @@ services:
   sonarr:
     image: linuxserver/sonarr
     container_name: sonarr
+    profiles: [streaming]
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -94,6 +97,7 @@ services:
   recyclarr:
     image: ghcr.io/recyclarr/recyclarr
     container_name: recyclarr
+    profiles: [streaming]
     user: ${PUID:?}:${PGID:?}
     environment:
       TZ: ${TZ:?}
@@ -114,6 +118,7 @@ services:
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr
     container_name: flaresolverr
+    profiles: [streaming]
     environment:
       TZ: ${TZ:?}
       LOG_LEVEL: info
@@ -132,6 +137,7 @@ services:
   prowlarr:
     image: linuxserver/prowlarr
     container_name: prowlarr
+    profiles: [streaming]
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -160,6 +166,7 @@ services:
   bazarr:
     image: linuxserver/bazarr
     container_name: bazarr
+    profiles: [streaming]
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -192,6 +199,7 @@ services:
   jellyfin:
     image: linuxserver/jellyfin
     container_name: jellyfin
+    profiles: [streaming]
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -222,6 +230,7 @@ services:
   jellyseerr:
     image: fallenbagel/jellyseerr
     container_name: jellyseerr
+    profiles: [streaming]
     environment:
       TZ: ${TZ:?}
       LOG_LEVEL: debug
@@ -250,6 +259,7 @@ services:
   readarr:
     image: lscr.io/linuxserver/readarr:develop
     container_name: readarr
+    profiles: [streaming]
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -278,6 +288,7 @@ services:
   calibre-web:
     image: lscr.io/linuxserver/calibre-web:latest
     container_name: calibre-web
+    profiles: [streaming]
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}

@@ -2,6 +2,7 @@ services:
   whoami:
     image: traefik/whoami
     container_name: whoami
+    profiles: [whoami]
     networks:
       - reverse-proxy
     labels:
@@ -11,8 +12,3 @@ services:
       traefik.http.routers.whoami.entryPoints: websecure
       traefik.http.routers.whoami.middlewares: crowdsec-bouncer@docker
     restart: unless-stopped
-
-networks:
-  reverse-proxy:
-    name: reverse-proxy
-    external: true

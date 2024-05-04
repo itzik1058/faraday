@@ -2,6 +2,7 @@ services:
   adguardhome:
     image: adguard/adguardhome
     container_name: adguardhome
+    profiles: [adguardhome]
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/adguardhome/conf

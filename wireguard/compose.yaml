@@ -2,6 +2,7 @@ services:
   wg-easy:
     image: ghcr.io/wg-easy/wg-easy
     container_name: wg-easy
+    profiles: [wireguard]
     environment:
       WG_HOST: vpn.${DOMAIN:?}
     cap_add:

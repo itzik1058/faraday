@@ -2,6 +2,7 @@ services:
   homepage:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage
+    profiles: [homepage]
     environment:
       PUID: ${PUID:?}
       PGID: ${PGID:?}
@@ -30,18 +31,3 @@ services:
 networks:
   homepage:
     name: homepage
-  watchtower:
-    name: watchtower
-    external: true
-  immich:
-    name: immich
-    external: true
-  # photoprism:
-  #   name: photoprism
-  #   external: true
-  streaming:
-    name: streaming
-    external: true
-  mealie:
-    name: mealie
-    external: true

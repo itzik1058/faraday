@@ -2,6 +2,7 @@ services:
   mealie:
     image: hkotel/mealie
     container_name: mealie
+    profiles: [mealie]
     environment:
       # Default Recipe Settings
       RECIPE_PUBLIC: "true"

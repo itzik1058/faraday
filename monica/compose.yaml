@@ -2,12 +2,13 @@ services:
   monica:
     image: monica
     container_name: monica
+    profiles: [monica]
     environment:
-      APP_KEY: ${APP_KEY:?}
+      APP_KEY: ${MONICA_APP_KEY:?}
       APP_ENV: production
       DB_HOST: monica-db
-      DB_USERNAME: ${DB_USERNAME:?}
-      DB_PASSWORD: ${DB_PASSWORD:?}
+      DB_USERNAME: ${MONICA_DB_USERNAME:?}
+      DB_PASSWORD: ${MONICA_DB_PASSWORD:?}
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/monica/data
@@ -24,15 +25,16 @@ services:
     depends_on:
       - monica-db
     restart: unless-stopped
-  
+
   monica-db:
     image: mariadb:11
     container_name: monica-db
+    profiles: [monica]
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: true
       MYSQL_DATABASE: monica
-      MYSQL_USER: ${DB_USERNAME:?}
-      MYSQL_PASSWORD: ${DB_PASSWORD:?}
+      MYSQL_USER: ${MONICA_DB_USERNAME:?}
+      MYSQL_PASSWORD: ${MONICA_DB_PASSWORD:?}
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/monica/mysql

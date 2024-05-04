@@ -2,6 +2,7 @@ services:
   traefik:
     image: traefik:v2.10
     container_name: traefik
+    profiles: [reverseproxy]
     environment:
       DUCKDNS_TOKEN: ${DUCKDNS_TOKEN:?error}
     command:
@@ -81,6 +82,7 @@ services:
   docker-socket-proxy:
     image: tecnativa/docker-socket-proxy
     container_name: docker-socket-proxy
+    profiles: [reverseproxy]
     environment:
       CONTAINERS: 1
       INFO: 1
@@ -101,6 +103,7 @@ services:
   duckdns:
     image: lscr.io/linuxserver/duckdns:latest
     container_name: duckdns
+    profiles: [reverseproxy]
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -123,51 +126,3 @@ networks:
     name: docker-socket-proxy
   duckdns:
     name: duckdns
-  wireguard:
-    name: wireguard
-    external: true
-  adguardhome:
-    name: adguardhome
-    external: true
-  authelia:
-    name: authelia
-    external: true
-  homepage:
-    name: homepage
-    external: true
-  immich:
-    name: immich
-    external: true
-  # photoprism:
-  #   name: photoprism
-  #   external: true
-  paperless-ngx:
-    name: paperless-ngx
-    external: true
-  speedtest-tracker:
-    name: speedtest-tracker
-    external: true
-  filebrowser:
-    name: filebrowser
-    external: true
-  streaming:
-    name: streaming
-    external: true
-  mealie:
-    name: mealie
-    external: true
-  rallly:
-    name: rallly
-    external: true
-  stirling-pdf:
-    name: stirling-pdf
-    external: true
-  microbin:
-    name: microbin
-    external: true
-  wger:
-    name: wger
-    external: true
-  monica:
-    name: monica
-    external: true

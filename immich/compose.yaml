@@ -2,11 +2,12 @@ services:
   immich-server:
     image: ghcr.io/immich-app/immich-server:release
     container_name: immich-server
+    profiles: [immich]
     environment:
       DB_HOSTNAME: immich-postgres
-      DB_DATABASE_NAME: ${DB_DATABASE_NAME:?}
-      DB_USERNAME: ${DB_USERNAME:?}
-      DB_PASSWORD: ${DB_PASSWORD:?}
+      DB_DATABASE_NAME: ${IMMICH_DB_DATABASE_NAME:?}
+      DB_USERNAME: ${IMMICH_DB_USERNAME:?}
+      DB_PASSWORD: ${IMMICH_DB_PASSWORD:?}
       REDIS_HOSTNAME: immich-redis
     volumes:
       - type: bind
@@ -29,14 +30,15 @@ services:
     restart: unless-stopped
 
   immich-microservices:
-    container_name: immich-microservices
     image: ghcr.io/immich-app/immich-server:release
+    container_name: immich-microservices
+    profiles: [immich]
     environment:
       TZ: ${TZ:?}
       DB_HOSTNAME: immich-postgres
-      DB_DATABASE_NAME: ${DB_DATABASE_NAME:?}
-      DB_USERNAME: ${DB_USERNAME:?}
-      DB_PASSWORD: ${DB_PASSWORD:?}
+      DB_DATABASE_NAME: ${IMMICH_DB_DATABASE_NAME:?}
+      DB_USERNAME: ${IMMICH_DB_USERNAME:?}
+      DB_PASSWORD: ${IMMICH_DB_PASSWORD:?}
       REDIS_HOSTNAME: immich-redis
     devices:
       # hardware acceleration
@@ -58,6 +60,7 @@ services:
   immich-machine-learning:
     image: ghcr.io/immich-app/immich-machine-learning:release
     container_name: immich-machine-learning
+    profiles: [immich]
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/immich/ml
@@ -71,6 +74,7 @@ services:
   immich-redis:
     image: redis:6.2-alpine@sha256:70a7a5b641117670beae0d80658430853896b5ef269ccf00d1827427e3263fa3
     container_name: immich-redis
+    profiles: [immich]
     networks:
       - immich
     labels:
@@ -80,10 +84,11 @@ services:
   immich-postgres:
     image: tensorchord/pgvecto-rs:pg14-v0.2.0
     container_name: immich-postgres
+    profiles: [immich]
     environment:
-      POSTGRES_DB: ${DB_DATABASE_NAME:?}
-      POSTGRES_USER: ${DB_USERNAME:?}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:?}
+      POSTGRES_DB: ${IMMICH_DB_DATABASE_NAME:?}
+      POSTGRES_USER: ${IMMICH_DB_USERNAME:?}
+      POSTGRES_PASSWORD: ${IMMICH_DB_PASSWORD:?}
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/immich/database
