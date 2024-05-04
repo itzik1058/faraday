@@ -7,5 +7,5 @@ echo -n 'base64:'; openssl rand -base64 32
 
 Register on first visit, then run
 ```
-docker-compose exec monica php artisan setup:production
+docker compose exec monica php artisan setup:production
 ```
