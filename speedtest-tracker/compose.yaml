@@ -2,7 +2,7 @@ services:
   speedtest-tracker:
     image: lscr.io/linuxserver/speedtest-tracker
     container_name: speedtest-tracker
-    profiles: [speedtest]
+    profiles: [speedtest-tracker]
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -36,7 +36,7 @@ services:
   speedtest-db:
     image: postgres:15
     container_name: speedtest-db
-    profiles: [speedtest]
+    profiles: [speedtest-tracker]
     environment:
       POSTGRES_DB: ${SPEEDTEST_TRACKER_DB_DATABASE:?}
       POSTGRES_USER: ${SPEEDTEST_TRACKER_DB_USERNAME:?}

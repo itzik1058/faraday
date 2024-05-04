@@ -2,7 +2,7 @@ services:
   homeassistant:
     image: ghcr.io/home-assistant/home-assistant:stable
     container_name: homeassistant
-    profiles: [homeassistant]
+    profiles: [home-assistant]
     user: ${PUID:?}:${PGID:?}
     environment:
       TZ: ${TZ:?}

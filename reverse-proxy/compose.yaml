@@ -2,7 +2,7 @@ services:
   traefik:
     image: traefik:v2.10
     container_name: traefik
-    profiles: [reverseproxy]
+    profiles: [reverse-proxy]
     environment:
       DUCKDNS_TOKEN: ${DUCKDNS_TOKEN:?error}
     command:
@@ -82,7 +82,7 @@ services:
   docker-socket-proxy:
     image: tecnativa/docker-socket-proxy
     container_name: docker-socket-proxy
-    profiles: [reverseproxy]
+    profiles: [reverse-proxy]
     environment:
       CONTAINERS: 1
       INFO: 1
@@ -103,7 +103,7 @@ services:
   duckdns:
     image: lscr.io/linuxserver/duckdns:latest
     container_name: duckdns
-    profiles: [reverseproxy]
+    profiles: [reverse-proxy]
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
