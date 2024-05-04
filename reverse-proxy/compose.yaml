@@ -52,17 +52,14 @@ services:
       - docker-socket-proxy
       - wireguard
       - adguardhome
-      - authelia
       # - watchtower
       - homepage
       - immich
-      # - photoprism
       - paperless-ngx
       - speedtest-tracker
       - filebrowser
       - streaming
       - mealie
-      - rallly
       - stirling-pdf
       - microbin
       - wger
