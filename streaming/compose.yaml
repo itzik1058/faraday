@@ -26,7 +26,7 @@ services:
       traefik.enable: true
       traefik.http.routers.qbittorrent.rule: Host(`qbittorrent.${DOMAIN:?}`)
       traefik.http.routers.qbittorrent.entryPoints: websecure
-      traefik.http.routers.qbittorrent.middlewares: ip-whitelist@docker
+      traefik.http.routers.qbittorrent.middlewares: ip-allowlist@docker
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
     restart: unless-stopped
 
@@ -57,7 +57,7 @@ services:
       traefik.enable: true
       traefik.http.routers.radarr.rule: Host(`radarr.${DOMAIN:?}`)
       traefik.http.routers.radarr.entryPoints: websecure
-      traefik.http.routers.radarr.middlewares: ip-whitelist@docker
+      traefik.http.routers.radarr.middlewares: ip-allowlist@docker
     depends_on:
       - qbittorrent
     restart: unless-stopped
@@ -89,7 +89,7 @@ services:
       traefik.enable: true
       traefik.http.routers.sonarr.rule: Host(`sonarr.${DOMAIN:?}`)
       traefik.http.routers.sonarr.entryPoints: websecure
-      traefik.http.routers.sonarr.middlewares: ip-whitelist@docker
+      traefik.http.routers.sonarr.middlewares: ip-allowlist@docker
     depends_on:
       - qbittorrent
     restart: unless-stopped
@@ -131,7 +131,7 @@ services:
       traefik.enable: true
       traefik.http.routers.flaresolverr.rule: Host(`flaresolverr.${DOMAIN:?}`)
       traefik.http.routers.flaresolverr.entryPoints: websecure
-      traefik.http.routers.flaresolverr.middlewares: ip-whitelist@docker
+      traefik.http.routers.flaresolverr.middlewares: ip-allowlist@docker
     restart: unless-stopped
 
   prowlarr:
@@ -156,7 +156,7 @@ services:
       traefik.enable: true
       traefik.http.routers.prowlarr.rule: Host(`prowlarr.${DOMAIN:?}`)
       traefik.http.routers.prowlarr.entryPoints: websecure
-      traefik.http.routers.prowlarr.middlewares: ip-whitelist@docker
+      traefik.http.routers.prowlarr.middlewares: ip-allowlist@docker
     depends_on:
       - radarr
       - sonarr
@@ -190,7 +190,7 @@ services:
       traefik.enable: true
       traefik.http.routers.bazarr.rule: Host(`bazarr.${DOMAIN:?}`)
       traefik.http.routers.bazarr.entryPoints: websecure
-      traefik.http.routers.bazarr.middlewares: ip-whitelist@docker
+      traefik.http.routers.bazarr.middlewares: ip-allowlist@docker
     depends_on:
       - radarr
       - sonarr
@@ -280,7 +280,7 @@ services:
       traefik.enable: true
       traefik.http.routers.readarr.rule: Host(`readarr.${DOMAIN:?}`)
       traefik.http.routers.readarr.entryPoints: websecure
-      traefik.http.routers.readarr.middlewares: ip-whitelist@docker
+      traefik.http.routers.readarr.middlewares: ip-allowlist@docker
     depends_on:
       - qbittorrent
     restart: unless-stopped

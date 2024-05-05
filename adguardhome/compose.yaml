@@ -30,7 +30,7 @@ services:
       traefik.enable: true
       traefik.http.routers.adguardhome.rule: Host(`adguard.${DOMAIN:?}`)
       traefik.http.routers.adguardhome.entryPoints: websecure
-      traefik.http.routers.adguardhome.middlewares: ip-whitelist@docker
+      traefik.http.routers.adguardhome.middlewares: ip-allowlist@docker
       traefik.http.services.adguardhome.loadbalancer.server.port: 80
     restart: unless-stopped
 

@@ -25,7 +25,7 @@ services:
       traefik.enable: true
       traefik.http.routers.filebrowser.rule: Host(`filebrowser.${DOMAIN:?}`)
       traefik.http.routers.filebrowser.entryPoints: websecure
-      traefik.http.routers.filebrowser.middlewares: ip-whitelist@docker
+      traefik.http.routers.filebrowser.middlewares: ip-allowlist@docker
     restart: unless-stopped
 
 networks:

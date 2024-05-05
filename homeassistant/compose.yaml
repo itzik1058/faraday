@@ -20,6 +20,6 @@ services:
       traefik.enable: true
       traefik.http.routers.homeassistant.rule: Host(`homeassistant.${DOMAIN:?}`)
       traefik.http.routers.homeassistant.entryPoints: websecure
-      traefik.http.routers.homeassistant.middlewares: ip-whitelist@docker
+      traefik.http.routers.homeassistant.middlewares: ip-allowlist@docker
       traefik.http.services.homeassistant.loadbalancer.server.port: 8123
     restart: unless-stopped

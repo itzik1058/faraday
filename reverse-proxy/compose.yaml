@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: traefik:v2.10
+    image: traefik
     container_name: traefik
     profiles: [reverse-proxy]
     environment:
@@ -30,7 +30,6 @@ services:
       - --certificatesResolvers.mydnschallenge.acme.dnsChallenge.provider=duckdns
       - --certificatesResolvers.mydnschallenge.acme.dnsChallenge.delaybeforecheck=10
       - --certificatesResolvers.mydnschallenge.acme.dnsChallenge.resolvers=1.1.1.1:53,8.8.8.8:53
-      - --certificatesResolvers.mydnschallenge.acme.email=${DUCKDNS_EMAIL:?}
       # Staging CA
       # - --certificatesResolvers.mydnschallenge.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory
       - --certificatesResolvers.mydnschallenge.acme.storage=/letsencrypt/acme.json
@@ -69,11 +68,11 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       traefik.enable: true
-      traefik.http.middlewares.ip-whitelist.ipWhiteList.sourceRange: ${IP_WHITELIST:?}
+      traefik.http.middlewares.ip-allowlist.ipAllowList.sourceRange: ${IP_ALLOWLIST:?}
       traefik.http.routers.dashboard.rule: Host(`traefik.${DOMAIN:?}`)
       traefik.http.routers.dashboard.entryPoints: websecure
       traefik.http.routers.dashboard.service: api@internal
-      traefik.http.routers.dashboard.middlewares: ip-whitelist@docker
+      traefik.http.routers.dashboard.middlewares: ip-allowlist@docker
     restart: unless-stopped
 
   docker-socket-proxy:

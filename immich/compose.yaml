@@ -23,7 +23,7 @@ services:
       traefik.enable: true
       traefik.http.routers.immich.rule: Host(`immich.${DOMAIN:?}`)
       traefik.http.routers.immich.entrypoints: websecure
-      traefik.http.routers.immich.middlewares: ip-whitelist@docker
+      traefik.http.routers.immich.middlewares: ip-allowlist@docker
     depends_on:
       - immich-redis
       - immich-postgres
