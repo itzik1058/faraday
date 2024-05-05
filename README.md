@@ -1,8 +1,10 @@
 # Setup
 
-Start the services with `docker compose up -d` and create missing directories as necessary.
-Use .env files to provide any missing environment variables to the compose stacks that require them.
-Pass .env files with `docker compose --env-file`.
+Start the services with `./compose.sh up -d` (optionally specify `--profile`) and create missing directories as necessary.
+
+Use `.env` to provide any missing environment variables to the compose stacks that require them.
+
+`.env` is encrypted using [SOPS](https://github.com/getsops/sops) and `./compose.sh` runs docker compose with `.env` decrypted.
 
 Inspect and solve network overlaps with
 
