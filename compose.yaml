@@ -1,5 +1,6 @@
 include:
   - adguardhome/compose.yaml
+  - allfather/compose.yaml
   - filebrowser/compose.yaml
   - games/compose.yaml
   - homeassistant/compose.yaml

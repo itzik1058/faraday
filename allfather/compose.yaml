@@ -1,0 +1,15 @@
+services:
+  allfather:
+    image: allfather
+    container_name: allfather
+    profiles: [allfather]
+    environment:
+      BOT_TOKEN: ${ALLFATHER_BOT_TOKEN:?}
+      GOOGLE_API_KEY: ${ALLFATHER_GOOGLE_API_KEY:?}
+    networks:
+      - allfather
+    restart: unless-stopped
+
+networks:
+  allfather:
+    name: allfather
