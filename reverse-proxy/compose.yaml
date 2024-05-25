@@ -4,7 +4,7 @@ services:
     container_name: traefik
     profiles: [reverse-proxy]
     environment:
-      DUCKDNS_TOKEN: ${DUCKDNS_TOKEN:?error}
+      CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN:?}
     command:
       - --global.sendAnonymousUsage=true
 
@@ -23,16 +23,16 @@ services:
       - --entryPoints.web.http.redirections.entryPoint.scheme=https
       - --entryPoints.web.http.redirections.entryPoint.permanent=true
       - --entryPoints.websecure.address=:443
-      - --entryPoints.websecure.http.tls.certResolver=mydnschallenge
+      - --entryPoints.websecure.http.tls.certResolver=dns-cloudflare
       - --entryPoints.websecure.http.tls.domains[0].main=${DOMAIN:?}
       - --entryPoints.websecure.http.tls.domains[0].sans=*.${DOMAIN:?}
 
-      - --certificatesResolvers.mydnschallenge.acme.dnsChallenge.provider=duckdns
-      - --certificatesResolvers.mydnschallenge.acme.dnsChallenge.delaybeforecheck=10
-      - --certificatesResolvers.mydnschallenge.acme.dnsChallenge.resolvers=1.1.1.1:53,8.8.8.8:53
+      - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.provider=cloudflare
+      - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.delaybeforecheck=10
+      - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.resolvers=1.1.1.1:53,1.0.0.1:53
       # Staging CA
-      # - --certificatesResolvers.mydnschallenge.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory
-      - --certificatesResolvers.mydnschallenge.acme.storage=/letsencrypt/acme.json
+      # - --certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory
+      - --certificatesResolvers.dns-cloudflare.acme.storage=/letsencrypt/acme.json
     volumes:
       - type: bind
         source: "${APP_DATA_PATH:?}/traefik/letsencrypt"
@@ -96,29 +96,8 @@ services:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
 
-  duckdns:
-    image: lscr.io/linuxserver/duckdns:latest
-    container_name: duckdns
-    profiles: [reverse-proxy]
-    environment:
-      TZ: ${TZ:?}
-      PUID: ${PUID:?}
-      PGID: ${PGID:?}
-      SUBDOMAINS: ${DUCKDNS_SUBDOMAINS:?}
-      TOKEN: ${DUCKDNS_TOKEN:?}
-      LOG_FILE: false
-    volumes:
-      - type: bind
-        source: ${APP_DATA_PATH:?}/duckdns
-        target: /config
-    networks:
-      - duckdns
-    restart: unless-stopped
-
 networks:
   reverse-proxy:
     name: reverse-proxy
   docker-socket-proxy:
     name: docker-socket-proxy
-  duckdns:
-    name: duckdns
