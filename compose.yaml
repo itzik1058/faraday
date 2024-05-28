@@ -8,6 +8,7 @@ include:
   - immich/compose.yaml
   - mealie/compose.yaml
   - microbin/compose.yaml
+  - miniflux/compose.yaml
   - monica/compose.yaml
   - omnibot/compose.yaml
   - paperless-ngx/compose.yaml

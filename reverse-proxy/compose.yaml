@@ -56,6 +56,7 @@ services:
       - immich
       - paperless-ngx
       - speedtest-tracker
+      - miniflux
       - filebrowser
       - streaming
       - mealie

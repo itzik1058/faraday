@@ -1,0 +1,50 @@
+services:
+  miniflux:
+    image: miniflux/miniflux:latest
+    container_name: miniflux
+    profiles: [miniflux]
+    environment:
+      DATABASE_URL: postgres://${MINIFLUX_DB_USERNAME:?}:${MINIFLUX_DB_PASSWORD:?}@miniflux-postgres/${MINIFLUX_DB_DATABASE:?}?sslmode=disable
+      ADMIN_USERNAME: ${MINIFLUX_ADMIN_USERNAME:?}
+      ADMIN_PASSWORD: ${MINIFLUX_ADMIN_PASSWORD:?}
+      RUN_MIGRATIONS: 1
+      CREATE_ADMIN: 1
+    networks:
+      - miniflux
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.miniflux.rule: Host(`rss.${DOMAIN:?}`)
+      traefik.http.routers.miniflux.entryPoints: websecure
+    healthcheck:
+      test: ["CMD", "/usr/bin/miniflux", "-healthcheck", "auto"]
+    depends_on:
+      miniflux-postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  miniflux-postgres:
+    image: postgres:15
+    container_name: miniflux-postgres
+    profiles: [miniflux]
+    environment:
+      POSTGRES_DB: ${MINIFLUX_DB_DATABASE:?}
+      POSTGRES_USER: ${MINIFLUX_DB_USERNAME:?}
+      POSTGRES_PASSWORD: ${MINIFLUX_DB_PASSWORD:?}
+    networks:
+      - miniflux
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/miniflux
+        target: /var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U ${MINIFLUX_DB_USERNAME:?}
+      interval: 10s
+      start_period: 30s
+    restart: unless-stopped
+
+networks:
+  miniflux:
+    name: miniflux
