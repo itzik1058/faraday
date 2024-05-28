@@ -141,7 +141,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
     healthcheck:
-      test: pg_isready -U wger
+      test: pg_isready -U ${WGER_DB_USERNAME:?}
       interval: 10s
       timeout: 5s
       retries: 5
