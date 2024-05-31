@@ -1,6 +1,6 @@
 services:
   filebrowser:
-    image: filebrowser/filebrowser:s6
+    image: filebrowser/filebrowser
     container_name: filebrowser
     profiles: [filebrowser]
     environment:
@@ -11,8 +11,8 @@ services:
         source: ${APP_DATA_PATH:?}/filebrowser/database
         target: /database
       - type: bind
-        source: ${APP_DATA_PATH:?}/filebrowser/config
-        target: /config
+        source: ${APP_DATA_PATH:?}/filebrowser/config/settings.json
+        target: /.filebrowser.json
       - type: bind
         source: ${USER_DATA_PATH:?}/files
         target: /srv
@@ -25,7 +25,7 @@ services:
       traefik.enable: true
       traefik.http.routers.filebrowser.rule: Host(`filebrowser.${DOMAIN:?}`)
       traefik.http.routers.filebrowser.entryPoints: websecure
-      traefik.http.routers.filebrowser.middlewares: ip-allowlist@docker
+      # traefik.http.routers.filebrowser.middlewares: ip-allowlist@docker
     restart: unless-stopped
 
 networks:
