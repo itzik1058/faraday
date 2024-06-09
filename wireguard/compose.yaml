@@ -5,6 +5,8 @@ services:
     profiles: [wireguard]
     environment:
       WG_HOST: vpn.${DOMAIN:?}
+      WG_DEFAULT_DNS: ${HOST_IP:?}
+      UI_TRAFFIC_STATS: true
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
