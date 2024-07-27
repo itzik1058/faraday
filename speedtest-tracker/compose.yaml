@@ -4,9 +4,10 @@ services:
     container_name: speedtest-tracker
     profiles: [speedtest-tracker]
     environment:
-      TZ: ${TZ:?}
+      TZ: Etc/UTC
       PUID: ${PUID:?}
       PGID: ${PGID:?}
+      DISPLAY_TIMEZONE: ${TZ:?}
       # APP_DEBUG: true
       APP_KEY: ${SPEEDTEST_TRACKER_APP_KEY:?}
       DB_CONNECTION: pgsql
@@ -15,6 +16,8 @@ services:
       DB_DATABASE: ${SPEEDTEST_TRACKER_DB_DATABASE:?}
       DB_USERNAME: ${SPEEDTEST_TRACKER_DB_USERNAME:?}
       DB_PASSWORD: ${SPEEDTEST_TRACKER_DB_PASSWORD:?}
+      SPEEDTEST_SCHEDULE: "0 */1 * * *"
+      SPEEDTEST_SERVERS: ${SPEEDTEST_TRACKER_SERVERS:?}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:?}
     volumes:
       - type: bind
