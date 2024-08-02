@@ -1,0 +1,28 @@
+services:
+  factorio:
+    image: factoriotools/factorio:stable
+    container_name: factorio
+    profiles: [factorio]
+    environment:
+      SAVE_NAME: _default
+      GENERATE_NEW_SAVE: true
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/factorio
+        target: /factorio
+      - type: bind
+        source: ${USER_DATA_PATH:?}/games/factorio/saves
+        target: /factorio/saves
+      - type: bind
+        source: ${USER_DATA_PATH:?}/games/factorio/mods
+        target: /factorio/mods
+    networks:
+      - factorio
+    ports:
+      - "34197:34197/udp"
+      - "27015:27015/tcp"
+    restart: unless-stopped
+
+networks:
+  factorio:
+    name: factorio
