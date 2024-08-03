@@ -34,6 +34,23 @@ services:
       traefik.http.services.adguardhome.loadbalancer.server.port: 80
     restart: unless-stopped
 
+  adguardhome-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: adguardhome-backup
+    profiles: [adguardhome]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/adguardhome
+        target: /backup/adguardhome
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/adguardhome
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
 networks:
   adguardhome:
     name: adguardhome
