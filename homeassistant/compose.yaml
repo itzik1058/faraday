@@ -23,3 +23,20 @@ services:
       traefik.http.routers.homeassistant.middlewares: ip-allowlist@docker
       traefik.http.services.homeassistant.loadbalancer.server.port: 8123
     restart: unless-stopped
+
+  homeassistant-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: homeassistant-backup
+    profiles: [home-assistant]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/homeassistant
+        target: /backup/homeassistant
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/homeassistant
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
