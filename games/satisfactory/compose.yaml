@@ -23,6 +23,27 @@ services:
       - 15777:15777/udp
     restart: unless-stopped
 
+  satisfactory-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: satisfactory-backup
+    profiles: [satisfactory]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/satisfactory
+        target: /backup/config
+        read_only: true
+      - type: bind
+        source: ${USER_DATA_PATH:?}/games/satisfactory
+        target: /backup/saved
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/satisfactory
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
 networks:
   satisfactory:
     name: satisfactory
