@@ -99,6 +99,23 @@ services:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
 
+  immich-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: immich-backup
+    profiles: [immich]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/immich
+        target: /backup/immich
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/immich
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
 networks:
   immich:
     name: immich
