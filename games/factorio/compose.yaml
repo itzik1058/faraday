@@ -23,6 +23,31 @@ services:
       - "27015:27015/tcp"
     restart: unless-stopped
 
+  factorio-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: factorio-backup
+    profiles: [factorio]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/factorio
+        target: /backup/factorio
+        read_only: true
+      - type: bind
+        source: ${USER_DATA_PATH:?}/games/factorio/saves
+        target: /backup/saves
+        read_only: true
+      - type: bind
+        source: ${USER_DATA_PATH:?}/games/factorio/mods
+        target: /backup/mods
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/factorio
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
 networks:
   factorio:
     name: factorio
