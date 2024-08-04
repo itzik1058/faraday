@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
 
   wg-easy-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: wg-easy-backup
     profiles: [wireguard]
     volumes:

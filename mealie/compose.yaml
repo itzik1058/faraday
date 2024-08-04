@@ -32,7 +32,7 @@ services:
     restart: unless-stopped
 
   mealie-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: mealie-backup
     profiles: [mealie]
     volumes:

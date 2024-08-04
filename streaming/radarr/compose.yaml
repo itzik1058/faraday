@@ -32,7 +32,7 @@ services:
     restart: unless-stopped
 
   radarr-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: radarr-backup
     profiles: [streaming]
     volumes:

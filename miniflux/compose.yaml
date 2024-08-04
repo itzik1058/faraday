@@ -46,7 +46,7 @@ services:
     restart: unless-stopped
 
   miniflux-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: miniflux-backup
     profiles: [miniflux]
     volumes:

@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
 
   omnibot-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: omnibot-backup
     profiles: [omnibot]
     volumes:

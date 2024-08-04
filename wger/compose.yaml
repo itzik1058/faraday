@@ -167,7 +167,7 @@ services:
     restart: unless-stopped
 
   wger-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: wger-backup
     profiles: [wger]
     volumes:

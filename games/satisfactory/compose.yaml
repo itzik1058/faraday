@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
 
   satisfactory-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: satisfactory-backup
     profiles: [satisfactory]
     volumes:

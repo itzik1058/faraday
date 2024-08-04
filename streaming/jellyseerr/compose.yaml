@@ -29,7 +29,7 @@ services:
     restart: unless-stopped
 
   jellyseerr-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: jellyseerr-backup
     profiles: [streaming]
     volumes:

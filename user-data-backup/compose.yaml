@@ -1,6 +1,6 @@
 services:
   user-data-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: user-data-backup
     profiles: [user-data-backup]
     environment:

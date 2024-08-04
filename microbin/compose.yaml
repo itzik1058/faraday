@@ -55,7 +55,7 @@ services:
     restart: unless-stopped
 
   microbin-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: microbin-backup
     profiles: [microbin]
     volumes:

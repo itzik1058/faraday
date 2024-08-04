@@ -28,7 +28,7 @@ services:
     restart: unless-stopped
 
   calibre-web-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: calibre-web-backup
     profiles: [streaming]
     volumes:

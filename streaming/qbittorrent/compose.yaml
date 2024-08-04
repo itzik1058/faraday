@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
 
   qbittorrent-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: qbittorrent-backup
     profiles: [streaming]
     volumes:

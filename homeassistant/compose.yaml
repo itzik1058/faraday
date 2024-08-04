@@ -25,7 +25,7 @@ services:
     restart: unless-stopped
 
   homeassistant-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: homeassistant-backup
     profiles: [home-assistant]
     volumes:

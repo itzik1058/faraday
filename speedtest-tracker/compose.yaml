@@ -55,7 +55,7 @@ services:
     restart: unless-stopped
 
   speedtest-tracker-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: speedtest-tracker-backup
     profiles: [speedtest-tracker]
     volumes:

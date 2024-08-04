@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
 
   recyclarr-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: recyclarr-backup
     profiles: [streaming]
     volumes:

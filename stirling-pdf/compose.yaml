@@ -17,7 +17,7 @@ services:
     restart: unless-stopped
 
   stirling-pdf-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: stirling-pdf-backup
     profiles: [stirling-pdf]
     volumes:

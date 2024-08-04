@@ -35,7 +35,7 @@ services:
     restart: unless-stopped
 
   adguardhome-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: adguardhome-backup
     profiles: [adguardhome]
     volumes:

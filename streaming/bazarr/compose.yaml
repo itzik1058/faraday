@@ -33,7 +33,7 @@ services:
     restart: unless-stopped
 
   bazarr-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: bazarr-backup
     profiles: [streaming]
     volumes:

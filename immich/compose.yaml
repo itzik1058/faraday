@@ -100,7 +100,7 @@ services:
     restart: unless-stopped
 
   immich-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: immich-backup
     profiles: [immich]
     volumes:

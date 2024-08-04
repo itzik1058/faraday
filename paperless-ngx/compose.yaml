@@ -60,7 +60,7 @@ services:
     restart: unless-stopped
 
   paperless-backup:
-    image: offen/docker-volume-backup:latest
+    image: offen/docker-volume-backup:v2
     container_name: paperless-backup
     profiles: [paperless]
     volumes:
