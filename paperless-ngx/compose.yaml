@@ -67,6 +67,9 @@ services:
     profiles:
       - backup
       - paperless
+    environment:
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/paperless
