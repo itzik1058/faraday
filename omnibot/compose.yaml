@@ -19,6 +19,23 @@ services:
       - omnibot
     restart: unless-stopped
 
+  omnibot-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: omnibot-backup
+    profiles: [omnibot]
+    volumes:
+      - type: bind
+        source: ${USER_DATA_PATH:?}/omnibot
+        target: /backup/omnibot
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/omnibot
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
 networks:
   omnibot:
     name: omnibot

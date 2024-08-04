@@ -166,6 +166,23 @@ services:
       retries: 5
     restart: unless-stopped
 
+  wger-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: wger-backup
+    profiles: [wger]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/wger
+        target: /backup/wger
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/wger
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
 networks:
   wger:
     name: wger

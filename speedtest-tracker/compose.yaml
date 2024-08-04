@@ -54,6 +54,23 @@ services:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
 
+  speedtest-tracker-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: speedtest-tracker-backup
+    profiles: [speedtest-tracker]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/speedtest-tracker
+        target: /backup/speedtest-tracker
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/speedtest-tracker
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
 networks:
   speedtest-tracker:
     name: speedtest-tracker

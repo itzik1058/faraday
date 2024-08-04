@@ -28,6 +28,23 @@ services:
       # traefik.http.routers.filebrowser.middlewares: ip-allowlist@docker
     restart: unless-stopped
 
+  filebrowser-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: filebrowser-backup
+    profiles: [filebrowser]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/filebrowser
+        target: /backup/filebrowser
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/filebrowser
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
 networks:
   filebrowser:
     name: filebrowser

@@ -31,6 +31,23 @@ services:
       - mealie
     restart: unless-stopped
 
+  mealie-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: mealie-backup
+    profiles: [mealie]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/mealie
+        target: /backup/mealie
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/mealie
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
 networks:
   mealie:
     name: mealie

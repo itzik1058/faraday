@@ -59,6 +59,27 @@ services:
       - paperless-ngx
     restart: unless-stopped
 
+  paperless-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: paperless-backup
+    profiles: [paperless]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/paperless
+        target: /backup/paperless
+        read_only: true
+      - type: bind
+        source: ${USER_DATA_PATH:?}/documents
+        target: /backup/documents
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/paperless
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
 networks:
   paperless-ngx:
     name: paperless-ngx
