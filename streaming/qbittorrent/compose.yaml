@@ -1,0 +1,31 @@
+services:
+  qbittorrent:
+    image: linuxserver/qbittorrent
+    container_name: qbittorrent
+    profiles: [streaming]
+    environment:
+      TZ: ${TZ:?}
+      PUID: ${PUID:?}
+      PGID: ${PGID:?}
+      WEBUI_PORT: 8080
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/qbittorrent
+        target: /config
+      - type: bind
+        source: ${USER_DATA_PATH:?}
+        target: /data
+    ports:
+      #   - 8080:8080
+      - 26881:6881
+      - 26881:6881/udp
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.qbittorrent.rule: Host(`qbittorrent.${DOMAIN:?}`)
+      traefik.http.routers.qbittorrent.entryPoints: websecure
+      traefik.http.routers.qbittorrent.middlewares: ip-allowlist@docker
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
+    restart: unless-stopped

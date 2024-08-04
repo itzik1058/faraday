@@ -1,0 +1,29 @@
+services:
+  jellyseerr:
+    image: fallenbagel/jellyseerr
+    container_name: jellyseerr
+    profiles: [streaming]
+    environment:
+      TZ: ${TZ:?}
+      LOG_LEVEL: debug
+    volumes:
+      - type: bind
+        source: ${APP_LOG_PATH:?}/jellyseerr
+        target: /app/config/logs
+      - type: bind
+        source: ${APP_DATA_PATH:?}/jellyseerr
+        target: /app/config
+    # ports:
+    #   - 5055:5055
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.jellyseerr.rule: Host(`jellyseerr.${DOMAIN:?}`)
+      traefik.http.routers.jellyseerr.entryPoints: websecure
+    depends_on:
+      - jellyfin
+      - radarr
+      - sonarr
+    restart: unless-stopped

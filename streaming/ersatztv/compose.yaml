@@ -1,0 +1,29 @@
+services:
+  ersatztv:
+    image: jasongdove/ersatztv:latest-vaapi
+    container_name: ersatztv
+    profiles: [streaming]
+    environment:
+      TZ: ${TZ:?}
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/ersatztv
+        target: /root/.local/share/ersatztv
+      - type: bind
+        source: ${USER_DATA_PATH:?}
+        target: /media
+        read_only: true
+    # ports:
+    #   - 8409:8409
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.ersatztv.rule: Host(`tv.${DOMAIN:?}`)
+      traefik.http.routers.ersatztv.entryPoints: websecure
+    depends_on:
+      - jellyfin
+    restart: unless-stopped

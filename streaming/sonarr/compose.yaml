@@ -1,0 +1,32 @@
+services:
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    profiles: [streaming]
+    environment:
+      TZ: ${TZ:?}
+      PUID: ${PUID:?}
+      PGID: ${PGID:?}
+    volumes:
+      - type: bind
+        source: ${APP_LOG_PATH:?}/sonarr
+        target: /config/logs
+      - type: bind
+        source: ${APP_DATA_PATH:?}/sonarr
+        target: /config
+      - type: bind
+        source: ${USER_DATA_PATH:?}
+        target: /data
+    # ports:
+    #   - 8989:8989
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.sonarr.rule: Host(`sonarr.${DOMAIN:?}`)
+      traefik.http.routers.sonarr.entryPoints: websecure
+      traefik.http.routers.sonarr.middlewares: ip-allowlist@docker
+    depends_on:
+      - qbittorrent
+    restart: unless-stopped

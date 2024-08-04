@@ -1,0 +1,29 @@
+services:
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    profiles: [streaming]
+    environment:
+      TZ: ${TZ:?}
+      PUID: ${PUID:?}
+      PGID: ${PGID:?}
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/readarr
+        target: /config
+      - type: bind
+        source: ${USER_DATA_PATH:?}
+        target: /data
+    # ports:
+    #   - 8787:8787
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.readarr.rule: Host(`readarr.${DOMAIN:?}`)
+      traefik.http.routers.readarr.entryPoints: websecure
+      traefik.http.routers.readarr.middlewares: ip-allowlist@docker
+    depends_on:
+      - qbittorrent
+    restart: unless-stopped

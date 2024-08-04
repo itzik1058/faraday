@@ -1,0 +1,32 @@
+services:
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    profiles: [streaming]
+    environment:
+      TZ: ${TZ:?}
+      PUID: ${PUID:?}
+      PGID: ${PGID:?}
+    volumes:
+      - type: bind
+        source: ${APP_LOG_PATH:?}/radarr
+        target: /config/logs
+      - type: bind
+        source: ${APP_DATA_PATH:?}/radarr
+        target: /config
+      - type: bind
+        source: ${USER_DATA_PATH:?}
+        target: /data
+    # ports:
+    #   - 7878:7878
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.radarr.rule: Host(`radarr.${DOMAIN:?}`)
+      traefik.http.routers.radarr.entryPoints: websecure
+      traefik.http.routers.radarr.middlewares: ip-allowlist@docker
+    depends_on:
+      - qbittorrent
+    restart: unless-stopped

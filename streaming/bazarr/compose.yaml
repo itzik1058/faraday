@@ -1,0 +1,33 @@
+services:
+  bazarr:
+    image: linuxserver/bazarr
+    container_name: bazarr
+    profiles: [streaming]
+    environment:
+      TZ: ${TZ:?}
+      PUID: ${PUID:?}
+      PGID: ${PGID:?}
+    volumes:
+      - type: bind
+        source: ${APP_LOG_PATH:?}/bazarr
+        target: /config/log
+      - type: bind
+        source: ${APP_DATA_PATH:?}/bazarr
+        target: /config
+      - type: bind
+        source: ${USER_DATA_PATH:?}
+        target: /data
+    # ports:
+    #   - 6767:6767
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.bazarr.rule: Host(`bazarr.${DOMAIN:?}`)
+      traefik.http.routers.bazarr.entryPoints: websecure
+      traefik.http.routers.bazarr.middlewares: ip-allowlist@docker
+    depends_on:
+      - radarr
+      - sonarr
+    restart: unless-stopped

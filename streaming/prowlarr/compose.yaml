@@ -1,0 +1,29 @@
+services:
+  prowlarr:
+    image: linuxserver/prowlarr
+    container_name: prowlarr
+    profiles: [streaming]
+    environment:
+      TZ: ${TZ:?}
+      PUID: ${PUID:?}
+      PGID: ${PGID:?}
+    volumes:
+      - type: bind
+        source: ${APP_LOG_PATH:?}/prowlarr
+        target: /config/logs
+      - type: bind
+        source: ${APP_DATA_PATH:?}/prowlarr
+        target: /config
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.prowlarr.rule: Host(`prowlarr.${DOMAIN:?}`)
+      traefik.http.routers.prowlarr.entryPoints: websecure
+      traefik.http.routers.prowlarr.middlewares: ip-allowlist@docker
+    depends_on:
+      - radarr
+      - sonarr
+      - readarr
+    restart: unless-stopped

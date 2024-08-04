@@ -1,0 +1,28 @@
+services:
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web:latest
+    container_name: calibre-web
+    profiles: [streaming]
+    environment:
+      TZ: ${TZ:?}
+      PUID: ${PUID:?}
+      PGID: ${PGID:?}
+      DOCKER_MODS: linuxserver/mods:universal-calibre #optional
+      OAUTHLIB_RELAX_TOKEN_SCOPE: 1 #optional
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/calibre
+        target: /config
+      - type: bind
+        source: ${USER_DATA_PATH:?}/calibre
+        target: /books
+    # ports:
+    #   - 8083:8083
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.calibre.rule: Host(`calibre.${DOMAIN:?}`)
+      traefik.http.routers.calibre.entryPoints: websecure
+    restart: unless-stopped

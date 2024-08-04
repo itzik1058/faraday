@@ -1,0 +1,31 @@
+services:
+  jellyfin:
+    image: linuxserver/jellyfin
+    container_name: jellyfin
+    profiles: [streaming]
+    environment:
+      TZ: ${TZ:?}
+      PUID: ${PUID:?}
+      PGID: ${PGID:?}
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - type: bind
+        source: ${APP_LOG_PATH:?}/jellyfin
+        target: /config/log
+      - type: bind
+        source: ${APP_DATA_PATH:?}/jellyfin
+        target: /config
+      - type: bind
+        source: ${USER_DATA_PATH:?}
+        target: /media
+    ports:
+      - 8096:8096
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.jellyfin.rule: Host(`jellyfin.${DOMAIN:?}`)
+      traefik.http.routers.jellyfin.entryPoints: websecure
+    restart: unless-stopped
