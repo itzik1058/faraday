@@ -2,7 +2,8 @@ services:
   speedtest-tracker:
     image: lscr.io/linuxserver/speedtest-tracker
     container_name: speedtest-tracker
-    profiles: [speedtest-tracker]
+    profiles:
+      - speedtest-tracker
     environment:
       TZ: Etc/UTC
       PUID: ${PUID:?}
@@ -39,7 +40,8 @@ services:
   speedtest-db:
     image: postgres:15
     container_name: speedtest-db
-    profiles: [speedtest-tracker]
+    profiles:
+      - speedtest-tracker
     environment:
       POSTGRES_DB: ${SPEEDTEST_TRACKER_DB_DATABASE:?}
       POSTGRES_USER: ${SPEEDTEST_TRACKER_DB_USERNAME:?}
@@ -57,7 +59,9 @@ services:
   speedtest-tracker-backup:
     image: offen/docker-volume-backup:v2
     container_name: speedtest-tracker-backup
-    profiles: [speedtest-tracker]
+    profiles:
+      - backup
+      - speedtest-tracker
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/speedtest-tracker

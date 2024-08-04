@@ -2,7 +2,8 @@ services:
   mealie:
     image: hkotel/mealie
     container_name: mealie
-    profiles: [mealie]
+    profiles:
+      - mealie
     environment:
       # Default Recipe Settings
       RECIPE_PUBLIC: "true"
@@ -34,7 +35,9 @@ services:
   mealie-backup:
     image: offen/docker-volume-backup:v2
     container_name: mealie-backup
-    profiles: [mealie]
+    profiles:
+      - backup
+      - mealie
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/mealie

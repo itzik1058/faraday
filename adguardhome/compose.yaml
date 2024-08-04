@@ -2,7 +2,9 @@ services:
   adguardhome:
     image: adguard/adguardhome
     container_name: adguardhome
-    profiles: [adguardhome]
+    profiles:
+      - adguardhome
+      - dns
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/adguardhome/conf
@@ -37,7 +39,10 @@ services:
   adguardhome-backup:
     image: offen/docker-volume-backup:v2
     container_name: adguardhome-backup
-    profiles: [adguardhome]
+    profiles:
+      - adguardhome
+      - backup
+      - dns
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/adguardhome

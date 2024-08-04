@@ -2,7 +2,8 @@ services:
   homeassistant:
     image: ghcr.io/home-assistant/home-assistant:stable
     container_name: homeassistant
-    profiles: [home-assistant]
+    profiles:
+      - home-assistant
     user: ${PUID:?}:${PGID:?}
     environment:
       TZ: ${TZ:?}
@@ -27,7 +28,9 @@ services:
   homeassistant-backup:
     image: offen/docker-volume-backup:v2
     container_name: homeassistant-backup
-    profiles: [home-assistant]
+    profiles:
+      - backup
+      - home-assistant
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/homeassistant

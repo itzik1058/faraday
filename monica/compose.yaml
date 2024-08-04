@@ -2,7 +2,8 @@ services:
   monica:
     image: monica
     container_name: monica
-    profiles: [monica]
+    profiles:
+      - monica
     environment:
       APP_KEY: ${MONICA_APP_KEY:?}
       APP_ENV: production
@@ -29,7 +30,8 @@ services:
   monica-db:
     image: mariadb:11
     container_name: monica-db
-    profiles: [monica]
+    profiles:
+      - monica
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: true
       MYSQL_DATABASE: monica
@@ -48,7 +50,9 @@ services:
   monica-backup:
     image: offen/docker-volume-backup:v2
     container_name: monica-backup
-    profiles: [monica]
+    profiles:
+      - backup
+      - monica
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/monica

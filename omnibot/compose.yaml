@@ -2,7 +2,8 @@ services:
   omnibot:
     image: omnibot
     container_name: omnibot
-    profiles: [omnibot]
+    profiles:
+      - omnibot
     environment:
       CLIENT_ID: ${OMNIBOT_CLIENT_ID:?}
       DISCORD_TOKEN: ${OMNIBOT_DISCORD_TOKEN:?}
@@ -22,7 +23,9 @@ services:
   omnibot-backup:
     image: offen/docker-volume-backup:v2
     container_name: omnibot-backup
-    profiles: [omnibot]
+    profiles:
+      - backup
+      - omnibot
     volumes:
       - type: bind
         source: ${USER_DATA_PATH:?}/omnibot

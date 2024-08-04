@@ -2,7 +2,8 @@ services:
   wger-nginx:
     image: nginx:stable
     container_name: wger-nginx
-    profiles: [wger]
+    profiles:
+      - wger
     volumes:
       - type: bind
         source: ./nginx.conf
@@ -35,7 +36,8 @@ services:
   wger-server:
     image: wger/server
     container_name: wger-server
-    profiles: [wger]
+    profiles:
+      - wger
     environment:
       PUID: ${PUID:?}
       PGID: ${PGID:?}
@@ -127,7 +129,8 @@ services:
   wger-db:
     image: postgres:15-alpine
     container_name: wger-db
-    profiles: [wger]
+    profiles:
+      - wger
     environment:
       POSTGRES_DB: ${WGER_DB_DATABASE_NAME:?}
       POSTGRES_USER: ${WGER_DB_USERNAME:?}
@@ -150,7 +153,8 @@ services:
   wger-cache:
     image: redis
     container_name: wger-cache
-    profiles: [wger]
+    profiles:
+      - wger
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/wger/cache
@@ -169,7 +173,9 @@ services:
   wger-backup:
     image: offen/docker-volume-backup:v2
     container_name: wger-backup
-    profiles: [wger]
+    profiles:
+      - backup
+      - wger
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/wger

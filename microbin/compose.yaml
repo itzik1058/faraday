@@ -2,7 +2,8 @@ services:
   microbin:
     image: danielszabo99/microbin:latest
     container_name: microbin
-    profiles: [microbin]
+    profiles:
+      - microbin
     environment:
       # MICROBIN_BASIC_AUTH_USERNAME:
       # MICROBIN_BASIC_AUTH_PASSWORD:
@@ -57,7 +58,9 @@ services:
   microbin-backup:
     image: offen/docker-volume-backup:v2
     container_name: microbin-backup
-    profiles: [microbin]
+    profiles:
+      - backup
+      - microbin
     volumes:
       - type: bind
         source: ${USER_DATA_PATH:?}/microbin

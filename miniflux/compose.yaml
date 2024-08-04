@@ -2,7 +2,8 @@ services:
   miniflux:
     image: miniflux/miniflux:latest
     container_name: miniflux
-    profiles: [miniflux]
+    profiles:
+      - miniflux
     environment:
       DATABASE_URL: postgres://${MINIFLUX_DB_USERNAME:?}:${MINIFLUX_DB_PASSWORD:?}@miniflux-postgres/${MINIFLUX_DB_DATABASE:?}?sslmode=disable
       ADMIN_USERNAME: ${MINIFLUX_ADMIN_USERNAME:?}
@@ -26,7 +27,8 @@ services:
   miniflux-postgres:
     image: postgres:15
     container_name: miniflux-postgres
-    profiles: [miniflux]
+    profiles:
+      - miniflux
     environment:
       POSTGRES_DB: ${MINIFLUX_DB_DATABASE:?}
       POSTGRES_USER: ${MINIFLUX_DB_USERNAME:?}
@@ -48,7 +50,9 @@ services:
   miniflux-backup:
     image: offen/docker-volume-backup:v2
     container_name: miniflux-backup
-    profiles: [miniflux]
+    profiles:
+      - backup
+      - miniflux
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/miniflux

@@ -2,7 +2,9 @@ services:
   recyclarr:
     image: ghcr.io/recyclarr/recyclarr
     container_name: recyclarr
-    profiles: [streaming]
+    profiles:
+      - recyclarr
+      - streaming
     user: ${PUID:?}:${PGID:?}
     environment:
       TZ: ${TZ:?}
@@ -23,7 +25,10 @@ services:
   recyclarr-backup:
     image: offen/docker-volume-backup:v2
     container_name: recyclarr-backup
-    profiles: [streaming]
+    profiles:
+      - backup
+      - recyclarr
+      - streaming
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/recyclarr

@@ -2,7 +2,9 @@ services:
   readarr:
     image: lscr.io/linuxserver/readarr:develop
     container_name: readarr
-    profiles: [streaming]
+    profiles:
+      - readarr
+      - streaming
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -31,7 +33,10 @@ services:
   readarr-backup:
     image: offen/docker-volume-backup:v2
     container_name: readarr-backup
-    profiles: [streaming]
+    profiles:
+      - backup
+      - readarr
+      - streaming
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/readarr

@@ -2,7 +2,9 @@ services:
   prowlarr:
     image: linuxserver/prowlarr
     container_name: prowlarr
-    profiles: [streaming]
+    profiles:
+      - prowlarr
+      - streaming
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -31,7 +33,10 @@ services:
   prowlarr-backup:
     image: offen/docker-volume-backup:v2
     container_name: prowlarr-backup
-    profiles: [streaming]
+    profiles:
+      - backup
+      - prowlarr
+      - streaming
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/prowlarr

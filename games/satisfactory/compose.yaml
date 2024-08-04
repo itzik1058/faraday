@@ -2,7 +2,9 @@ services:
   satisfactory-server:
     image: wolveix/satisfactory-server:latest
     container_name: satisfactory-server
-    profiles: [satisfactory]
+    profiles:
+      - game
+      - satisfactory
     environment:
       PUID: ${PUID:?}
       PGID: ${PGID:?}
@@ -26,7 +28,10 @@ services:
   satisfactory-backup:
     image: offen/docker-volume-backup:v2
     container_name: satisfactory-backup
-    profiles: [satisfactory]
+    profiles:
+      - backup
+      - game
+      - satisfactory
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/satisfactory

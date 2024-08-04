@@ -2,7 +2,8 @@ services:
   whoami:
     image: traefik/whoami
     container_name: whoami
-    profiles: [whoami]
+    profiles:
+      - whoami
     networks:
       - reverse-proxy
     labels:

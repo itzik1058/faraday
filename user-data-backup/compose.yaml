@@ -2,7 +2,9 @@ services:
   user-data-backup:
     image: offen/docker-volume-backup:v2
     container_name: user-data-backup
-    profiles: [user-data-backup]
+    profiles:
+      - backup
+      - user-data-backup
     environment:
       BACKUP_CRON_EXPRESSION: "0 0 * * 5"
       BACKUP_PRUNING_PREFIX: backup-

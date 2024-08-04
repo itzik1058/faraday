@@ -2,7 +2,9 @@ services:
   factorio:
     image: factoriotools/factorio:stable
     container_name: factorio
-    profiles: [factorio]
+    profiles:
+      - factorio
+      - game
     environment:
       SAVE_NAME: _default
       GENERATE_NEW_SAVE: true
@@ -26,7 +28,10 @@ services:
   factorio-backup:
     image: offen/docker-volume-backup:v2
     container_name: factorio-backup
-    profiles: [factorio]
+    profiles:
+      - backup
+      - factorio
+      - game
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/factorio

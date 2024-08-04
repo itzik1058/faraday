@@ -2,7 +2,9 @@ services:
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr
     container_name: flaresolverr
-    profiles: [streaming]
+    profiles:
+      - flaresolverr
+      - streaming
     environment:
       TZ: ${TZ:?}
       LOG_LEVEL: info

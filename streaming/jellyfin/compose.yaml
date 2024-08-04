@@ -2,7 +2,9 @@ services:
   jellyfin:
     image: linuxserver/jellyfin
     container_name: jellyfin
-    profiles: [streaming]
+    profiles:
+      - jellyfin
+      - streaming
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -33,7 +35,10 @@ services:
   jellyfin-backup:
     image: offen/docker-volume-backup:v2
     container_name: jellyfin-backup
-    profiles: [streaming]
+    profiles:
+      - backup
+      - jellyfin
+      - streaming
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/jellyfin

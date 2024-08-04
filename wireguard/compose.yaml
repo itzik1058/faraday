@@ -2,7 +2,8 @@ services:
   wg-easy:
     image: ghcr.io/wg-easy/wg-easy
     container_name: wg-easy
-    profiles: [wireguard]
+    profiles:
+      - wireguard
     environment:
       WG_HOST: vpn.${DOMAIN:?}
       WG_DEFAULT_DNS: ${HOST_IP:?}
@@ -33,7 +34,9 @@ services:
   wg-easy-backup:
     image: offen/docker-volume-backup:v2
     container_name: wg-easy-backup
-    profiles: [wireguard]
+    profiles:
+      - backup
+      - wireguard
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/wg-easy

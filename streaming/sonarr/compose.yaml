@@ -2,7 +2,9 @@ services:
   sonarr:
     image: linuxserver/sonarr
     container_name: sonarr
-    profiles: [streaming]
+    profiles:
+      - sonarr
+      - streaming
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -34,7 +36,10 @@ services:
   sonarr-backup:
     image: offen/docker-volume-backup:v2
     container_name: sonarr-backup
-    profiles: [streaming]
+    profiles:
+      - backup
+      - sonarr
+      - streaming
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/sonarr

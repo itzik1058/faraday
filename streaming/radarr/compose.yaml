@@ -2,7 +2,9 @@ services:
   radarr:
     image: linuxserver/radarr
     container_name: radarr
-    profiles: [streaming]
+    profiles:
+      - radarr
+      - streaming
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -34,7 +36,10 @@ services:
   radarr-backup:
     image: offen/docker-volume-backup:v2
     container_name: radarr-backup
-    profiles: [streaming]
+    profiles:
+      - backup
+      - radarr
+      - streaming
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/radarr

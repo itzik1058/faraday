@@ -2,7 +2,9 @@ services:
   allfather:
     image: allfather
     container_name: allfather
-    profiles: [allfather]
+    profiles:
+      - allfather
+      - bot
     environment:
       BOT_TOKEN: ${ALLFATHER_BOT_TOKEN:?}
       GOOGLE_API_KEY: ${ALLFATHER_GOOGLE_API_KEY:?}

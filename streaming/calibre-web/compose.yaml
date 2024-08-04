@@ -2,7 +2,9 @@ services:
   calibre-web:
     image: lscr.io/linuxserver/calibre-web:latest
     container_name: calibre-web
-    profiles: [streaming]
+    profiles:
+      - calibre-web
+      - streaming
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -30,7 +32,10 @@ services:
   calibre-web-backup:
     image: offen/docker-volume-backup:v2
     container_name: calibre-web-backup
-    profiles: [streaming]
+    profiles:
+      - backup
+      - calibre-web
+      - streaming
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/calibre

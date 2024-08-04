@@ -2,7 +2,9 @@ services:
   qbittorrent:
     image: linuxserver/qbittorrent
     container_name: qbittorrent
-    profiles: [streaming]
+    profiles:
+      - qbittorrent
+      - streaming
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -33,7 +35,10 @@ services:
   qbittorrent-backup:
     image: offen/docker-volume-backup:v2
     container_name: qbittorrent-backup
-    profiles: [streaming]
+    profiles:
+      - backup
+      - qbittorrent
+      - streaming
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/qbittorrent

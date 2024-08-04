@@ -2,7 +2,9 @@ services:
   bazarr:
     image: linuxserver/bazarr
     container_name: bazarr
-    profiles: [streaming]
+    profiles:
+      - bazarr
+      - streaming
     environment:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
@@ -35,7 +37,10 @@ services:
   bazarr-backup:
     image: offen/docker-volume-backup:v2
     container_name: bazarr-backup
-    profiles: [streaming]
+    profiles:
+      - backup
+      - bazarr
+      - streaming
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/bazarr

@@ -2,7 +2,8 @@ services:
   paperless-ngx:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     container_name: paperless-ngx
-    profiles: [paperless]
+    profiles:
+      - paperless
     environment:
       PAPERLESS_REDIS: redis://paperless-redis:6379
       USERMAP_UID: ${PUID:?}
@@ -50,7 +51,8 @@ services:
   paperless-redis:
     image: docker.io/library/redis:7
     container_name: paperless-redis
-    profiles: [paperless]
+    profiles:
+      - paperless
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/paperless/cache
@@ -62,7 +64,9 @@ services:
   paperless-backup:
     image: offen/docker-volume-backup:v2
     container_name: paperless-backup
-    profiles: [paperless]
+    profiles:
+      - backup
+      - paperless
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/paperless

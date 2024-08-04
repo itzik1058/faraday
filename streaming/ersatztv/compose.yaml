@@ -2,7 +2,9 @@ services:
   ersatztv:
     image: jasongdove/ersatztv:latest-vaapi
     container_name: ersatztv
-    profiles: [streaming]
+    profiles:
+      - ersatztv
+      - streaming
     environment:
       TZ: ${TZ:?}
     devices:
@@ -31,7 +33,10 @@ services:
   ersatztv-backup:
     image: offen/docker-volume-backup:v2
     container_name: ersatztv-backup
-    profiles: [streaming]
+    profiles:
+      - backup
+      - ersatztv
+      - streaming
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/ersatztv

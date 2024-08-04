@@ -2,7 +2,8 @@ services:
   stirling-pdf:
     image: frooodle/s-pdf:latest
     container_name: stirling-pdf
-    profiles: [stirling-pdf]
+    profiles:
+      - stirling-pdf
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/stirling-pdf
@@ -19,7 +20,9 @@ services:
   stirling-pdf-backup:
     image: offen/docker-volume-backup:v2
     container_name: stirling-pdf-backup
-    profiles: [stirling-pdf]
+    profiles:
+      - backup
+      - stirling-pdf
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/stirling-pdf

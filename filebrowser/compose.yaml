@@ -2,7 +2,8 @@ services:
   filebrowser:
     image: filebrowser/filebrowser
     container_name: filebrowser
-    profiles: [filebrowser]
+    profiles:
+      - filebrowser
     environment:
       PUID: ${PUID:?}
       PGID: ${PGID:?}
@@ -31,7 +32,9 @@ services:
   filebrowser-backup:
     image: offen/docker-volume-backup:v2
     container_name: filebrowser-backup
-    profiles: [filebrowser]
+    profiles:
+      - backup
+      - filebrowser
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/filebrowser
