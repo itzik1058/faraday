@@ -1,0 +1,35 @@
+services:
+  user-data-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: user-data-backup
+    profiles: [user-data-backup]
+    environment:
+      BACKUP_CRON_EXPRESSION: "0 0 * * 5"
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
+    volumes:
+      - type: bind
+        source: ${USER_DATA_PATH:?}/photos
+        target: /backup/photos
+        read_only: true
+      - type: bind
+        source: ${USER_DATA_PATH:?}/files
+        target: /backup/files
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/user-data
+        target: /archive
+      # use external tmp because of disk limitations
+      # https://github.com/offen/docker-volume-backup/issues/316
+      - type: bind
+        source: ${USER_DATA_PATH:?}/tmp
+        target: /tmp
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      docker-volume-backup.copy-post: "/bin/sh -c 'rm /tmp/backup-*'"
+    restart: unless-stopped

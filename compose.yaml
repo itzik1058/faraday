@@ -16,6 +16,7 @@ include:
   - speedtest-tracker/compose.yaml
   - stirling-pdf/compose.yaml
   - streaming/compose.yaml
+  - user-data-backup/compose.yaml
   - watchtower/compose.yaml
   - wger/compose.yaml
   - whoami/compose.yaml
