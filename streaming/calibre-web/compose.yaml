@@ -26,3 +26,20 @@ services:
       traefik.http.routers.calibre.rule: Host(`calibre.${DOMAIN:?}`)
       traefik.http.routers.calibre.entryPoints: websecure
     restart: unless-stopped
+
+  calibre-web-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: calibre-web-backup
+    profiles: [streaming]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/calibre
+        target: /backup/calibre
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/calibre
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped

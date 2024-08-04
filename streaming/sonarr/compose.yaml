@@ -30,3 +30,20 @@ services:
     depends_on:
       - qbittorrent
     restart: unless-stopped
+
+  sonarr-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: sonarr-backup
+    profiles: [streaming]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/sonarr
+        target: /backup/sonarr
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/sonarr
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped

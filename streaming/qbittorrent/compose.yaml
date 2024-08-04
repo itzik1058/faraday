@@ -29,3 +29,20 @@ services:
       traefik.http.routers.qbittorrent.middlewares: ip-allowlist@docker
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
     restart: unless-stopped
+
+  qbittorrent-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: qbittorrent-backup
+    profiles: [streaming]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/qbittorrent
+        target: /backup/qbittorrent
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/qbittorrent
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped

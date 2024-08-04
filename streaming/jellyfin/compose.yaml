@@ -29,3 +29,20 @@ services:
       traefik.http.routers.jellyfin.rule: Host(`jellyfin.${DOMAIN:?}`)
       traefik.http.routers.jellyfin.entryPoints: websecure
     restart: unless-stopped
+
+  jellyfin-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: jellyfin-backup
+    profiles: [streaming]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/jellyfin
+        target: /backup/jellyfin
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/jellyfin
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped

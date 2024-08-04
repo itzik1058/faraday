@@ -27,3 +27,20 @@ services:
     depends_on:
       - jellyfin
     restart: unless-stopped
+
+  ersatztv-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: ersatztv-backup
+    profiles: [streaming]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/ersatztv
+        target: /backup/ersatztv
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/ersatztv
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped

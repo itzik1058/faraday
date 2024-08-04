@@ -19,3 +19,20 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
+
+  recyclarr-backup:
+    image: offen/docker-volume-backup:latest
+    container_name: recyclarr-backup
+    profiles: [streaming]
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/recyclarr
+        target: /backup/recyclarr
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/recyclarr
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
