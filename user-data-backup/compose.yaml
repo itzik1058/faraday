@@ -6,6 +6,7 @@ services:
       - backup
       - user-data-backup
     environment:
+      EXEC_LABEL: user-data
       BACKUP_CRON_EXPRESSION: "0 0 * * 5"
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: 7
@@ -34,4 +35,5 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
       docker-volume-backup.copy-post: "/bin/sh -c 'rm /tmp/backup-*'"
+      docker-volume-backup.exec-label: user-data
     restart: unless-stopped
