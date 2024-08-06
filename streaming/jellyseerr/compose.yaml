@@ -21,6 +21,7 @@ services:
       - streaming
     labels:
       com.centurylinklabs.watchtower.enable: true
+      docker-volume-backup.stop-during-backup: jellyseerr
       traefik.enable: true
       traefik.http.routers.jellyseerr.rule: Host(`jellyseerr.${DOMAIN:?}`)
       traefik.http.routers.jellyseerr.entryPoints: websecure
@@ -38,6 +39,8 @@ services:
       - jellyseerr
       - streaming
     environment:
+      EXEC_LABEL: jellyseerr
+      BACKUP_STOP_DURING_BACKUP_LABEL: jellyseerr
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: 7
     volumes:
@@ -48,6 +51,10 @@ services:
       - type: bind
         source: ${BACKUP_DATA_PATH:?}/jellyseerr
         target: /archive
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
     network_mode: none
     labels:
       com.centurylinklabs.watchtower.enable: true

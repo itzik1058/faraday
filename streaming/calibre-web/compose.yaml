@@ -24,6 +24,7 @@ services:
       - streaming
     labels:
       com.centurylinklabs.watchtower.enable: true
+      docker-volume-backup.stop-during-backup: calibre-web
       traefik.enable: true
       traefik.http.routers.calibre.rule: Host(`calibre.${DOMAIN:?}`)
       traefik.http.routers.calibre.entryPoints: websecure
@@ -37,6 +38,8 @@ services:
       - calibre-web
       - streaming
     environment:
+      EXEC_LABEL: calibre-web
+      BACKUP_STOP_DURING_BACKUP_LABEL: calibre-web
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: 7
     volumes:
@@ -47,6 +50,10 @@ services:
       - type: bind
         source: ${BACKUP_DATA_PATH:?}/calibre
         target: /archive
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
     network_mode: none
     labels:
       com.centurylinklabs.watchtower.enable: true

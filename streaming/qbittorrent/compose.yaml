@@ -25,6 +25,7 @@ services:
       - streaming
     labels:
       com.centurylinklabs.watchtower.enable: true
+      docker-volume-backup.stop-during-backup: qbittorrent
       traefik.enable: true
       traefik.http.routers.qbittorrent.rule: Host(`qbittorrent.${DOMAIN:?}`)
       traefik.http.routers.qbittorrent.entryPoints: websecure
@@ -40,6 +41,8 @@ services:
       - qbittorrent
       - streaming
     environment:
+      EXEC_LABEL: qbittorrent
+      BACKUP_STOP_DURING_BACKUP_LABEL: qbittorrent
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: 7
     volumes:
@@ -50,6 +53,10 @@ services:
       - type: bind
         source: ${BACKUP_DATA_PATH:?}/qbittorrent
         target: /archive
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
     network_mode: none
     labels:
       com.centurylinklabs.watchtower.enable: true

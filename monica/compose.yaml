@@ -45,6 +45,7 @@ services:
       - monica
     labels:
       com.centurylinklabs.watchtower.enable: true
+      docker-volume-backup.stop-during-backup: monica
     restart: unless-stopped
 
   monica-backup:
@@ -54,6 +55,8 @@ services:
       - backup
       - monica
     environment:
+      EXEC_LABEL: monica
+      BACKUP_STOP_DURING_BACKUP_LABEL: monica
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: 7
     volumes:
@@ -64,6 +67,10 @@ services:
       - type: bind
         source: ${BACKUP_DATA_PATH:?}/monica
         target: /archive
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
     network_mode: none
     labels:
       com.centurylinklabs.watchtower.enable: true
