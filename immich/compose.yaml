@@ -118,6 +118,7 @@ services:
       - immich
     environment:
       EXEC_LABEL: immich
+      BACKUP_STOP_DURING_BACKUP_LABEL: immich
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: 7
     volumes:
