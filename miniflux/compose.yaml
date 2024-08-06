@@ -33,18 +33,23 @@ services:
       POSTGRES_DB: ${MINIFLUX_DB_DATABASE:?}
       POSTGRES_USER: ${MINIFLUX_DB_USERNAME:?}
       POSTGRES_PASSWORD: ${MINIFLUX_DB_PASSWORD:?}
-    networks:
-      - miniflux
-    labels:
-      com.centurylinklabs.watchtower.enable: true
     volumes:
       - type: bind
-        source: ${APP_DATA_PATH:?}/miniflux
+        source: ${APP_DATA_PATH:?}/miniflux/database
         target: /var/lib/postgresql/data
+      - type: bind
+        source: ${APP_DATA_PATH:?}/miniflux/backup
+        target: /backup
     healthcheck:
       test: pg_isready -U ${MINIFLUX_DB_USERNAME:?}
       interval: 10s
       start_period: 30s
+    networks:
+      - miniflux
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      docker-volume-backup.exec-label: miniflux
+      docker-volume-backup.archive-pre: "/bin/sh -c 'pg_dumpall --clean --if-exists --username=${MINIFLUX_DB_USERNAME:?} | gzip > /backup/dump.sql.gz'"
     restart: unless-stopped
 
   miniflux-backup:
@@ -54,6 +59,8 @@ services:
       - backup
       - miniflux
     environment:
+      EXEC_LABEL: miniflux
+      BACKUP_STOP_DURING_BACKUP_LABEL: miniflux
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: 7
     volumes:
@@ -64,6 +71,10 @@ services:
       - type: bind
         source: ${BACKUP_DATA_PATH:?}/miniflux
         target: /archive
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
     network_mode: none
     labels:
       com.centurylinklabs.watchtower.enable: true
