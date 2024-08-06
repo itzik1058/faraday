@@ -1,5 +1,5 @@
 services:
-  radarr:
+  radarr: &radarr
     image: linuxserver/radarr
     container_name: radarr
     profiles:
@@ -33,6 +33,28 @@ services:
       - qbittorrent
     restart: unless-stopped
 
+  radarr-4k:
+    <<: *radarr
+    container_name: radarr-4k
+    volumes:
+      - type: bind
+        source: ${APP_LOG_PATH:?}/radarr-4k
+        target: /config/logs
+      - type: bind
+        source: ${APP_DATA_PATH:?}/radarr-4k
+        target: /config
+      - type: bind
+        source: ${USER_DATA_PATH:?}
+        target: /data
+    # ports:
+    #   - 7879:7878
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.radarr-4k.rule: Host(`radarr4k.${DOMAIN:?}`)
+      traefik.http.routers.radarr-4k.entryPoints: websecure
+      traefik.http.routers.radarr-4k.middlewares: ip-allowlist@docker
+
   radarr-backup:
     image: offen/docker-volume-backup:v2
     container_name: radarr-backup
@@ -47,6 +69,10 @@ services:
       - type: bind
         source: ${APP_DATA_PATH:?}/radarr
         target: /backup/radarr
+        read_only: true
+      - type: bind
+        source: ${APP_DATA_PATH:?}/radarr-4k
+        target: /backup/radarr-4k
         read_only: true
       - type: bind
         source: ${BACKUP_DATA_PATH:?}/radarr

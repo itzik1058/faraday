@@ -1,5 +1,5 @@
 services:
-  sonarr:
+  sonarr: &sonarr
     image: linuxserver/sonarr
     container_name: sonarr
     profiles:
@@ -33,6 +33,28 @@ services:
       - qbittorrent
     restart: unless-stopped
 
+  sonarr-4k:
+    <<: *sonarr
+    container_name: sonarr-4k
+    volumes:
+      - type: bind
+        source: ${APP_LOG_PATH:?}/sonarr-4k
+        target: /config/logs
+      - type: bind
+        source: ${APP_DATA_PATH:?}/sonarr-4k
+        target: /config
+      - type: bind
+        source: ${USER_DATA_PATH:?}
+        target: /data
+    # ports:
+    #   - 8990:8989
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.sonarr-4k.rule: Host(`sonarr4k.${DOMAIN:?}`)
+      traefik.http.routers.sonarr-4k.entryPoints: websecure
+      traefik.http.routers.sonarr-4k.middlewares: ip-allowlist@docker
+
   sonarr-backup:
     image: offen/docker-volume-backup:v2
     container_name: sonarr-backup
@@ -46,6 +68,10 @@ services:
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/sonarr
+        target: /backup/sonarr
+        read_only: true
+      - type: bind
+        source: ${APP_DATA_PATH:?}/sonarr-4k
         target: /backup/sonarr
         read_only: true
       - type: bind
