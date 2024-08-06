@@ -50,10 +50,15 @@ services:
       - type: bind
         source: ${APP_DATA_PATH:?}/speedtest-tracker/data
         target: /var/lib/postgresql/data
+      - type: bind
+        source: ${APP_DATA_PATH:?}/speedtest-tracker/backup
+        target: /backup
     networks:
       - speedtest-tracker
     labels:
       com.centurylinklabs.watchtower.enable: true
+      docker-volume-backup.exec-label: speedtest-tracker
+      docker-volume-backup.archive-pre: "/bin/sh -c 'pg_dumpall --clean --if-exists --username=${SPEEDTEST_TRACKER_DB_USERNAME:?} | gzip > /backup/dump.sql.gz'"
     restart: unless-stopped
 
   speedtest-tracker-backup:
@@ -63,6 +68,8 @@ services:
       - backup
       - speedtest-tracker
     environment:
+      EXEC_LABEL: speedtest-tracker
+      BACKUP_STOP_DURING_BACKUP_LABEL: speedtest-tracker
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: 7
     volumes:
@@ -73,6 +80,10 @@ services:
       - type: bind
         source: ${BACKUP_DATA_PATH:?}/speedtest-tracker
         target: /archive
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
     network_mode: none
     labels:
       com.centurylinklabs.watchtower.enable: true

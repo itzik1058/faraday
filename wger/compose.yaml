@@ -139,10 +139,15 @@ services:
       - type: bind
         source: ${APP_DATA_PATH:?}/wger/data
         target: /var/lib/postgresql/data
+      - type: bind
+        source: ${APP_DATA_PATH:?}/wger/backup
+        target: /backup
     networks:
       - wger
     labels:
       com.centurylinklabs.watchtower.enable: true
+      docker-volume-backup.exec-label: wger
+      docker-volume-backup.archive-pre: "/bin/sh -c 'pg_dumpall --clean --username=${WGER_DB_USERNAME:?} | gzip > /backup/dump.sql.gz'"
     healthcheck:
       test: pg_isready -U ${WGER_DB_USERNAME:?}
       interval: 10s
@@ -177,6 +182,8 @@ services:
       - backup
       - wger
     environment:
+      EXEC_LABEL: wger
+      BACKUP_STOP_DURING_BACKUP_LABEL: wger
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: 7
     volumes:
@@ -187,6 +194,10 @@ services:
       - type: bind
         source: ${BACKUP_DATA_PATH:?}/wger
         target: /archive
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
     network_mode: none
     labels:
       com.centurylinklabs.watchtower.enable: true
