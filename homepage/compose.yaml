@@ -14,6 +14,18 @@ services:
       - type: bind
         source: ${APP_DATA_PATH:?}/homepage
         target: /app/config
+      - type: bind
+        source: ${APP_DATA_PATH:?}
+        target: /mnt/app_data
+        read_only: true
+      - type: bind
+        source: ${USER_DATA_PATH:?}
+        target: /mnt/user_data
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}
+        target: /mnt/backup_data
+        read_only: true
     networks:
       - homepage
       - watchtower
