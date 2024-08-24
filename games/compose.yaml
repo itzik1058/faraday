@@ -1,3 +1,4 @@
 include:
   - factorio/compose.yaml
+  - minecraft/compose.yaml
   - satisfactory/compose.yaml

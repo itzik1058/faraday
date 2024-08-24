@@ -1,0 +1,64 @@
+services:
+  minecraft-server:
+    image: itzg/minecraft-server:java21
+    container_name: minecraft-server
+    profiles:
+      - game
+      - minecraft
+    environment:
+      TYPE: "AUTO_CURSEFORGE"
+      CF_API_KEY: ${MINECRAFT_CURSEFORGE_API_KEY:?}
+      CF_PAGE_URL: ${MINECRAFT_CURSEFORGE_PAGE_URL:?}
+      MEMORY: "4G"
+      EULA: "TRUE"
+      ONLINE_MODE: "false"
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/minecraft
+        target: /data
+      - type: bind
+        source: ${USER_DATA_PATH:?}/games/minecraft/config
+        target: /data/config
+      - type: bind
+        source: ${USER_DATA_PATH:?}/games/minecraft/mods
+        target: /data/mods
+    networks:
+      - minecraft
+    ports:
+      - "25565:25565/tcp"
+    restart: unless-stopped
+
+  minecraft-server-backup:
+    image: offen/docker-volume-backup:v2
+    container_name: minecraft-server-backup
+    profiles:
+      - backup
+      - game
+      - minecraft
+    environment:
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/minecraft
+        target: /backup/minecraft
+        read_only: true
+      - type: bind
+        source: ${USER_DATA_PATH:?}/games/minecraft/config
+        target: /backup/config
+        read_only: true
+      - type: bind
+        source: ${USER_DATA_PATH:?}/games/minecraft/mods
+        target: /backup/mods
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/minecraft
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+networks:
+  minecraft:
+    name: minecraft
