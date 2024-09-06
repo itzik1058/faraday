@@ -1,0 +1,62 @@
+services:
+  navidrome:
+    image: deluan/navidrome:latest
+    container_name: navidrome
+    profiles:
+      - navidrome
+      - streaming
+    user: ${PUID:?}:${PGID:?}
+    environment:
+      ND_SCANSCHEDULE: 1h
+      ND_LOGLEVEL: info
+      ND_SESSIONTIMEOUT: 24h
+      ND_BASEURL: "https://navidrome.${DOMAIN:?}"
+      ND_ENABLESHARING: true
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/navidrome
+        target: /data
+      - type: bind
+        source: ${USER_DATA_PATH:?}/media/music
+        target: /music
+        read_only: true
+    ports:
+      - 4533:4533
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      docker-volume-backup.stop-during-backup: navidrome
+      traefik.enable: true
+      traefik.http.routers.navidrome.rule: Host(`navidrome.${DOMAIN:?}`)
+      traefik.http.routers.navidrome.entryPoints: websecure
+    restart: unless-stopped
+
+  navidrome-backup:
+    image: offen/docker-volume-backup:v2
+    container_name: navidrome-backup
+    profiles:
+      - backup
+      - navidrome
+      - streaming
+    environment:
+      EXEC_LABEL: navidrome
+      BACKUP_STOP_DURING_BACKUP_LABEL: navidrome
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/navidrome
+        target: /backup/navidrome
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/navidrome
+        target: /archive
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
