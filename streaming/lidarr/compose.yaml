@@ -1,0 +1,57 @@
+services:
+  lidarr:
+    image: linuxserver/lidarr
+    container_name: lidarr
+    profiles:
+      - lidarr
+      - streaming
+    environment:
+      TZ: ${TZ:?}
+      PUID: ${PUID:?}
+      PGID: ${PGID:?}
+    volumes:
+      - type: bind
+        source: ${APP_LOG_PATH:?}/lidarr
+        target: /config/logs
+      - type: bind
+        source: ${APP_DATA_PATH:?}/lidarr
+        target: /config
+      - type: bind
+        source: ${USER_DATA_PATH:?}
+        target: /data
+    # ports:
+    #   - 8686:8686
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.lidarr.rule: Host(`lidarr.${DOMAIN:?}`)
+      traefik.http.routers.lidarr.entryPoints: websecure
+      traefik.http.routers.lidarr.middlewares: ip-allowlist@docker
+    depends_on:
+      - qbittorrent
+    restart: unless-stopped
+
+  lidarr-backup:
+    image: offen/docker-volume-backup:v2
+    container_name: lidarr-backup
+    profiles:
+      - backup
+      - lidarr
+      - streaming
+    environment:
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/lidarr
+        target: /backup/lidarr
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/lidarr
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped

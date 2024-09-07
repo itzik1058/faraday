@@ -5,6 +5,7 @@ include:
   - flaresolverr/compose.yaml
   - jellyfin/compose.yaml
   - jellyseerr/compose.yaml
+  - lidarr/compose.yaml
   - navidrome/compose.yaml
   - prowlarr/compose.yaml
   - qbittorrent/compose.yaml
