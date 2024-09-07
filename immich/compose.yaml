@@ -5,37 +5,6 @@ services:
     profiles:
       - immich
     environment:
-      DB_HOSTNAME: immich-postgres
-      DB_DATABASE_NAME: ${IMMICH_DB_DATABASE_NAME:?}
-      DB_USERNAME: ${IMMICH_DB_USERNAME:?}
-      DB_PASSWORD: ${IMMICH_DB_PASSWORD:?}
-      REDIS_HOSTNAME: immich-redis
-    volumes:
-      - type: bind
-        source: ${USER_DATA_PATH:?}/photos/immich
-        target: /usr/src/app/upload
-    command: ["start.sh", "immich"]
-    networks:
-      - immich
-    # ports:
-    #   - 2283:3001
-    labels:
-      com.centurylinklabs.watchtower.enable: true
-      traefik.enable: true
-      traefik.http.routers.immich.rule: Host(`immich.${DOMAIN:?}`)
-      traefik.http.routers.immich.entrypoints: websecure
-      traefik.http.routers.immich.middlewares: ip-allowlist@docker
-    depends_on:
-      - immich-redis
-      - immich-postgres
-    restart: unless-stopped
-
-  immich-microservices:
-    image: ghcr.io/immich-app/immich-server:release
-    container_name: immich-microservices
-    profiles:
-      - immich
-    environment:
       TZ: ${TZ:?}
       DB_HOSTNAME: immich-postgres
       DB_DATABASE_NAME: ${IMMICH_DB_DATABASE_NAME:?}
@@ -49,11 +18,16 @@ services:
       - type: bind
         source: ${USER_DATA_PATH:?}/photos/immich
         target: /usr/src/app/upload
-    command: ["start.sh", "microservices"]
     networks:
       - immich
+    # ports:
+    #   - 2283:3001
     labels:
       com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.immich.rule: Host(`immich.${DOMAIN:?}`)
+      traefik.http.routers.immich.entrypoints: websecure
+      traefik.http.routers.immich.middlewares: ip-allowlist@docker
     depends_on:
       - immich-redis
       - immich-postgres
