@@ -101,6 +101,25 @@ services:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
 
+  cloudflare-ddns:
+    image: favonia/cloudflare-ddns:latest
+    container_name: cloudflare-ddns
+    profiles:
+      - ddns
+      - reverse-proxy
+    read_only: true
+    cap_drop: [all]
+    security_opt: [no-new-privileges:true]
+    user: "${PUID:?}:${PGID:?}"
+    environment:
+      CF_API_TOKEN: ${CF_DNS_API_TOKEN:?}
+      DOMAINS: ${DOMAIN}
+      PROXIED: true
+    network_mode: host
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
 networks:
   reverse-proxy:
     name: reverse-proxy
