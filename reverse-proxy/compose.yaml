@@ -47,7 +47,7 @@ services:
       - 443:443
       # - 8080:8080
     extra_hosts:
-      - host.docker.internal:172.17.0.1
+      - host.docker.internal:host-gateway
     networks:
       - reverse-proxy
       - docker-socket-proxy
