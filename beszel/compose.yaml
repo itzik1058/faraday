@@ -1,0 +1,75 @@
+services:
+  beszel:
+    image: henrygd/beszel
+    container_name: beszel
+    profiles:
+      - beszel
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/beszel
+        target: /beszel_data
+    # ports:
+    #   - 8090:8090
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - beszel
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.beszel.rule: Host(`beszel.${DOMAIN:?}`)
+      traefik.http.routers.beszel.entryPoints: websecure
+      traefik.http.routers.beszel.middlewares: ip-allowlist@docker
+    restart: unless-stopped
+
+  beszel-agent:
+    image: henrygd/beszel-agent
+    container_name: beszel-agent
+    profiles:
+      - beszel
+    network_mode: host
+    environment:
+      PORT: ${BESZEL_PORT:?}
+      KEY: ${BESZEL_KEY:?}
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+      - type: bind
+        source: ${USER_DATA_PATH:?}/lost+found
+        target: /extra-filesystems/user-data
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/lost+found
+        target: /extra-filesystems/backup-data
+        read_only: true
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+  beszel-backup:
+    image: offen/docker-volume-backup:v2
+    container_name: beszel-backup
+    profiles:
+      - backup
+      - beszel
+    environment:
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/beszel
+        target: /backup/beszel
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/beszel
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+networks:
+  beszel:
+    name: beszel

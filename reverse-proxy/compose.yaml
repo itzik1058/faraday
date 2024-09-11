@@ -54,6 +54,7 @@ services:
       - wireguard
       - adguardhome
       # - watchtower
+      - beszel
       - homepage
       - immich
       - paperless-ngx
