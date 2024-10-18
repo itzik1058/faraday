@@ -1,0 +1,48 @@
+services:
+  autobrr:
+    image: ghcr.io/autobrr/autobrr:latest
+    container_name: autobrr
+    profiles:
+      - autobrr
+      - streaming
+    environment:
+      TZ: ${TZ:?}
+    user: ${PUID:?}:${PGID:?}
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/autobrr
+        target: /config
+    # ports:
+    #   - 7474:7474
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.autobrr.rule: Host(`autobrr.${DOMAIN:?}`)
+      traefik.http.routers.autobrr.entryPoints: websecure
+      traefik.http.routers.autobrr.middlewares: ip-allowlist@docker
+    restart: unless-stopped
+
+  autobrr-backup:
+    image: offen/docker-volume-backup:v2
+    container_name: autobrr-backup
+    profiles:
+      - autobrr
+      - backup
+      - streaming
+    environment:
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/autobrr
+        target: /backup/autobrr
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/autobrr
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
