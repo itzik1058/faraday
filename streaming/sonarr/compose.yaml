@@ -55,6 +55,28 @@ services:
       traefik.http.routers.sonarr-4k.entryPoints: websecure
       traefik.http.routers.sonarr-4k.middlewares: ip-allowlist@docker
 
+  sonarr-anime:
+    <<: *sonarr
+    container_name: sonarr-anime
+    volumes:
+      - type: bind
+        source: ${APP_LOG_PATH:?}/sonarr-anime
+        target: /config/logs
+      - type: bind
+        source: ${APP_DATA_PATH:?}/sonarr-anime
+        target: /config
+      - type: bind
+        source: ${USER_DATA_PATH:?}
+        target: /data
+    # ports:
+    #   - 8991:8989
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.sonarr-anime.rule: Host(`sonarr-anime.${DOMAIN:?}`)
+      traefik.http.routers.sonarr-anime.entryPoints: websecure
+      traefik.http.routers.sonarr-anime.middlewares: ip-allowlist@docker
+
   sonarr-backup:
     image: offen/docker-volume-backup:v2
     container_name: sonarr-backup
@@ -72,6 +94,10 @@ services:
         read_only: true
       - type: bind
         source: ${APP_DATA_PATH:?}/sonarr-4k
+        target: /backup/sonarr
+        read_only: true
+      - type: bind
+        source: ${APP_DATA_PATH:?}/sonarr-anime
         target: /backup/sonarr
         read_only: true
       - type: bind
