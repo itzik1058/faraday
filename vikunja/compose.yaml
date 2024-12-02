@@ -1,0 +1,54 @@
+services:
+  vikunja:
+    image: vikunja/vikunja
+    container_name: vikunja
+    profiles:
+      - vikunja
+    environment:
+      VIKUNJA_SERVICE_JWTSECRET: ${VIKUNJA_SECRET:?}
+      VIKUNJA_SERVICE_PUBLICURL: https://vikunja.${DOMAIN:?}
+      VIKUNJA_DATABASE_PATH: /db/vikunja.db
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/vikunja/files
+        target: /app/vikunja/files
+      - type: bind
+        source: ${APP_DATA_PATH:?}/vikunja/db
+        target: /db
+    # ports:
+    #   - 3456:3456
+    networks:
+      - vikunja
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.vikunja.rule: Host(`vikunja.${DOMAIN:?}`)
+      traefik.http.routers.vikunja.entryPoints: websecure
+      traefik.http.routers.vikunja.middlewares: ip-allowlist@docker
+    restart: unless-stopped
+
+  vikunja-backup:
+    image: offen/docker-volume-backup:v2
+    container_name: vikunja-backup
+    profiles:
+      - backup
+      - vikunja
+    environment:
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/vikunja
+        target: /backup/vikunja
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/vikunja
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+networks:
+  vikunja:
+    name: vikunja

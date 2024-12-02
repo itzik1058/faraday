@@ -59,6 +59,7 @@ services:
       - immich
       - paperless-ngx
       - speedtest-tracker
+      - vikunja
       - miniflux
       - filebrowser
       - streaming
