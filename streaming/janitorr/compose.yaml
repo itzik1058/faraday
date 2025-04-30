@@ -1,0 +1,54 @@
+services:
+  janitorr:
+    image: ghcr.io/schaka/janitorr:native-stable
+    container_name: janitorr
+    profiles:
+      - janitorr
+      - streaming
+    user: ${PUID:?}:${PGID:?}
+    environment:
+      - THC_PATH=/health
+      - THC_PORT=8081
+    healthcheck:
+      test: ["CMD", "/workspace/health-check"]
+      start_period: 30s
+      interval: 5s
+      retries: 3
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/janitorr/application.yml
+        target: /workspace/application.yml
+      - type: bind
+        source: ${APP_LOG_PATH:?}/janitorr
+        target: /logs
+      - type: bind
+        source: ${USER_DATA_PATH:?}
+        target: /data
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+  janitorr-backup:
+    image: offen/docker-volume-backup:v2
+    container_name: janitorr-backup
+    profiles:
+      - backup
+      - janitorr
+      - streaming
+    environment:
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/janitorr
+        target: /backup/janitorr
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/janitorr
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
