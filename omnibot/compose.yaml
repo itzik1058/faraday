@@ -15,7 +15,6 @@ services:
       - type: bind
         source: ${USER_DATA_PATH:?}/omnibot
         target: /omnibot
-        read_only: true
     networks:
       - omnibot
     restart: unless-stopped
