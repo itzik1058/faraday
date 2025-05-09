@@ -58,6 +58,7 @@ services:
       - homepage
       - immich
       - paperless-ngx
+      - karakeep
       - speedtest-tracker
       - vikunja
       - miniflux

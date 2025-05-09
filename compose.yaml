@@ -7,6 +7,7 @@ include:
   - homeassistant/compose.yaml
   - homepage/compose.yaml
   - immich/compose.yaml
+  - karakeep/compose.yaml
   - mealie/compose.yaml
   - microbin/compose.yaml
   - miniflux/compose.yaml

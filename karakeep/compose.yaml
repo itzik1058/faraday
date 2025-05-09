@@ -1,0 +1,90 @@
+services:
+  karakeep-web:
+    image: ghcr.io/karakeep-app/karakeep:${KARAKEEP_VERSION:-release}
+    container_name: karakeep-web
+    profiles:
+      - karakeep
+    environment:
+      KARAKEEP_VERSION: release
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: ${KARAKEEP_NEXTAUTH_SECRET:?}
+      MEILI_ADDR: http://karakeep-meilisearch:7700
+      BROWSER_WEB_URL: http://karakeep-chrome:9222
+      # OPENAI_API_KEY: ...
+      DATA_DIR: /data
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/karakeep/data
+        target: /data
+    # ports:
+    #   - 3000:3000
+    networks:
+      - karakeep
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.karakeep.rule: Host(`karakeep.${DOMAIN:?}`)
+      traefik.http.routers.karakeep.entryPoints: websecure
+    restart: unless-stopped
+
+  karakeep-chrome:
+    image: gcr.io/zenika-hub/alpine-chrome:123
+    container_name: karakeep-chrome
+    profiles:
+      - karakeep
+    command:
+      - --no-sandbox
+      - --disable-gpu
+      - --disable-dev-shm-usage
+      - --remote-debugging-address=0.0.0.0
+      - --remote-debugging-port=9222
+      - --hide-scrollbars
+    networks:
+      - karakeep
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+  karakeep-meilisearch:
+    image: getmeili/meilisearch:v1.13.3
+    container_name: karakeep-meilisearch
+    profiles:
+      - karakeep
+    environment:
+      MEILI_MASTER_KEY: ${KARAKEEP_MEILI_MASTER_KEY:?}
+      MEILI_NO_ANALYTICS: "true"
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/karakeep/meili
+        target: /meili_data
+    networks:
+      - karakeep
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+  karakeep-backup:
+    image: offen/docker-volume-backup:v2
+    container_name: karakeep-backup
+    profiles:
+      - backup
+      - karakeep
+    environment:
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/karakeep
+        target: /backup/karakeep
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/karakeep
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+networks:
+  karakeep:
+    name: karakeep
