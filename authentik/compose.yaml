@@ -1,0 +1,131 @@
+x-authentik-base: &authentik
+  image: ghcr.io/goauthentik/server:latest
+  profiles:
+    - authentik
+  environment:
+    AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?}
+    AUTHENTIK_REDIS__HOST: authentik-redis
+    AUTHENTIK_POSTGRESQL__HOST: authentik-postgresql
+    AUTHENTIK_POSTGRESQL__USER: ${AUTHENTIK_DB_USERNAME:?}
+    AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_DB_PASSWORD:?}
+    AUTHENTIK_POSTGRESQL__NAME: ${AUTHENTIK_DB_DATABASE_NAME:?}
+  volumes:
+    - type: bind
+      source: ${APP_DATA_PATH:?}/authentik/media
+      target: /media
+    - type: bind
+      source: ${APP_DATA_PATH:?}/authentik/templates
+      target: /templates
+    # - type: bind
+    #   source: ${APP_DATA_PATH:?}/authentik/certs
+    #   target: /certs
+  networks:
+    - authentik
+  depends_on:
+    authentik-postgresql:
+      condition: service_healthy
+    authentik-redis:
+      condition: service_healthy
+  restart: unless-stopped
+
+services:
+  authentik-server:
+    <<: *authentik
+    container_name: authentik-server
+    command: server
+    # ports:
+    #   - "9000:9000"
+    #   - "9443:9443"
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.authentik.rule: Host(`auth.${DOMAIN:?}`)
+      traefik.http.routers.authentik.entryPoints: websecure
+      traefik.http.services.authentik.loadbalancer.server.port: 9000
+
+  authentik-worker:
+    <<: *authentik
+    command: worker
+    container_name: authentik-worker
+
+  authentik-postgresql:
+    image: docker.io/library/postgres:16-alpine
+    container_name: authentik-postgresql
+    profiles:
+      - authentik
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/authentik/postgresql
+        target: /var/lib/postgresql/data
+      - type: bind
+        source: ${APP_DATA_PATH:?}/authentik/backup
+        target: /backup
+    environment:
+      POSTGRES_USER: ${AUTHENTIK_DB_USERNAME:?}
+      POSTGRES_PASSWORD: ${AUTHENTIK_DB_PASSWORD:?}
+      POSTGRES_DB: ${AUTHENTIK_DB_DATABASE_NAME:?}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
+    networks:
+      - authentik
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      docker-volume-backup.exec-label: authentik
+      docker-volume-backup.archive-pre: "/bin/sh -c 'pg_dumpall --clean --if-exists --username=${AUTHENTIK_DB_USERNAME:?} | gzip > /backup/dump.sql.gz'"
+    restart: unless-stopped
+
+  authentik-redis:
+    image: docker.io/library/redis:alpine
+    container_name: authentik-redis
+    profiles:
+      - authentik
+    command: --save 60 1 --loglevel warning
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/authentik/redis
+        target: /data
+    networks:
+      - authentik
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    restart: unless-stopped
+
+  authentik-backup:
+    image: offen/docker-volume-backup:v2
+    container_name: authentik-backup
+    profiles:
+      - authentik
+      - backup
+    environment:
+      EXEC_LABEL: authentik
+      BACKUP_STOP_DURING_BACKUP_LABEL: authentik
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/authentik
+        target: /backup/authentik
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/authentik
+        target: /archive
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+networks:
+  authentik:
+    name: authentik
