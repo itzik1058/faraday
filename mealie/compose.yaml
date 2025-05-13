@@ -5,6 +5,17 @@ services:
     profiles:
       - mealie
     environment:
+      BASE_URL: "https://mealie.${DOMAIN:?}"
+      OIDC_AUTH_ENABLED: true
+      OIDC_CONFIGURATION_URL: "https://auth.${DOMAIN:?}/application/o/mealie/.well-known/openid-configuration"
+      OIDC_CLIENT_ID: ${MEALIE_OIDC_CLIENT_ID:?}
+      OIDC_CLIENT_SECRET: ${MEALIE_OIDC_CLIENT_SECRET:?}
+      OIDC_AUTO_REDIRECT: true
+      OIDC_REMEMBER_ME: true
+      OIDC_USER_GROUP: "mealie Users"
+      OIDC_ADMIN_GROUP: "mealie Admins"
+      OIDC_PROVIDER_NAME: Authentik
+
       # Default Recipe Settings
       RECIPE_PUBLIC: "true"
       RECIPE_SHOW_NUTRITION: "true"
