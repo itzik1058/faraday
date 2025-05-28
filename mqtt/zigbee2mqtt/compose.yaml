@@ -1,0 +1,54 @@
+services:
+  zigbee2mqtt:
+    image: ghcr.io/koenkk/zigbee2mqtt
+    container_name: zigbee2mqtt
+    profiles:
+      - mqtt
+    environment:
+      TZ: ${TZ:?}
+    devices:
+      - /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_388bad859780ef11a47f1c1cedd322a4-if00-port0:/dev/ttyUSB0
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/zigbee2mqtt/
+        target: /app/data
+      - type: bind
+        source: /run/udev
+        target: /run/udev
+        read_only: true
+    # ports:
+    #   - 8080:8080
+    networks:
+      - mqtt
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.zigbee2mqtt.rule: Host(`z2m.${DOMAIN:?}`)
+      traefik.http.routers.zigbee2mqtt.entryPoints: websecure
+      traefik.http.routers.zigbee2mqtt.middlewares: ip-allowlist@docker
+      traefik.http.services.zigbee2mqtt.loadbalancer.server.port: 8080
+    depends_on:
+      - mosquitto
+    restart: unless-stopped
+
+  zigbee2mqtt-backup:
+    image: offen/docker-volume-backup:v2
+    container_name: zigbee2mqtt-backup
+    profiles:
+      - backup
+      - mqtt
+    environment:
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/zigbee2mqtt
+        target: /backup/zigbee2mqtt
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/zigbee2mqtt
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped

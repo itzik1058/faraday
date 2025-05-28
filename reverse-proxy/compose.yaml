@@ -53,6 +53,7 @@ services:
       - docker-socket-proxy
       - wireguard
       - adguardhome
+      - mqtt
       # - watchtower
       - authentik
       - beszel
