@@ -1,0 +1,28 @@
+services:
+  esphome:
+    image: ghcr.io/esphome/esphome
+    container_name: esphome
+    profiles:
+      - home-assistant
+    environment:
+      USERNAME: ${ESPHOME_USERNAME:?}
+      PASSWORD: ${ESPHOME_PASSWORD:?}
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/esphome
+        target: /config
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
+    networks:
+      - home-assistant
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.esphome.rule: Host(`esphome.${DOMAIN:?}`)
+      traefik.http.routers.esphome.entryPoints: websecure
+      traefik.http.routers.esphome.middlewares: ip-allowlist@docker
+      traefik.http.services.esphome.loadbalancer.server.port: 6052
+    restart: unless-stopped
+
