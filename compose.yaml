@@ -14,6 +14,7 @@ include:
   - miniflux/compose.yaml
   - monica/compose.yaml
   - mqtt/compose.yaml
+  - nextcloud/compose.yaml
   - omnibot/compose.yaml
   - paperless-ngx/compose.yaml
   - reverse-proxy/compose.yaml

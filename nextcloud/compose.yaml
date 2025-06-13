@@ -1,0 +1,100 @@
+services:
+  nextcloud:
+    image: nextcloud:apache
+    container_name: nextcloud
+    profiles:
+      - nextcloud
+    environment:
+      POSTGRES_HOST: nextcloud-postgres
+      POSTGRES_DB: ${NEXTCLOUD_DB_DATABASE_NAME:?}
+      POSTGRES_USER: ${NEXTCLOUD_DB_USERNAME:?}
+      POSTGRES_PASSWORD: ${NEXTCLOUD_DB_PASSWORD:?}
+      REDIS_HOST: nextcloud-redis
+      NEXTCLOUD_DOMAIN_NAME: nextcloud.${DOMAIN:?}
+      TRUSTED_PROXIES: 172.16.0.0/12
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/nextcloud/data
+        target: /var/www/html
+    networks:
+      - nextcloud
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.nextcloud.rule: Host(`nextcloud.${DOMAIN:?}`)
+      traefik.http.routers.nextcloud.entryPoints: websecure
+
+      traefik.http.middlewares.nextcloud-headers.headers.referrerPolicy: no-referrer
+      traefik.http.middlewares.nextcloud-headers.headers.sslRedirect: true
+      traefik.http.middlewares.nextcloud-headers.headers.stsSeconds: 315360000
+      traefik.http.middlewares.nextcloud-headers.headers.browserXSSFilter: true
+      traefik.http.middlewares.nextcloud-headers.headers.contentTypeNosniff: true
+      traefik.http.middlewares.nextcloud-headers.headers.forceSTSHeader: true
+      traefik.http.middlewares.nextcloud-headers.headers.stsIncludeSubdomains: true
+      traefik.http.middlewares.nextcloud-headers.headers.stsPreload: true
+      traefik.http.middlewares.nextcloud-headers.headers.customFrameOptionsValue: SAMEORIGIN
+
+      traefik.http.middlewares.nextcloud-redirect.redirectRegex.permanent: true
+      traefik.http.middlewares.nextcloud-redirect.redirectRegex.regex: "https://(.*)/.well-known/(card|cal)dav"
+      traefik.http.middlewares.nextcloud-redirect.redirectRegex.replacement: "https://$${1}/remote.php/dav/"
+
+      traefik.http.routers.nextcloud.middlewares: nextcloud-redirect@docker, nextcloud-headers@docker, ip-allowlist@docker
+    depends_on:
+      - nextcloud-postgres
+      - nextcloud-redis
+    restart: unless-stopped
+
+  nextcloud-cron:
+    image: nextcloud:fpm
+    container_name: nextcloud-cron
+    profiles:
+      - nextcloud
+    entrypoint: /cron.sh
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/nextcloud/data
+        target: /var/www/html
+    networks:
+      - nextcloud
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    depends_on:
+      - nextcloud-postgres
+      - nextcloud-redis
+    restart: unless-stopped
+
+  nextcloud-postgres:
+    image: postgres:alpine
+    container_name: nextcloud-postgres
+    profiles:
+      - nextcloud
+    environment:
+      POSTGRES_DB: ${NEXTCLOUD_DB_DATABASE_NAME:?}
+      POSTGRES_USER: ${NEXTCLOUD_DB_USERNAME:?}
+      POSTGRES_PASSWORD: ${NEXTCLOUD_DB_PASSWORD:?}
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/nextcloud/postgres
+        target: /var/lib/postgresql/data
+    networks:
+      - nextcloud
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+  nextcloud-redis:
+    image: redis:alpine
+    container_name: nextcloud-redis
+    profiles:
+      - nextcloud
+    networks:
+      - nextcloud
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+networks:
+  nextcloud:
+    name: nextcloud
+  nextcloud-proxy:
+    name: nextcloud-proxy
