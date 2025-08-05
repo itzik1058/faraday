@@ -9,7 +9,7 @@ services:
       PUID: ${PUID:?}
       PGID: ${PGID:?}
       STEAMBETA: false
-      MAXPLAYERS: 8
+      MAXPLAYERS: 4
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/satisfactory
@@ -20,9 +20,9 @@ services:
     networks:
       - satisfactory
     ports:
-      - 7777:7777/udp
-      - 15000:15000/udp
-      - 15777:15777/udp
+      - 8777:7777/tcp
+      - 8777:7777/udp
+      - 8888:8888/tcp
     restart: unless-stopped
 
   satisfactory-backup:
