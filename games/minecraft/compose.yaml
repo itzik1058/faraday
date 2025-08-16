@@ -36,6 +36,7 @@ services:
       - game
       - minecraft
     environment:
+      EXEC_LABEL: minecraft-server
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: 7
     volumes:

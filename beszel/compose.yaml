@@ -55,6 +55,7 @@ services:
       - backup
       - beszel
     environment:
+      EXEC_LABEL: beszel
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: 7
     volumes:

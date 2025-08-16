@@ -75,6 +75,7 @@ services:
       - backup
       - karakeep
     environment:
+      EXEC_LABEL: karakeep
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: 7
     volumes:

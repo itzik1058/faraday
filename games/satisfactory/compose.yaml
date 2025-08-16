@@ -33,6 +33,7 @@ services:
       - game
       - satisfactory
     environment:
+      EXEC_LABEL: satisfactory-server
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: 7
     volumes:

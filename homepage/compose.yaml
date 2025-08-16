@@ -47,6 +47,7 @@ services:
       - backup
       - homepage
     environment:
+      EXEC_LABEL: homepage
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: 7
     volumes:
