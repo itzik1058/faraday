@@ -9,7 +9,7 @@ services:
       EXEC_LABEL: user-data
       BACKUP_CRON_EXPRESSION: "0 0 * * 5"
       BACKUP_PRUNING_PREFIX: backup-
-      BACKUP_RETENTION_DAYS: 7
+      BACKUP_RETENTION_DAYS: 1
     volumes:
       - type: bind
         source: ${USER_DATA_PATH:?}/photos
