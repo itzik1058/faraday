@@ -12,7 +12,6 @@ include:
   - prowlarr/compose.yaml
   - qbittorrent/compose.yaml
   - radarr/compose.yaml
-  - readarr/compose.yaml
   - recyclarr/compose.yaml
   - sonarr/compose.yaml
 
