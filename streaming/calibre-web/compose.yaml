@@ -1,7 +1,7 @@
 services:
-  calibre-web:
-    image: lscr.io/linuxserver/calibre-web:latest
-    container_name: calibre-web
+  calibre-web-automated:
+    image: crocodilestick/calibre-web-automated:latest
+    container_name: calibre-web-automated
     profiles:
       - calibre-web
       - streaming
@@ -9,15 +9,18 @@ services:
       TZ: ${TZ:?}
       PUID: ${PUID:?}
       PGID: ${PGID:?}
-      DOCKER_MODS: linuxserver/mods:universal-calibre #optional
-      OAUTHLIB_RELAX_TOKEN_SCOPE: 1 #optional
+      HARDCOVER_TOKEN: ${CALIBRE_WEB_HARDCOVER_TOKEN:?}
+      NETWORK_SHARE_MODE: true
     volumes:
       - type: bind
-        source: ${APP_DATA_PATH:?}/calibre
+        source: ${APP_DATA_PATH:?}/calibre/config
         target: /config
       - type: bind
+        source: ${APP_DATA_PATH:?}/calibre/ingest
+        target: /cwa-book-ingest
+      - type: bind
         source: ${USER_DATA_PATH:?}/calibre
-        target: /books
+        target: /calibre-library
     # ports:
     #   - 8083:8083
     networks:
@@ -28,6 +31,32 @@ services:
       traefik.enable: true
       traefik.http.routers.calibre.rule: Host(`calibre.${DOMAIN:?}`)
       traefik.http.routers.calibre.entryPoints: websecure
+    restart: unless-stopped
+
+  calibre-web-automated-book-downloader:
+    image: ghcr.io/calibrain/calibre-web-automated-book-downloader:dev
+    container_name: calibre-web-automated-book-downloader
+    profiles:
+      - calibre-web
+      - streaming
+    environment:
+      TZ: ${TZ:?}
+      PUID: ${PUID:?}
+      PGID: ${PGID:?}
+      PRIORITIZE_WELIB: true
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/calibre/ingest
+        target: /cwa-book-ingest
+    # ports:
+    #   - 8084:8084
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.calibre-downloader.rule: Host(`calibre-downloader.${DOMAIN:?}`)
+      traefik.http.routers.calibre-downloader.entryPoints: websecure
     restart: unless-stopped
 
   calibre-web-backup:
