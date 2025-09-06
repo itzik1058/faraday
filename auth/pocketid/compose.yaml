@@ -1,0 +1,56 @@
+services:
+  pocket-id:
+    image: ghcr.io/pocket-id/pocket-id:v1
+    container_name: pocket-id
+    profiles:
+      - auth
+    environment:
+      APP_URL: https://pocketid.${DOMAIN:?}
+      TRUST_PROXY: false
+      PUID: ${PUID:?}
+      PGID: ${PGID:?}
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/pocket-id
+        target: /app/data
+    networks:
+      - auth
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.pocket-id.rule: Host(`pocketid.${DOMAIN:?}`)
+      traefik.http.routers.pocket-id.entryPoints: websecure
+    healthcheck:
+      test: ["CMD", "/app/pocket-id", "healthcheck"]
+      interval: 1m30s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    restart: unless-stopped
+
+  pocket-id-backup:
+    image: offen/docker-volume-backup:v2
+    container_name: pocket-id-backup
+    profiles:
+      - auth
+      - backup
+    environment:
+      EXEC_LABEL: pocket-id
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/pocket-id
+        target: /backup/pocket-id
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/pocket-id
+        target: /archive
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped

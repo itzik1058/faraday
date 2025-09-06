@@ -1,5 +1,6 @@
 include:
   - authentik/compose.yaml
+  - pocketid/compose.yaml
 
 networks:
   auth:
