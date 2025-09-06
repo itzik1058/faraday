@@ -1,7 +1,7 @@
 x-authentik-base: &authentik
   image: ghcr.io/goauthentik/server:latest
   profiles:
-    - authentik
+    - auth
   environment:
     AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?}
     AUTHENTIK_REDIS__HOST: authentik-redis
@@ -20,7 +20,7 @@ x-authentik-base: &authentik
     #   source: ${APP_DATA_PATH:?}/authentik/certs
     #   target: /certs
   networks:
-    - authentik
+    - auth
   depends_on:
     authentik-postgresql:
       condition: service_healthy
@@ -52,7 +52,7 @@ services:
     image: docker.io/library/postgres:16-alpine
     container_name: authentik-postgresql
     profiles:
-      - authentik
+      - auth
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/authentik/postgresql
@@ -71,7 +71,7 @@ services:
       retries: 5
       timeout: 5s
     networks:
-      - authentik
+      - auth
     labels:
       com.centurylinklabs.watchtower.enable: true
       docker-volume-backup.exec-label: authentik
@@ -82,14 +82,14 @@ services:
     image: docker.io/library/redis:alpine
     container_name: authentik-redis
     profiles:
-      - authentik
+      - auth
     command: --save 60 1 --loglevel warning
     volumes:
       - type: bind
         source: ${APP_DATA_PATH:?}/authentik/redis
         target: /data
     networks:
-      - authentik
+      - auth
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
       start_period: 20s
@@ -102,7 +102,7 @@ services:
     image: offen/docker-volume-backup:v2
     container_name: authentik-backup
     profiles:
-      - authentik
+      - auth
       - backup
     environment:
       EXEC_LABEL: authentik
@@ -125,7 +125,3 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
-
-networks:
-  authentik:
-    name: authentik

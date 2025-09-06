@@ -1,0 +1,6 @@
+include:
+  - authentik/compose.yaml
+
+networks:
+  auth:
+    name: auth

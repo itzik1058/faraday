@@ -1,7 +1,7 @@
 include:
   - adguardhome/compose.yaml
   - allfather/compose.yaml
-  - authentik/compose.yaml
+  - auth/compose.yaml
   - beszel/compose.yaml
   - filebrowser/compose.yaml
   - games/compose.yaml

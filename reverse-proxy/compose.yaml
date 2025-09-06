@@ -56,7 +56,7 @@ services:
       - home-assistant
       - mqtt
       # - watchtower
-      - authentik
+      - auth
       - beszel
       - homepage
       - immich
