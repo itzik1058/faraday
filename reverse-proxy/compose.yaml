@@ -60,7 +60,6 @@ services:
       - beszel
       - homepage
       - immich
-      - nextcloud
       - paperless-ngx
       - karakeep
       - speedtest-tracker
