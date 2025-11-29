@@ -61,6 +61,7 @@ services:
       - homepage
       - immich
       - paperless-ngx
+      - baikal
       - karakeep
       - speedtest-tracker
       - vikunja

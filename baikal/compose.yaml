@@ -1,0 +1,58 @@
+services:
+  baikal:
+    image: ckulka/baikal:nginx
+    container_name: baikal
+    profiles:
+      - baikal
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/baikal/config
+        target: /var/www/baikal/config
+      - type: bind
+        source: ${APP_DATA_PATH:?}/baikal/data
+        target: /var/www/baikal/Specific
+    networks:
+      - baikal
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      docker-volume-backup.stop-during-backup: baikal
+      traefik.enable: true
+      traefik.http.routers.baikal.rule: Host(`baikal.${DOMAIN:?}`)
+      traefik.http.routers.baikal.entryPoints: websecure
+      traefik.http.routers.baikal.middlewares: ip-allowlist@docker, baikal-dav@docker
+      traefik.http.middlewares.baikal-dav.redirectregex.regex: https://(.*)/.well-known/(card|cal)dav
+      traefik.http.middlewares.baikal-dav.redirectregex.replacement: https://$$1/dav.php/
+      traefik.http.middlewares.baikal-dav.redirectregex.permanent: true
+    restart: unless-stopped
+
+  baikal-backup:
+    image: offen/docker-volume-backup:v2
+    container_name: baikal-backup
+    profiles:
+      - backup
+      - baikal
+    environment:
+      EXEC_LABEL: baikal
+      BACKUP_STOP_DURING_BACKUP_LABEL: baikal
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/baikal
+        target: /backup/baikal
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/baikal
+        target: /archive
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+networks:
+  baikal:
+    name: baikal

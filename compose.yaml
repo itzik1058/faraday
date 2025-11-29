@@ -2,6 +2,7 @@ include:
   - adguardhome/compose.yaml
   - allfather/compose.yaml
   - auth/compose.yaml
+  - baikal/compose.yaml
   - beszel/compose.yaml
   - filebrowser/compose.yaml
   - games/compose.yaml
