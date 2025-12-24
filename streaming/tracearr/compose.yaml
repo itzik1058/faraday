@@ -1,0 +1,108 @@
+services:
+  tracearr:
+    image: ghcr.io/connorgallopo/tracearr:latest
+    container_name: tracearr
+    profiles:
+      - streaming
+      - tracearr
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOST: 0.0.0.0
+      TZ: ${TZ:?}
+      DATABASE_URL: postgres://${TRACEARR_DB_USERNAME:?}:${TRACEARR_DB_PASSWORD:?}@tracearr-timescale:5432/tracearr
+      REDIS_URL: redis://tracearr-redis:6379
+      JWT_SECRET: ${TRACEARR_JWT_SECRET:?}
+      COOKIE_SECRET: ${TRACEARR_COOKIE_SECRET:?}
+      CORS_ORIGIN: "*"
+      LOG_LEVEL: info
+      TRUST_PROXY: true
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      traefik.enable: true
+      traefik.http.routers.tracearr.rule: Host(`tracearr.${DOMAIN:?}`)
+      traefik.http.routers.tracearr.entryPoints: websecure
+      traefik.http.routers.tracearr.middlewares: ip-allowlist@docker
+    depends_on:
+      tracearr-timescale:
+        condition: service_healthy
+      tracearr-redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  tracearr-timescale:
+    image: timescale/timescaledb:latest-pg17
+    container_name: tracearr-timescale
+    profiles:
+      - streaming
+      - tracearr
+    shm_size: 256mb
+    environment:
+      POSTGRES_USER: ${TRACEARR_DB_USERNAME:?}
+      POSTGRES_PASSWORD: ${TRACEARR_DB_PASSWORD:?}
+      POSTGRES_DB: tracearr
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/tracearr/timescale
+        target: /var/lib/postgresql/data
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+      docker-volume-backup.exec-label: tracearr
+      docker-volume-backup.archive-pre: "/bin/sh -c 'pg_dumpall --clean --if-exists --username=${TRACEARR_DB_USERNAME:?} | gzip > /backup/dump.sql.gz'"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tracearr"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  tracearr-redis:
+    image: redis:7-alpine
+    container_name: tracearr-redis
+    profiles:
+      - streaming
+      - tracearr
+    command: redis-server --appendonly yes
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/tracearr/redis
+        target: /data
+    networks:
+      - streaming
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  tracearr-backup:
+    image: offen/docker-volume-backup:v2
+    container_name: tracearr-backup
+    profiles:
+      - backup
+      - streaming
+      - tracearr
+    environment:
+      EXEC_LABEL: tracearr
+      BACKUP_STOP_DURING_BACKUP_LABEL: tracearr
+      BACKUP_PRUNING_PREFIX: backup-
+      BACKUP_RETENTION_DAYS: 7
+    volumes:
+      - type: bind
+        source: ${APP_DATA_PATH:?}/tracearr
+        target: /backup/tracearr
+        read_only: true
+      - type: bind
+        source: ${BACKUP_DATA_PATH:?}/tracearr
+        target: /archive
+    network_mode: none
+    labels:
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
