@@ -7,7 +7,7 @@ services:
       - user-data-backup
     environment:
       EXEC_LABEL: user-data
-      BACKUP_CRON_EXPRESSION: "0 0 * * 5"
+      BACKUP_CRON_EXPRESSION: "0 3 * * 5"
       BACKUP_PRUNING_PREFIX: backup-
       BACKUP_RETENTION_DAYS: 1
     volumes:
